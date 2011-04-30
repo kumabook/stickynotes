@@ -1,0 +1,30 @@
+---------- 環境構築メモ -----------
+
+----firefoxの開発用プロファイルの追加---
+
+http://firefox.geckodev.org/index.php?%E3%83%97%E3%83%AD%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB　　　を参照
+
+about:config　で以下を設定する。
+
+javascript.options.strict	true	エラーコンソールでの厳密な警告を有効にする
+browser.dom.window.dump.enabled	true	標準コンソールへの出力をするdump()を使用可能にする。
+
+
+--------buildツール　make--- 
+cygwinに付属のものでOK
+
+--------document ツール  jsdoc toolkit----  
+http://code.google.com/p/jsdoc-toolkit/downloads/list　からダウンロード
+
+------------testツール UxU  ----- 
+正式にはfirefox4に対応していないので
+http://www.clear-code.com/software/uxu/ から
+uxu.xpi と uxu-utilsをダウンロードする。
+
+xpiはいったん解凍してinstall.rdfの現在のfirefoxに入るように書き換えて、
+またzipで固めて、xpiにしてインストール。
+
+
+
+
+	

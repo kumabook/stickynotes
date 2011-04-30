@@ -1,0 +1,219 @@
+#!/usr/bin/env ruby
+
+require 'socket'
+require 'optparse'
+require 'ostruct'
+require 'pathname'
+
+options = OpenStruct.new
+options.host = "localhost"
+options.port = 4444
+options.firefox = "firefox"
+options.named_profile = nil
+options.profile = nil
+options.wait = 3
+options.n_retries = 3
+options.quit = false
+options.close_main_windows = false
+options.use_color = nil
+
+opts = OptionParser.new("Usage: #{$0} [options] test_or_directory...") do |opts|
+  opts.on("--host=HOST",
+          "host name to connect Firefox (#{options.host})") {|options.host|}
+  opts.on("-pPORT", "--port=PORT", Integer,
+          "port number to connect Firefox (#{options.port})") {|options.port|}
+  opts.on("--firefox=FIREFOX",
+          "command to start Firefox (#{options.firefox})") {|options.firefox|}
+  opts.on("--named-profile=PROFILE",
+          "name of Firefox's profile",
+          "(#{options.named_profile})") {|options.named_profile|}
+  opts.on("--profile=PROFILE",
+          "path to Firefox's profile (#{options.profile})") {|options.profile|}
+  opts.on("--wait=SECONDS", Float,
+          "how long wait to start Firefox (#{options.wait})") {|options.wait|}
+  opts.on("--retries=N", Integer,
+          "how many times to retry to connect",
+          "(#{options.n_retries})") {|options.n_retries|}
+  opts.on("--[no-]quit",
+          "whether quit or not on finish (#{options.quit})") {|options.quit|}
+  opts.on("--[no-]close-main-windows",
+          "whether close main windows or not",
+          "(#{options.close_main_windows})") {|options.close_main_windows|}
+  opts.on("--[no-]use-color",
+          "whether use colorized output or not", "(auto)") {|options.use_color|}
+
+  opts.separator ""
+  opts.on_tail("--help", "Show this message") do
+    puts opts
+    exit
+  end
+end
+tests = opts.parse!(ARGV)
+if tests.empty?
+  $stderr.puts opts
+  exit 1
+end
+
+class Runner
+  def initialize(socket, target_paths, output=$stdout)
+    @socket = socket
+    @output = output
+    @output.sync = true
+    @target_paths = target_paths
+    @reporter_var_name = "reporter"
+    @shown_result_index = 0
+    self.use_color = nil
+  end
+
+  def use_color?
+    @use_color
+  end
+
+  def use_color=(use_color)
+    @use_color = use_color
+    @use_color = guess_use_color if @use_color.nil?
+  end
+
+  def run
+    escaped_target_paths = @target_paths.collect do |path|
+      normalized_path = normalize_separator(path)
+      escaped_path = escape_path(normalized_path.to_s)
+      "'#{escaped_path}'"
+    end.join(", ")
+    options = "{useColor: #{use_color?}}"
+    evaluate("var #{@reporter_var_name};")
+    evaluate("#{@reporter_var_name} =" +
+             " runTest(#{options}, #{escaped_target_paths}); " +
+             "undefined;")
+
+    show_result while running?
+    show_result
+    @output.puts
+  end
+
+  def close_main_windows
+    evaluate("closeMainWindows();")
+  end
+
+  def quit
+    evaluate("quitApplication();")
+  end
+
+  private
+  def normalize_separator(path)
+    if File::ALT_SEPARATOR
+      normalized_file_name = Pathname(path.to_s.gsub(/\//, File::ALT_SEPARATOR))
+    else
+      normalized_file_name = path
+    end
+  end
+
+  def escape_path(path)
+    path.gsub(/\\/, "\\\\\\").gsub(/'/, "\\'")
+  end
+
+  def evaluate(command, need_to_read=true)
+    return nil if @socket.nil?
+    begin
+      @socket.puts(command)
+    rescue Errno::EPIPE
+      @output.puts("#{$!.inspect}: #{$!}: #{command}")
+      @output.puts($@)
+      return nil
+    end
+    return nil unless need_to_read
+
+    result = read.chomp
+    @output.puts(result) unless result.empty?
+    result
+  end
+
+  def read
+    buffer = ""
+    while IO.select([@socket], [], [], 0.1)
+      break if @socket.eof?
+      buffer << @socket.readpartial(4096)
+    end
+    buffer
+  end
+
+  def running?
+    evaluate("#{@reporter_var_name}.isFinished()", false)
+    result = nil
+    loop do
+      result = read.chomp
+      break unless result.empty?
+      return false if @socket.eof?
+    end
+
+    unless ["true", "false"].include?(result)
+      @output.puts("Failed:")
+      @output.puts(result)
+      return false
+    end
+    result != "true"
+  end
+
+  def show_result
+    evaluate("#{@reporter_var_name}.result", false)
+    outputted = false
+    n_tried = 4
+    loop do
+      result = read.chomp
+      if result.empty? and !outputted
+        if n_tried > 0
+          sleep 0.5
+          n_tried -= 1
+          next
+        end
+      end
+      break if result.size <= @shown_result_index
+      @output.print(result[@shown_result_index..-1])
+      @output.flush
+      @shown_result_index = result.size
+      outputted = true
+    end
+  end
+
+  def guess_use_color
+    return false unless @output.tty?
+    term = ENV["TERM"]
+    return true if term and (/term\z/ =~ term or term == "screen")
+    return true if ENV["EMACS"] == "t"
+    false
+  end
+end
+
+def run(tests, options)
+  TCPSocket.open(options.host, options.port) do |socket|
+    begin
+      runner = Runner.new(socket,
+                          tests.collect {|test| Pathname(test).expand_path})
+      runner.close_main_windows if options.close_main_windows
+      runner.run
+      runner.quit if options.quit
+    rescue SystemCallError
+      puts "#{$!.class}: #{$!}"
+      puts $@
+    end
+  end
+end
+
+n_retried = 0
+begin
+  run(tests, options)
+rescue SystemCallError
+  n_retried += 1
+  if n_retried <= options.n_retries
+    command = [options.firefox,
+               "-uxu-start-server",
+               "-uxu-listen-port", options.port.to_s]
+    command += ["-p", options.named_profile] if options.named_profile
+    command += ["-profile", options.profile] if options.profile
+    command += ["-no-remote"] if options.named_profile or options.profile
+    command += ["&"]
+    system(command.join(" "))
+    sleep options.wait
+    retry
+  end
+end

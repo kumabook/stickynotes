@@ -1,0 +1,18 @@
+<!ENTITY stickyMenu.label "Generate Sticky">
+<!ENTITY stickyToggleMenu.label   "toggle sticky sidebar">
+<!ENTITY stickyFocusMenu.label   "focus on sticky sidebar">
+<!ENTITY show_sticky_list.label   "display Sticky List">
+<!ENTITY sticky_list.sidebarTitle "Sticky List">
+<!ENTITY sticky_list.sidebarText "Text">
+<!ENTITY sticky_list.sidebarX "X">
+<!ENTITY sticky_list.sidebarY "Y">
+<!ENTITY sticky_list.sidebarDisplay "display">
+<!ENTITY sticky_list.sidebarToggleV "Hide/Display">
+<!ENTITY sticky_list.sidebarJump "Jump to this sticky">
+<!ENTITY sticky_list.sidebarDelete "Delete this sticky">
+<!ENTITY sticky_list.sidebarHide "Hide this sticky">
+<!ENTITY sticky_list.sidebarVisible "Display this sticky">
+
+
+
+

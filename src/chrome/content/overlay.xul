@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE overlay SYSTEM "chrome://stickynotes/locale/">
+<overlay id="stickynotes-overlay"
+	 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <menupopup id="menu_ToolsPopup">
+    <menuitem
+	id="sticky_menu"
+	key="key_openSidebar_stickynotes"
+	observes="side_with_sticky"
+	insertbefore="sanitizeSeparator" />
+  </menupopup>
+  <popup id="contentAreaContextMenu">
+    <menuitem id="sticky_popup"
+	      label="&stickyMenu.label;"
+	      key="key_create_stickynotes"
+	      command="create_sticky" 
+	      />
+    <menuitem id="sticky_toggle_popup"
+	      label="&stickyToggleMenu.label;"
+	      key="key_toggle_stickynotes"
+	      command="toggle_sticky"
+	      />
+  </popup>
+  <keyset id="mainKeyset">
+    <key id="key_openSidebar_stickynotes" key="s" modifiers="accel shift" command="side_with_sticky"/>
+    <key id="key_toggle_stickynotes" key="q" modifiers="control" command="toggle_sticky"/>
+    <key id="key_create_stickynotes" key="c" modifiers="control shift" command="create_sticky"/>
+    <key id="key_focusSidebar_stickynotes" key="f" modifiers="control shift" command="focusSidebar_sticky"/>
+  </keyset>
+  <menupopup id="viewSidebarMenu">
+    <menuitem observes="side_with_sticky" key="key_openSidebar_stickynotes"/>
+    <!--		  <menuitem id="sticky_focus_popup"
+	label="&stickyFocusMenu.label;"
+	key="key_focusSidebar_stickynotes"
+	command="focusSidebar_sticky"
+	/>
+	<menuitem id="sticky_toggle_popup"
+	label="&stickyToggleMenu.label;"
+	key="key_toggle_stickynotes"
+	command="toggle_sticky"
+	/> -->
+  </menupopup>
+  <commandset>
+    <command id="toggle_sticky" oncommand="Sticky.toggleVisibilityAllStickies();"/>
+    <command id="create_sticky" oncommand="StickyNotes.createSticky().focus();"/>
+    <command id="focusSidebar_sticky" oncommand="Sidebar.focusSidebar();"/>
+  </commandset>
+  <broadcasterset>
+    <broadcaster
+	id="side_with_sticky"
+	label="&show_sticky_list.label;"
+	autoCheck="false" type="checkbox" group="sidebar"
+	sidebartitle="&sticky_list.sidebarTitle;"
+	sidebarurl="chrome://stickynotes/content/side_bar.xul"
+	oncommand="toggleSidebar('side_with_sticky');" 
+	/>
+  </broadcasterset>
+  <script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Sidebar.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/overlay.js" />
+
+</overlay>

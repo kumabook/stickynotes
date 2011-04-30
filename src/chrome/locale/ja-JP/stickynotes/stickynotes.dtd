@@ -1,0 +1,15 @@
+<!ENTITY stickyMenu.label   "ここに付箋を作成">
+<!ENTITY stickyToggleMenu.label   "付箋の表示/非表示">
+<!ENTITY stickyFocusMenu.label   "サイドバーにフォーカスする">
+<!ENTITY show_sticky_list.label   "サイドバーに付箋の一覧を表示">
+<!ENTITY sticky_list.sidebarTitle "付箋の一覧">
+<!ENTITY sticky_list.sidebarText "内容">
+<!ENTITY sticky_list.sidebarX "X座標">
+<!ENTITY sticky_list.sidebarY "Y座標">
+<!ENTITY sticky_list.sidebarDisplay "表示">
+<!ENTITY sticky_list.sidebarToggleV "表示/非表示">
+<!ENTITY sticky_list.sidebarJump "付箋にジャンプ">
+<!ENTITY sticky_list.sidebarDelete "付箋を消去">
+<!ENTITY sticky_list.sidebarHide "付箋を非表示にする">
+<!ENTITY sticky_list.sidebarVisible "付箋を表示する">
+

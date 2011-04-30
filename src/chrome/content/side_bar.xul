@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://stickynotes/locale/">
+<window xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  title="temp_sidebar"
+  id="mainwindow"
+  context="clipmenu">
+
+<popupset>
+  <menupopup id="clipmenu" >
+    <menuitem
+          label="&sticky_list.sidebarJump;"
+          id="popup_jump"
+          oncommand="Sidebar.jump();"
+      />
+    <menuitem
+          label="&sticky_list.sidebarDelete;"
+          id="popup_delete"
+          oncommand="Sidebar.delete();"
+       />
+  </menupopup>
+</popupset>
+
+
+<tree  id="sticky" seltype="single" hidecolumnpicker="true">
+  <treecols>
+      <treecol id="text" label="&sticky_list.sidebarText;" primary="true" flex="10"/>
+      <treecol id="id" label="ID" hidden="true"  flex="1"/>
+      <treecol id="left" label="&sticky_list.sidebarX;"  flex="2"/>
+      <treecol id="top" label="&sticky_list.sidebarY;"  flex="2"/>
+      <treecol id="uri" label="URL" hidden="true"/>
+      <treecol id="title" label="title" hidden="true"/>
+      <treecol id="width" label="width" hidden="true"/>
+      <treecol id="height" label="height" hidden="true"/>
+	  <treecol id="color" label="color" hidden="true"/>
+  </treecols>
+
+  <treechildren id="sticky_tree" >
+    <treeitem id="sticky_tree_item" container="true" open="true">
+
+	</treeitem>
+  </treechildren>
+</tree>
+
+<script type="application/x-javascript" src="chrome://stickynotes/content/Sidebar.js" />
+<script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
+<script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
+<script type="application/x-javascript" src="chrome://stickynotes/content/side_bar.js" />
+
+</window>

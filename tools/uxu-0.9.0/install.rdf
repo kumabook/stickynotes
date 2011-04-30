@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+	<Description about="urn:mozilla:install-manifest">
+
+		<em:id>uxu@clear-code.com</em:id>
+		<em:name>UxU - UnitTest.XUL</em:name>
+		<em:version>0.9.0</em:version>
+		<em:description>Provides features for unit tests and functional tests.</em:description>
+		<em:creator>ClearCode inc.</em:creator>
+		<em:optionsURL>chrome://uxu/content/ui/config.xul</em:optionsURL>
+		<em:homepageURL>http://www.clear-code.com/oss/uxu/</em:homepageURL>
+
+		<em:updateURL>http://www.clear-code.com/update.rdf</em:updateURL>
+		<em:updateKey>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDN4ESXDa0ljqzSDoGs9yy82aR+8tPBIPT8O3FwvXleCB815eOCIKH4lT7L7nK9LKOzdrP5EwiqfugyM+SEXSikbgi+UEfM04HqAomXWUqc7tvXb1kmqx2VwLHxm1tiKuulv1HgHmJtYOh09Tv3+q6VOGX2SDcNe6dgnhnAIP4kYwIDAQAB</em:updateKey>
+
+		<em:targetApplication>
+			<!-- Firefox -->
+			<Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+				em:minVersion="3.0"
+				em:maxVersion="4.*" />
+		</em:targetApplication>
+		<em:targetApplication>
+			<!-- Thunderbird -->
+			<Description em:id="{3550f703-e582-4d05-9a08-453d09bdfdc6}"
+				em:minVersion="3.0"
+				em:maxVersion="3.1.*" />
+		</em:targetApplication>
+		<em:targetApplication>
+			<!-- XULRunner Applications -->
+			<Description em:id="toolkit@mozilla.org"
+				em:minVersion="0"
+				em:maxVersion="99" />
+		</em:targetApplication>
+
+	</Description>
+
+</RDF>

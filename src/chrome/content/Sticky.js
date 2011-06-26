@@ -33,10 +33,7 @@
      if (this.content == '')
          this.content = 'ここにメモを挿入';
      this.color = opt.color;
-     this.tag = opt.tag;
-     //     this.createDom();
      dump('store sticky\n');
-     //     this.addStickySidebar();
  }
 
 
@@ -50,7 +47,7 @@ Sticky.prototype.update = function() {
     this.updateStickySidebar();
 };
 
-Sticky.prototype.delete = function() {
+Sticky.prototype.remove = function() {
     //delete from database
     DAO.deleteSticky(this);
     //delete from sidebar
@@ -116,7 +113,7 @@ Sticky.prototype.createDom = function() {
     this.textarea.sticky = this;
     this.textarea.addEventListener('keydown', function(e) {
         if (e.keyCode == 68 && e.ctrlKey && e.shiftKey) {
-            e.target.sticky.delete();
+            e.target.sticky.remove();
         }
     },false);
     //--ドラッグ用のバー--
@@ -172,7 +169,7 @@ Sticky.prototype.createDom = function() {
                                    true);
     this.delete_button.addEventListener('click',
                                         function(e) {
-                                            that.delete();
+                                            that.remove();
                                             // doc.body.removeChild(sticky);
                                             e.stopPropagation();
                                         },
@@ -279,16 +276,15 @@ Sticky.prototype.addStickySidebar = function() {
         url_item = Sidebar.createSidebarUrlItem(
             { id: this.id, url: this.url, title: this.title });
     }
-    Sidebar.createSidebarStickyItem(this);
+    Sidebar.createSidebarStickyItem(this, url_item);
 };
 Sticky.prototype.deleteStickySidebar = function() {
     var sidebarDoc = Sidebar.getSidebarDoc();
-    //    var url_tree = sidebarDoc.getElementById("tree"+this.url);
-        varurl_tree = sidebarDoc.getElementById('treeitem_' + this.page_id);
+    var url_tree = sidebarDoc.getElementById('treeitem_' + this.page_id);
     if (url_tree == null) return;
     var sticky_tree = sidebarDoc.getElementById('sticky_tree');
     var item = sidebarDoc.getElementById('item' + this.id);
-        var url_item = sidebarDoc.getElementById('tree_page_' + this.page_id);
+    var url_item = sidebarDoc.getElementById('tree_page_' + this.page_id);
     url_item.removeChild(item);
     if (url_item.childNodes.length == 0) {
         sticky_tree.removeChild(url_tree);
@@ -357,8 +353,7 @@ Sticky.prototype.jump = function() {
 Sticky.prototype.toString = function() {
     return 'sticky:' + this.id + ', ' + this.page_id + ', ' +
         this.left + ', ' + this.top + ', ' + this.width + ', ' +
-        this.height + ', ' + this.content + ', ' + this.color +
-        ', ' + this.tag;
+        this.height + ', ' + this.content + ', ' + this.color;
 };
 
 Sticky.toggleVisibilityAllStickies = function() {

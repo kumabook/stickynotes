@@ -7,7 +7,7 @@ SRC = $(DIR)/overlay.js $(DIR)/overlay.xul $(DIR)/side_bar.xul $(DIR)/side_bar.j
 TARGET = dist/stickynotes.xpi
 DEPLOY_FILE = "C:\Users\hiroki\AppData\Roaming\Mozilla\Firefox\Profiles\nabkjmj3.stickysnotes\extensions\stickynotes@kumabook.com.xpi"
 
-SQLITE = "C:\Users\hiroki\AppData\Roaming\Mozilla\Firefox\Profiles\nabkjmj3.stickysnotes\stickynotes.splite"
+SQLITE = "C:\Users\hiroki\AppData\Roaming\Mozilla\Firefox\Profiles\nabkjmj3.stickysnotes\stickynotes.sqlite"
 
 LOG_DIR = "log/"
 
@@ -23,10 +23,10 @@ JSDOC = tools/jsdoc-toolkit
 
 run: deploy
 	firefox $(FF_OPTION)  2>&1 > $(LOG_DIR)\stickynotes_`date +%m%d_%H%M`.log
-deploy: $(TARGET)
+deploy: compile
 	cp $(TARGET) $(DEPLOY_FILE)
 
-$(TARGET) : $(SRC) $(RS) Makefile
+compile : $(SRC) $(RS) Makefile
 	cd src ; zip -r ../dist/stickynotes.xpi chrome chrome.manifest install.rdf
 fixstyle:
 	fixjsstyle src/chrome/content/*

@@ -27,16 +27,23 @@ var DAO =
         dbConn.executeSimpleSQL('CREATE TABLE IF NOT EXISTS sticky(' +
                                 'id INTEGER PRIMARY KEY , page_id INTEGER ,' +
                                 'left INTEGER, top INTEGER, width INTEGER, ' +
-                                'height INTEGER, content TEXT, color TEXT,' +
-                                'tag_id TEXT)');
+                                'height INTEGER, content TEXT, color TEXT)');
         dbConn.executeSimpleSQL('CREATE TABLE IF NOT EXISTS page(' +
                                 'id INTEGER PRIMARY KEY , url TEXT UNIQUE,' +
                                'title TEXT)');
+        dbConn.executeSimpleSQL('CREATE TABLE IF NOT EXISTS tag(' +
+                                'id INTEGER PRIMARY KEY , name TEXT UNIQUE)');
+        dbConn.executeSimpleSQL('CREATE TABLE IF NOT EXISTS sticky_tag(' +
+                                'id INTEGER PRIMARY KEY ,' +
+                                'sticky_id INTEGER, tag_id INTEGER)');
+
     },
     dropTables: function() {
         var dbConn = DAO.getDBConn();
         dbConn.executeSimpleSQL('DROP TABLE IF EXISTS "sticky" ');
         dbConn.executeSimpleSQL('DROP TABLE IF EXISTS "page" ');
+        dbConn.executeSimpleSQL('DROP TABLE IF EXISTS "tag" ');
+        dbConn.executeSimpleSQL('DROP TABLE IF EXISTS "sticky_tag" ');
         dbConn.close();
     },
     insertSticky: function(sticky) {
@@ -44,7 +51,7 @@ var DAO =
         var sql = "insert into sticky values('" + sticky.id + "','" +
             sticky.page_id + "','" + sticky.left + "','" + sticky.top +
             "','" + sticky.width + "','" + sticky.height + "','" +
-            sticky.content + "','" + sticky.color + "','" + sticky.tag + "')";
+            sticky.content + "','" + sticky.color + "')";
         try {
             dbConn.executeSimpleSQL(sql);
         } catch (e) {
@@ -63,7 +70,7 @@ var DAO =
             sticky.page_id + "', left = '" + sticky.left + "', top = '" +
             sticky.top + "', width = '" + sticky.width + "', height = '" +
             sticky.height + "', content = '" + sticky.content + "', color ='" +
-            sticky.color + "', tag = '" + sticky.tag + "' WHERE id = '" +
+            sticky.color + "' WHERE id = '" +
             sticky.id + "'";
         try {
             dbConn.executeSimpleSQL(sql);
@@ -110,7 +117,7 @@ var DAO =
         return true;
     },
     getPages: function() {
-            var result = [];
+        var result = [];
         var dbConn = DAO.getDBConn();
         var sql = 'SELECT * FROM page ';
             dump(sql + '\n');
@@ -154,11 +161,24 @@ var DAO =
                 url: statement.row.url,
                 title: statement.row.title
             };
-            }
+        }
         statement.finalize();
         dbConn.close();
         return page;
         },
+    getStickies: function() {
+        var result = [];
+        var dbConn = DAO.getDBConn();
+        var sql = 'SELECT * FROM sticky';
+        dump(sql + '\n');
+        var statement = dbConn.createStatement(sql);
+        while (statement.executeStep()) {
+            result.push(new Sticky(DAO.row2Obj(statement.row)));
+        }
+        statement.finalize();
+        dbConn.close();
+        return result;
+    },
     getStickiesByPageId: function(page_id) {
         var result = [];
         var dbConn = DAO.getDBConn();
@@ -174,10 +194,9 @@ var DAO =
     },
     getStickyById: function(id) {
         var result;
-            var dbConn = DAO.getDBConn();
+        var dbConn = DAO.getDBConn();
         var sql = 'SELECT * FROM sticky WHERE id = ' + id;
             dump(sql + '\n');
-        var url, title;
         var statement = dbConn.createStatement(sql);
         try {
             while (statement.executeStep()) {
@@ -198,7 +217,73 @@ var DAO =
         else
             return [];
     },
-    getStickiesByTag: function() {
+    getTags: function() {
+        var result = [];
+        var dbConn = DAO.getDBConn();
+        var sql = 'SELECT * FROM tag ';
+            dump(sql + '\n');
+        try {
+            var statement = dbConn.createStatement(sql);
+            while (statement.executeStep()) {
+                var tag = {
+                    id: statement.row.id,
+                    name: statement.row.name
+                };
+                result.push(tag);
+            }
+        } catch (e) {
+            alert(e);
+            statement.finalize();
+            dbConn.close();
+        }
+        return result;
+    },
+    getStickiesByTag: function(tag) {
+        var result = [];
+        var dbConn = DAO.getDBConn();
+        var sql = 'SELECT * FROM sticky ' +
+            'LEFT OUTER JOIN sticky_tag ON (sticky.id=sticky_tag.sticky_id) ' +
+            'LEFT OUTER JOIN tag ON (sticky_tag.tag_id=tag.id) ' +
+            "WHERE tag.name='" + tag + "'";
+            dump(sql + '\n');
+        var statement = dbConn.createStatement(sql);
+        try {
+            while (statement.executeStep()) {
+                var sticky = new Sticky(DAO.row2Obj(statement.row));
+                result.push(sticky);
+            }
+        } catch (e) {
+            statement.finalize();
+            dbConn.close();
+        }
+        statement.finalize();
+        dbConn.close();
+        return result;
+    },
+    getTagsBySticky: function(sticky) {
+        var result = [];
+        var dbConn = DAO.getDBConn();
+        var sql = 'SELECT * FROM tag ' +
+            'LEFT OUTER JOIN sticky_tag ON (tag.id=sticky_tag.tag_id) ' +
+            'LEFT OUTER JOIN sticky ON (sticky_tag.tag_id=sticky.id) ' +
+            'WHERE sticky.id=' + sticky.id;
+        dump(sql + '\n');
+        var statement = dbConn.createStatement(sql);
+        try {
+            while (statement.executeStep()) {
+                var tag = {
+                    id: statement.row.id,
+                    name: statement.row.name
+                };
+                result.push(tag);
+            }
+        } catch (e) {
+            statement.finalize();
+            dbConn.close();
+        }
+        statement.finalize();
+        dbConn.close();
+        return result;
     },
     row2Obj: function(row, name_array) {
         if (!name_array)
@@ -208,10 +293,9 @@ var DAO =
                 left: row.left,
                 top: row.top,
                 width: row.width,
-                    height: row.height,
+                height: row.height,
                 content: row.content,
-                color: row.color,
-                tag: row.tag
+                color: row.color
             };
         else {
             var obj = { };

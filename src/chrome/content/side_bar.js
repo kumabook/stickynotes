@@ -28,32 +28,10 @@ var Side_bar_sticky =
                                         Side_bar_sticky.resizeSidebarHeight,
                                         false);
             //サイドバーに付箋の一覧を作成
-            //元の付箋サイドバーの内容をクリア
-            var old_tree = document.getElementById('sticky_tree');
-            var new_tree = document.createElement('treechildren');
-            if (old_tree == null) return;
-            new_tree.setAttribute('id', 'sticky_tree');
-            document.getElementById('sticky').replaceChild(new_tree, old_tree);
-            var pages = DAO.getPages();
-            var stickies;
-            var i;
-            for (i = 0; i < pages.length; i++) {
-                stickies = DAO.getStickiesByPageId(pages[i].id);
-                /*		    if(stickies.length > 0){ // treeの行を作成
-                                    Sidebar.createSidebarUrlItem(pages[i]);
-                                    }*/
-                for (var j = 0; j < stickies.length; j++) {
-                    Sidebar.createSidebarStickyItem(stickies[j]);
-                }
-            }
-            if (document.getElementById('sticky_tree').childNodes.length == 0) {
-                document.getElementById('clipmenu').hidden = true;
-                return;
-            }
+            Sidebar.groupBy();
         }
     };
 
-//Side_bar_sticky.index();
 Sidebar.resizeSidebarHeight();
 //Sidebar.getSidebarDoc().getElementById("sticky").height;
 window.addEventListener('load', function() { Side_bar_sticky.init(); }, false);

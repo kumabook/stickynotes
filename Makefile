@@ -28,8 +28,9 @@ deploy: $(TARGET)
 
 $(TARGET) : $(SRC) $(RS) Makefile
 	cd src ; zip -r ../dist/stickynotes.xpi chrome chrome.manifest install.rdf
-
-doc: $(SRC) 
+fixstyle:
+	fixjsstyle src/chrome/content/*
+doc: $(SRC)
 	java -jar $(JSDOC)/jsrun.jar $(JSDOC)/app/run.js  --template=$(JSDOC)/templates/jsdoc --directory=doc src/chrome/content/*.js
 
 unit: deploy 
@@ -43,4 +44,3 @@ clean:
 	find . -name \*~ -exec rm {} \; 
 	rm $(SQLITE)
 	rm $(UNIT_LOG)
-

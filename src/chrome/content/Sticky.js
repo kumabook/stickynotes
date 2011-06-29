@@ -44,6 +44,17 @@ Sticky.prototype.insert = function() {
 Sticky.changeElemSize = 35,
 Sticky.prototype.update = function() {
     DAO.updateSticky(this);
+    var tag;
+    DAO.deleteRelationStickyAndTag(this);
+    for (var i = 0; i < this.tag.length; i++) {
+        tag = DAO.getTagByName(this.tag[i]);
+        if (tag == null) {
+            tag = {id: Math.round(Math.random() * 10000),
+                   name: this.tag[i]};
+            DAO.insertTag(tag);
+        }
+        DAO.insertRelationStickyAndTag(this, tag);
+    }
     this.updateStickySidebar();
 };
 
@@ -81,6 +92,7 @@ Sticky.prototype.createDom = function() {
           });
           return;
           }*/
+    var that = this;
     dump('create DomElement of StickyID: ' + this.id + '\n');
     //-- 付箋全体を包含するdiv要素--
     this.dom = doc.createElement('div');
@@ -117,57 +129,70 @@ Sticky.prototype.createDom = function() {
         }
     },false);
     //--ドラッグ用のバー--
-    this.drag_bar = doc.createElement('div');
-    this.drag_bar.style.position = 'relative';
-    this.drag_bar.style.width = this.width - 10 + 'px';
-    this.drag_bar.style.height = '22px';
-    this.drag_bar.style.borderBottom = 'inset';
-    this.drag_bar.style.margin = '0px';
-    this.drag_bar.className = 'drag_bar';
-    this.drag_bar.style.backgroundColor = this.color;
+    this.dragBar = doc.createElement('div');
+    this.dragBar.style.position = 'relative';
+    this.dragBar.style.width = this.width - 10 + 'px';
+    this.dragBar.style.height = '22px';
+    this.dragBar.style.borderBottom = 'inset';
+    this.dragBar.style.margin = '0px';
+    this.dragBar.className = 'dragBar';
+    this.dragBar.style.backgroundColor = this.color;
+    //タグ用のテキストボックス
+    this.tagBox = doc.createElement('input');
+    this.tagBox.style.position = 'absolute';
+    this.tagBox.style.width = '50px';
+    this.tagBox.style.left = this.width - 70 + 'px';
+    this.tagBox.style.top = '0px';
+    this.tagBox.value = this.tag ? this.tag.join(',') : '';
+    this.tagBox.addEventListener('change', function() {
+        var array = (that.tagBox.value + ',').split(',');
+        that.tag = array.slice(0, array.length - 1);
+        that.update();
+    }, false);
     //--削除ボタン--
-    this.delete_button = doc.createElement('div');
-    this.delete_button.style.position = 'absolute';
-    this.delete_button.style.width = '10px';
-    this.delete_button.style.fontFamily = 'fantasy';
-    this.delete_button.style.height = '22px';
-    this.delete_button.style.left = this.width - 10 + 'px';
-    this.delete_button.style.top = '0px';
-    this.delete_button.className = 'delete_button';
-    this.delete_button.style.backgroundColor = this.color;
-    this.delete_button.style.margin = '0px';
-    this.delete_button.style.padding = '0px';
-    this.delete_button.style.textAlign = 'start';
-    this.delete_button.style.borderBottom = 'inset';
-    this.delete_button.style.color = 'black';
-    this.delete_button.innerHTML = 'x';
+    this.deleteButton = doc.createElement('div');
+    this.deleteButton.style.position = 'absolute';
+    this.deleteButton.style.width = '10px';
+    this.deleteButton.style.fontFamily = 'fantasy';
+    this.deleteButton.style.height = '22px';
+    this.deleteButton.style.left = this.width - 10 + 'px';
+    this.deleteButton.style.top = '0px';
+    this.deleteButton.className = 'deleteButton';
+    this.deleteButton.style.backgroundColor = this.color;
+    this.deleteButton.style.margin = '0px';
+    this.deleteButton.style.padding = '0px';
+    this.deleteButton.style.textAlign = 'start';
+    this.deleteButton.style.borderBottom = 'inset';
+    this.deleteButton.style.color = 'black';
+    this.deleteButton.innerHTML = 'x';
     //--付箋全体の大きさを変化させる要素
-    this.change_size = doc.createElement('div');
-    this.change_size.style.position = 'absolute';
-    this.change_size.style.left = this.width - 5 + 'px';
-    this.change_size.style.top = this.height + 6 + 'px';
-    this.change_size.style.width = '20px';
-    this.change_size.style.height = '20px';
-    this.change_size.className = 'change_size';
-    this.change_size.style.fontSize = '70%';
-    this.change_size.style.fontFamily = 'san-serif';
-    this.change_size.innerHTML = '';
-    this.change_size.style.padding = '0px';
-    this.change_size.style.margin = '0px';
-    this.change_size.style.textAlign = 'start';
+    this.changeSize = doc.createElement('div');
+    this.changeSize.style.position = 'absolute';
+    this.changeSize.style.left = this.width - 5 + 'px';
+    this.changeSize.style.top = this.height + 6 + 'px';
+    this.changeSize.style.width = '20px';
+    this.changeSize.style.height = '20px';
+    this.changeSize.className = 'changeSize';
+    this.changeSize.style.fontSize = '70%';
+    this.changeSize.style.fontFamily = 'san-serif';
+    this.changeSize.innerHTML = '';
+    this.changeSize.style.padding = '0px';
+    this.changeSize.style.margin = '0px';
+    this.changeSize.style.textAlign = 'start';
     //--生成したdomを組み立てる
-    this.dom.appendChild(this.drag_bar);
-    this.dom.appendChild(this.delete_button);
+    this.dom.appendChild(this.dragBar);
+    this.dom.appendChild(this.deleteButton);
     this.dom.appendChild(this.textarea);
-    this.dom.appendChild(this.change_size);
+    this.dom.appendChild(this.changeSize);
+    this.dom.appendChild(this.tagBox);
     doc.body.appendChild(this.dom);
-    var that = this;
-    this.drag_bar.addEventListener('mousedown',
+
+    this.dragBar.addEventListener('mousedown',
                                    function(e) {
                                        that.drag(this.parentNode, e);
                                    },
                                    true);
-    this.delete_button.addEventListener('click',
+    this.deleteButton.addEventListener('click',
                                         function(e) {
                                             that.remove();
                                             // doc.body.removeChild(sticky);
@@ -189,7 +214,7 @@ Sticky.prototype.createDom = function() {
             top: Math.round(window.scrollY + position.top)
         };
         }
-    //    this.change_size.addEventListener("mousedown",
+    //    this.changeSize.addEventListener("mousedown",
     this.textarea.addEventListener(
         'mousedown',
         function(e) {
@@ -200,7 +225,7 @@ Sticky.prototype.createDom = function() {
                  e.clientX < right) &&
                 (bottom - Sticky.changeElemSize < e.clientY &&
                  e.clientY < bottom)) {
-                that.changeSize(that.dom, e);
+                that.resize(that.dom, e);
             }
         },
         true);
@@ -231,7 +256,7 @@ Sticky.prototype.drag = function(elem, e) {
     }
 };
 
-Sticky.prototype.changeSize = function(elem, e) {
+Sticky.prototype.resize = function(elem, e) {
     var that = this;
     var URL = window.content.document.location.href;
     var origX = elem.offsetLeft, origY = elem.offsetTop;
@@ -249,8 +274,8 @@ Sticky.prototype.changeSize = function(elem, e) {
         that.textarea.style.height = e.clientY - deltaHeight + 'px';
         var width = that.textarea.style.width;
         var height = that.textarea.style.height;
-        that.drag_bar.style.width = parseInt(width) + 'px';//drag_bar width
-        that.delete_button.style.left = parseInt(width) - 10 + 'px';//delete_button
+        that.dragBar.style.width = parseInt(width) + 'px';//dragBar width
+        that.deleteButton.style.left = parseInt(width) - 10 + 'px';//deleteButton
         //        that.textarea.style.width = parseInt(width)  + "px";//text area size
         //        that.textarea.style.height = parseInt(height) - 7 + "px";
         // elem.lastChild.style.left = parseInt(width) - 5 + "px";//change_button position
@@ -276,7 +301,7 @@ Sticky.prototype.addStickySidebar = function() {
         url_item = Sidebar.createSidebarUrlItem(
             { id: this.id, url: this.url, title: this.title });
     }
-    Sidebar.createSidebarStickyItem(this, url_item);
+    Sidebar.createSidebarStickyItem(this, url_item.treechildren);
 };
 Sticky.prototype.deleteStickySidebar = function() {
     var sidebarDoc = Sidebar.getSidebarDoc();

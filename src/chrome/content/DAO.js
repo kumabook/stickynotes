@@ -81,7 +81,6 @@ var DAO =
         }
         dbConn.close();
         return true;
-
         //sticky.updateStickySidebar();
     },
     deleteSticky: function(sticky) {
@@ -133,7 +132,7 @@ var DAO =
         return result;
     },
     getPageByUrl: function(url) {
-            var dbConn = DAO.getDBConn();
+        var dbConn = DAO.getDBConn();
         var sql = "SELECT * FROM page WHERE url = '" + url + "'";
         var page = null;
         dump(sql + '\n');
@@ -165,42 +164,52 @@ var DAO =
         statement.finalize();
         dbConn.close();
         return page;
-        },
+    },
     getStickies: function() {
         var result = [];
+        var sticky, tag;
         var dbConn = DAO.getDBConn();
         var sql = 'SELECT * FROM sticky';
         dump(sql + '\n');
         var statement = dbConn.createStatement(sql);
         while (statement.executeStep()) {
-            result.push(new Sticky(DAO.row2Obj(statement.row)));
+            sticky = new Sticky(DAO.row2Obj(statement.row));
+            tag = DAO.getTagsBySticky(sticky);
+            sticky.tag = tag;
+            result.push(sticky);
         }
         statement.finalize();
         dbConn.close();
         return result;
     },
     getStickiesByPageId: function(page_id) {
+        var sticky, tag;
         var result = [];
         var dbConn = DAO.getDBConn();
         var sql = 'SELECT * FROM sticky WHERE page_id=' + page_id;
         dump(sql + '\n');
         var statement = dbConn.createStatement(sql);
         while (statement.executeStep()) {
-            result.push(new Sticky(DAO.row2Obj(statement.row)));
+            sticky = new Sticky(DAO.row2Obj(statement.row));
+            tag = DAO.getTagsBySticky(sticky);
+            sticky.tag = tag;
+            result.push(sticky);
         }
         statement.finalize();
         dbConn.close();
         return result;
     },
     getStickyById: function(id) {
-        var result;
+        var sticky, tag;
         var dbConn = DAO.getDBConn();
         var sql = 'SELECT * FROM sticky WHERE id = ' + id;
             dump(sql + '\n');
         var statement = dbConn.createStatement(sql);
         try {
             while (statement.executeStep()) {
-                result = new Sticky(DAO.row2Obj(statement.row));
+                sticky = new Sticky(DAO.row2Obj(statement.row));
+                tag = DAO.getTagsBySticky(sticky);
+                sticky.tag = tag;
             }
         } catch (e) {
             statement.finalize();
@@ -208,7 +217,7 @@ var DAO =
         }
         statement.finalize();
         dbConn.close();
-        return result;
+        return sticky;
     },
     getStickiesByUrl: function(url) {
         var page = DAO.getPageByUrl(url);
@@ -216,6 +225,105 @@ var DAO =
             return DAO.getStickiesByPageId(page.id);
         else
             return [];
+    },
+    insertTag: function(tag) {
+        var dbConn = DAO.getDBConn();
+        var sql = 'insert into tag values(' + tag.id + ",'" + tag.name + "')";
+        try {
+            dbConn.executeSimpleSQL(sql);
+        } catch (e) {
+            dump('DataBaseException: insertTag!  ' + e);
+            alert('DataBaseException: insertTag!  ' + e);
+            dbConn.close();
+            return false;
+        }
+        dbConn.close();
+        return true;
+    },
+    deleteTag: function(tag){
+        var dbConn = DAO.getDBConn();
+        if (DAO.getStickyById(sticky.id) != null) {
+            var sql = 'DELETE from tag where id=' + tag.id;
+            try {
+                dbConn.executeSimpleSQL(sql);
+            } catch (e) {
+                dump('DataBaseException: deleteTag!  ' + e);
+                dbConn.close();
+                throw new DBAccessError();
+            }
+            dbConn.close();
+            return true;
+        }
+        else
+            return false;        
+    },
+    getTagByName: function(name){
+        var dbConn = DAO.getDBConn();
+        var sql = "SELECT * FROM tag WHERE name ='" + name + "'";
+        var tag = null;
+        dump(sql + '\n');
+        var statement = dbConn.createStatement(sql);
+        while (statement.executeStep()) {
+             tag= {
+                id: statement.row.id,
+                 name: statement.row.name
+            };
+        }
+        statement.finalize();
+        dbConn.close();
+        return tag;
+    },
+    getRelationStickyAndTag: function(){
+         var dbConn = DAO.getDBConn();
+        var sql = "SELECT * FROM sticky_tag";
+        var relations = [];
+        dump(sql + '\n');
+        var statement = dbConn.createStatement(sql);
+        while (statement.executeStep()) {
+             relations.push({
+                 id: statement.row.id,
+                 sticky_id: statement.row.sticky_id,
+                 tag_id: statement.row.tag_id
+            });
+        }
+        statement.finalize();
+        dbConn.close();
+        return relations;
+    },
+    insertRelationStickyAndTag: function(sticky, tag, relation_id) {
+        if (!relation_id)
+             relation_id = Math.round(Math.random() * 10000);
+        var dbConn = DAO.getDBConn();
+        var sql = 'insert into sticky_tag values(' + relation_id + ',' +
+            sticky.id + ',' + tag.id + ')';
+        try {
+            dbConn.executeSimpleSQL(sql);
+        } catch (e) {
+            dump('DataBaseException: insertRelationStickyAndTag!  ' + e);
+            alert('DataBaseException: insertRelationStickyAndTag!  ' + e);
+            dbConn.close();
+            throw new DBAccessError();
+            return false;
+        }
+        dbConn.close();
+        return true;
+    },
+    deleteRelationStickyAndTag: function(sticky) {
+        var dbConn = DAO.getDBConn();
+        if (DAO.getStickyById(sticky.id) != null) {
+            var sql = 'DELETE from sticky_tag  where sticky_id=' + sticky.id;
+            try {
+                dbConn.executeSimpleSQL(sql);
+            } catch (e) {
+                dump('DataBaseException: deleteTag!  ' + e);
+                dbConn.close();
+                throw new DBAccessError();
+            }
+            dbConn.close();
+            return true;
+        }
+        else
+            return false;
     },
     getTags: function() {
         var result = [];
@@ -229,7 +337,7 @@ var DAO =
                     id: statement.row.id,
                     name: statement.row.name
                 };
-                result.push(tag);
+                result.push(tag.name);
             }
         } catch (e) {
             alert(e);
@@ -253,31 +361,66 @@ var DAO =
                 result.push(sticky);
             }
         } catch (e) {
+            alert(e);
             statement.finalize();
             dbConn.close();
         }
         statement.finalize();
         dbConn.close();
+
         return result;
     },
-    getTagsBySticky: function(sticky) {
-        var result = [];
+    getTagById: function(id) {
+        var tag;
         var dbConn = DAO.getDBConn();
-        var sql = 'SELECT * FROM tag ' +
-            'LEFT OUTER JOIN sticky_tag ON (tag.id=sticky_tag.tag_id) ' +
-            'LEFT OUTER JOIN sticky ON (sticky_tag.tag_id=sticky.id) ' +
-            'WHERE sticky.id=' + sticky.id;
-        dump(sql + '\n');
+        var sql = 'SELECT * FROM tag WHERE id=' + id;
+            dump(sql + '\n');
         var statement = dbConn.createStatement(sql);
         try {
+            while (statement.executeStep()) {
+                tag = { id: statement.row.id, name: statement.row.name};
+             }
+        } catch (e) {
+            statement.finalize();
+            dbConn.close();
+        }
+        statement.finalize();
+        dbConn.close();
+        return tag;
+    },
+    getStickiesByUrl: function(url) {
+        var page = DAO.getPageByUrl(url);
+        if (page)
+            return DAO.getStickiesByPageId(page.id);
+        else
+            return [];
+    },
+    getTagsBySticky: function(sticky) {
+/*        var tags = [];
+        var relations = DAO.getRelationStickyAndTag(sticky);
+        for(var i = 0; i < relations.length; i++){
+            if(sticky.id == relations[i].sticky_id){
+                tags.push(DAO.getTagById(relations[i].tag_id).name);
+            }
+        }
+        return tags;*/
+        var result = [];
+        var dbConn = DAO.getDBConn();
+        var sql = 'SELECT * FROM tag, sticky, sticky_tag WHERE ' +
+            'tag.id=sticky_tag.tag_id AND sticky.id=sticky_tag.sticky_id' +
+            ' AND sticky.id=' + sticky.id;
+        dump(sql + '\n');
+        try {
+            var statement = dbConn.createStatement(sql);
             while (statement.executeStep()) {
                 var tag = {
                     id: statement.row.id,
                     name: statement.row.name
                 };
-                result.push(tag);
+                result.push(tag.name);
             }
         } catch (e) {
+            alert(e);
             statement.finalize();
             dbConn.close();
         }

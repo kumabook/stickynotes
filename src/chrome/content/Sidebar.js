@@ -58,12 +58,12 @@ var Sidebar = {
         parent.appendChild(treeitem_sticky);
         return treeitem_sticky;
     },
-    createSidebarUrlItem: function(page, parent) {
+    createSidebarUrlItem: function(page, parent, id) {
         var sidebarDoc = Sidebar.getSidebarDoc();
         if (parent == null)
             parent = sidebarDoc.getElementById('sticky_tree');
         var treeitem = sidebarDoc.createElement('treeitem');
-        treeitem.setAttribute('id', 'treeitem_' + page.id);
+        treeitem.setAttribute('id', id ? id : 'treeitem_' + page.id);
             treeitem.setAttribute('container', 'true');
         if (page.url == window.content.document.location.href) {
             treeitem.setAttribute('open', 'true');
@@ -90,7 +90,7 @@ var Sidebar = {
         var treeitem = sidebarDoc.createElement('treeitem');
         treeitem.setAttribute('id', 'treeitem_tag_' + tag.id);
         treeitem.setAttribute('container', 'true');
-
+        
         var treerow = document.createElement('treerow');
         var treecell = document.createElement('treecell');
         treecell.setAttribute('label', tag.name);
@@ -116,7 +116,7 @@ var Sidebar = {
         }, true);
         root.addEventListener('keydown', function(e) {
             if (e.keyCode == 68) {// d  --> Delete
-                Sidebar.delete();
+                Sidebar.remove();
                 Sidebar.focusSidebar();
             }
         },true);
@@ -145,27 +145,6 @@ var Sidebar = {
             .removeEventListener('click',
                                  Side_bar_sticky.resizeSidebarHeight, false);
     },
-    index: function() {//サイドバーに付箋の一覧を作成
-        var old_tree = document.getElementById('sticky_tree');//元の付箋サイドバーの内容をクリア
-        var new_tree = document.createElement('treechildren');
-            if (old_tree == null) return;
-        new_tree.setAttribute('id', 'sticky_tree');
-        document.getElementById('sticky').replaceChild(new_tree, old_tree);
-        var pages = DAO.getPages();
-        for (var i = 0; i < pages.length; i++) {
-            var stickies = DAO.getStickiesByPageId(pages[i].id);
-            if (stickies.length > 0) { // treeの行を作成
-                Sidebar.createSidebarUrlItem(pages[i]);
-            }
-            for (var j = 0; j < stickies.length; j++) {
-                Sidebar.createSidebarStickyItem(stickies[j]);
-            }
-        }
-        if (document.getElementById('sticky_tree').childNodes.length == 0) {
-            document.getElementById('clipmenu').hidden = true;
-            return;
-        }
-    },
     getSelectStickyId: function() {//サイドバーで選択されている付箋の情報を取得
         var id;
         var sidebarDoc = Sidebar.getSidebarDoc();
@@ -187,9 +166,9 @@ var Sidebar = {
             document.getElementById('clipmenu').hidden = false;
         }
     },
-    delete: function() {
+    remove: function() {
         var sticky = DAO.getStickyById(Sidebar.getSelectStickyId());
-        sticky.delete();
+        sticky.remove();
         if (document.getElementById('sticky_tree').childNodes.length == 0) {
             document.getElementById('clipmenu').hidden = true;
             return;
@@ -268,27 +247,49 @@ var Sidebar = {
         }
     },
     groupByTagAndSite: function() {
+        var sidebarDoc = Sidebar.getSidebarDoc();
         Sidebar.createSidebarTree();
         var tags = DAO.getTags();
         var pages = DAO.getPages();
         var allStickies = DAO.getStickies();
         var stickies;
+        var pageItem;
         var i, j, k;
+        var tagItem;
+
         for (i = 0; i < tags.length; i++) {
             stickies = DAO.getStickiesByTag(tags[i]);
-            for (j = 0; j < stickies.length; j++) {
-                Sidebar.createSidebarStickyItem(stickies[j]);
-                for (k = 0; k < allStickies.length; k++) {
-                    if (allStickies[k].id == stickies[j].id)
-                        allStickies.splice(k, 1);
+            if (stickies.length > 0) {
+                tagItem =
+                    Sidebar.createSidebarTagItem({id: tags[i], name: tags[i]});
+                for (j = 0; j < stickies.length; j++) {
+                    pageItem = sidebarDoc
+                        .getElementById('tree_page_' + stickies[j].page_id +
+                                        '_tag_' + tags[i]);
+                    if (!pageItem) {
+                        pageItem = Sidebar.createSidebarUrlItem(
+                            DAO.getPageByUrl(stickies[j].url),
+                            tagItem.treechildren,
+                            'tree_page_' + stickies[j].page_id +
+                                '_tag_' + tags[i]);
+                    }
+
+                    Sidebar.createSidebarStickyItem(stickies[j],
+                                                    pageItem.treechildren);
+                    for (k = 0; k < allStickies.length; k++) {
+                        if (allStickies[k].id == stickies[j].id)
+                            allStickies.splice(k, 1);
+                    }
                 }
            }
         }
-        if (allStickies.length > 0)
+        if (allStickies.length > 0) {
             var noTagItem = Sidebar.createSidebarTagItem({id: 0, name: 'タグなし'});
-        for (k = 0; k < allStickies.length; k++) {
-            Sidebar.createSidebarStickyItem(allStickies[k],
-                                            noTagItem.treechildren);
+            noTagItem.setAttribute('open', 'true');
+            for (k = 0; k < allStickies.length; k++) {
+                Sidebar.createSidebarStickyItem(allStickies[k],
+                                                noTagItem.treechildren);
+            }
         }
         if (document.getElementById('sticky_tree').childNodes.length == 0) {
             document.getElementById('clipmenu').hidden = true;
@@ -302,12 +303,14 @@ var Sidebar = {
         var stickies;
         var i;
         for (i = 0; i < pages.length; i++) {
-            urlItem = Sidebar
-                .createSidebarUrlItem(pages[i]);
             stickies = DAO.getStickiesByPageId(pages[i].id);
-
-            for (var j = 0; j < stickies.length; j++) {
-                Sidebar.createSidebarStickyItem(stickies[j], urlItem);
+            if (stickies.length > 0) {
+                urlItem = Sidebar
+                    .createSidebarUrlItem(pages[i]);
+                for (var j = 0; j < stickies.length; j++) {
+                    Sidebar.createSidebarStickyItem(stickies[j],
+                                                    urlItem.treechildren);
+                }
             }
         }
         if (document.getElementById('sticky_tree').childNodes.length == 0) {
@@ -317,6 +320,40 @@ var Sidebar = {
     },
     groupByTag: function(tag) {
         Sidebar.createSidebarTree();
+        var tags = DAO.getTags();
+        var pages = DAO.getPages();
+        var allStickies = DAO.getStickies();
+        var stickies;
+        var tagItem;
+        var i, j, k;
+
+        for (i = 0; i < tags.length; i++) {
+            stickies = DAO.getStickiesByTag(tags[i]);
+            if (stickies.length > 0) {
+                tagItem =
+                    Sidebar.createSidebarTagItem({id: tags[i], name: tags[i]});
+                for (j = 0; j < stickies.length; j++) {
+                    Sidebar.createSidebarStickyItem(stickies[j],
+                                                    tagItem.treechildren);
+                    for (k = 0; k < allStickies.length; k++) {
+                        if (allStickies[k].id == stickies[j].id)
+                            allStickies.splice(k, 1);
+                    }
+                }
+           }
+        }
+        if (allStickies.length > 0) {
+            var noTagItem = Sidebar.createSidebarTagItem({id: 0, name: 'タグなし'});
+            noTagItem.setAttribute('open', 'true');
+            for (k = 0; k < allStickies.length; k++) {
+                Sidebar.createSidebarStickyItem(allStickies[k],
+                                                noTagItem.treechildren);
+            }
+        }
+        if (document.getElementById('sticky_tree').childNodes.length == 0) {
+            document.getElementById('clipmenu').hidden = true;
+            return;
+        }
     },
     groupByTime: function() {
         Sidebar.createSidebarTree();

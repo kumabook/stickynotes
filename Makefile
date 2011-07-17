@@ -16,6 +16,7 @@ ifeq ($OS, darwin)
 	COMMAND=$(FIREFOX_ROOT)/firefox
 	PROFILE=~/Library/Application\ Support/Devfox/Profiles/stickynotes
 else 
+	PROFILE="C:\Users\hiroki\AppData\Roaming\Mozilla\Firefox\Profiles\nabkjmj3.stickysnotes\"
 endif
 DEPLOY_FILE = ${PROFILE}/extensions/stickynotes@kumabook.com.xpi
 
@@ -39,9 +40,10 @@ run: deploy
 	#$(FF_OPTION)
 	#2>&1 > $(LOG_DIR)\stickynotes_`date +%m%d_%H%M`.log
 deploy: $(TARGET)
+deploy: compile
 	cp $(TARGET) $(DEPLOY_FILE)
 
-$(TARGET) : $(SRC) $(RS) Makefile
+compile : $(SRC) $(RS) Makefile
 	cd src ; zip -r ../dist/stickynotes.xpi chrome chrome.manifest install.rdf
 fixstyle:
 	fixjsstyle src/chrome/content/*

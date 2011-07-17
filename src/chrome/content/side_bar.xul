@@ -23,6 +23,26 @@
   </menupopup>
 </popupset>
 
+<hbox id="sidebar-sticky-search-container" align="center">
+  <label id="sidebar-sticky-search-label" value="検索:" accesskey="S" control="search-sticky-box"></label>
+  <textbox id="search-sticky-box" class="compact" flex="1" type="search" aria-controls="historyTree" oncommand="searchSticky(this.value);" aria-autocomplete="list"></textbox>
+  <button id="viewButton" style="min-width:0px !important;" type="menu" label="表示" accesskey="w" selectedsort="site" persist="selectedsort">
+    <menupopup>
+      <menuitem id="bytag+site" label="タグとサイト名順に並べる" accesskey="T" type="radio" 
+		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag+site'); Sidebar.groupBy('tag+site');" >
+      </menuitem>
+      <menuitem id="bysite" label="サイト名順に並べる" accesskey="S" type="radio" 
+		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'site'); Sidebar.groupBy('site');">
+      </menuitem>
+      <menuitem id="bytag" label="タグ順に並べる" accesskey="T" type="radio" 
+		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag'); Sidebar.groupBy('tag');" >
+      </menuitem>
+      <menuitem id="bytime" label="作成した日時順に並べる" accesskey="M" type="radio" 
+		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'time'); Sidebar.groupBy('time');" >
+      </menuitem>
+    </menupopup>
+  </button>
+</hbox>
 
 <tree  id="sticky" seltype="single" hidecolumnpicker="true">
   <treecols>

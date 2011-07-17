@@ -2,7 +2,7 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
-    <em:id>sticky@filenamezero.dip.jp</em:id>
+    <em:id>stickynotes@kumabook.com</em:id>
     <em:type>2</em:type>
     <em:name>Sticky Notes</em:name>
     <em:version>0.3.0</em:version>

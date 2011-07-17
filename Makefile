@@ -5,9 +5,21 @@ RS = src/chrome.manifest src/install.rdf
 DIR = src/chrome/content
 SRC = $(DIR)/overlay.js $(DIR)/overlay.xul $(DIR)/side_bar.xul $(DIR)/side_bar.js $(DIR)/Sidebar.js  $(DIR)/Sticky.js $(DIR)/DAO.js 
 TARGET = dist/stickynotes.xpi
-DEPLOY_FILE = "C:\Users\hiroki\AppData\Roaming\Mozilla\Firefox\Profiles\nabkjmj3.stickysnotes\extensions\stickynotes@kumabook.com.xpi"
 
-SQLITE = "C:\Users\hiroki\AppData\Roaming\Mozilla\Firefox\Profiles\nabkjmj3.stickysnotes\stickynotes.splite"
+
+#firefox environment
+#change as your os, profile
+
+OS=$(shell whoami)
+ifeq ($OS, darwin)
+	FIREFOX_ROOT=/Applications/Devfox.app/Contents/MacOS/
+	COMMAND=$(FIREFOX_ROOT)/firefox
+	PROFILE=~/Library/Application\ Support/Devfox/Profiles/stickynotes
+else 
+endif
+DEPLOY_FILE = ${PROFILE}/extensions/stickynotes@kumabook.com.xpi
+
+SQLITE = ${PROFILE}/stickynotes.splite"
 
 LOG_DIR = "log/"
 
@@ -20,9 +32,12 @@ FF_OPTION = --no-remote -p stickynotes
 
 JSDOC = tools/jsdoc-toolkit
 
-
+createProfile:
+	$(COMMAND) -ProfileManager
 run: deploy
-	firefox $(FF_OPTION)  2>&1 > $(LOG_DIR)\stickynotes_`date +%m%d_%H%M`.log
+	${COMMAND}
+	#$(FF_OPTION)
+	#2>&1 > $(LOG_DIR)\stickynotes_`date +%m%d_%H%M`.log
 deploy: $(TARGET)
 	cp $(TARGET) $(DEPLOY_FILE)
 

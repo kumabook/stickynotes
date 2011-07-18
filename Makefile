@@ -10,8 +10,8 @@ TARGET = dist/stickynotes.xpi
 #firefox environment
 #change as your os, profile
 
-OS=$(shell whoami)
-ifeq ($OS, darwin)
+OS=$(shell uname)
+ifeq (${OS}, Darwin)
 	FIREFOX_ROOT=/Applications/Devfox.app/Contents/MacOS/
 	COMMAND=$(FIREFOX_ROOT)/firefox
 	PROFILE=~/Library/Application\ Support/Devfox/Profiles/stickynotes
@@ -20,11 +20,11 @@ else
 endif
 DEPLOY_FILE = ${PROFILE}/extensions/stickynotes@kumabook.com.xpi
 
-SQLITE = ${PROFILE}/stickynotes.splite"
+SQLITE = ${PROFILE}/stickynotes.sqlite
 
-LOG_DIR = "log/"
+LOG_DIR = log/
 
-UNIT_DIR = "tests/unit/"
+UNIT_DIR = tests/unit/
 
 UNIT_LOG = unittest.log
 UNIT_LOG_SJIS = unittest_sjis.log

@@ -224,7 +224,7 @@ var Sidebar = {
                 selectedsort = 'tag+site';
         return selectedsort;
     },
-    groupBy: function(selectedsort) {
+    groupBy: function(selectedsort, key) {
         var doc = Sidebar.getSidebarDoc();
         if (!selectedsort) {
             selectedsort = Sidebar.getSelectedSort();
@@ -233,25 +233,25 @@ var Sidebar = {
             .setAttribute('checked', true);
         switch (selectedsort) {
           case 'tag+site':
-            Sidebar.groupByTagAndSite();
+            Sidebar.groupByTagAndSite(key);
             break;
           case 'site':
-            Sidebar.groupBySite();
+            Sidebar.groupBySite(key);
             break;
           case 'tag':
-            Sidebar.groupByTag();
+            Sidebar.groupByTag(key);
             break;
           case 'time':
-            Sidebar.groupByTime();
+            Sidebar.groupByTime(key);
             break;
         }
     },
-    groupByTagAndSite: function() {
+    groupByTagAndSite: function(key) {
         var sidebarDoc = Sidebar.getSidebarDoc();
         Sidebar.createSidebarTree();
         var tags = DAO.getTags();
         var pages = DAO.getPages();
-        var allStickies = DAO.getStickies();
+        var allStickies = DAO.getStickies(key);
         var stickies;
         var pageItem;
         var i, j, k;
@@ -296,14 +296,14 @@ var Sidebar = {
             return;
         }
     },
-    groupBySite: function() {
+    groupBySite: function(key) {
         Sidebar.createSidebarTree();
         var pages = DAO.getPages();
         var urlItem;
         var stickies;
         var i;
         for (i = 0; i < pages.length; i++) {
-            stickies = DAO.getStickiesByPageId(pages[i].id);
+            stickies = DAO.getStickiesByPageId(pages[i].id, key);
             if (stickies.length > 0) {
                 urlItem = Sidebar
                     .createSidebarUrlItem(pages[i]);
@@ -318,11 +318,11 @@ var Sidebar = {
             return;
         }
     },
-    groupByTag: function(tag) {
+    groupByTag: function(tag, key) {
         Sidebar.createSidebarTree();
         var tags = DAO.getTags();
         var pages = DAO.getPages();
-        var allStickies = DAO.getStickies();
+        var allStickies = DAO.getStickies(key);
         var stickies;
         var tagItem;
         var i, j, k;
@@ -355,10 +355,10 @@ var Sidebar = {
             return;
         }
     },
-    groupByTime: function() {
+    groupByTime: function(key) {
         Sidebar.createSidebarTree();
     },
-    search: function(key) {
-        
+    searchSticky: function(key) {
+        Sidebar.groupBy(null, key);
     }
 };

@@ -24,8 +24,11 @@
 </popupset>
 
 <hbox id="sidebar-sticky-search-container" align="center">
-  <label id="sidebar-sticky-search-label" value="検索:" accesskey="S" control="search-sticky-box"></label>
-  <textbox id="search-sticky-box" class="compact" flex="1" type="search" aria-controls="historyTree" oncommand="searchSticky(this.value);" aria-autocomplete="list"></textbox>
+  <label id="sidebar-sticky-search-label" value="検索:" 
+	 accesskey="S" control="search-sticky-box"></label>
+  <textbox id="search-sticky-box" class="compact" flex="1" type="search" 
+	   aria-controls="historyTree" oncommand="Sidebar.searchSticky(this.value);" 
+	   aria-autocomplete="list"></textbox>
   <button id="viewButton" style="min-width:0px !important;" type="menu" label="表示" accesskey="w" selectedsort="site" persist="selectedsort">
     <menupopup>
       <menuitem id="bytag+site" label="タグとサイト名順に並べる" accesskey="T" type="radio" 

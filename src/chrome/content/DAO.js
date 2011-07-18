@@ -165,7 +165,7 @@ var DAO =
         dbConn.close();
         return page;
     },
-    getStickies: function() {
+    getStickies: function(key) {
         var result = [];
         var sticky, tag;
         var dbConn = DAO.getDBConn();
@@ -176,13 +176,17 @@ var DAO =
             sticky = new Sticky(DAO.row2Obj(statement.row));
             tag = DAO.getTagsBySticky(sticky);
             sticky.tag = tag;
-            result.push(sticky);
+            if (key == null ||
+                sticky.content.indexOf(key) != -1 ||
+                sticky.tag.indexOf(key) != -1)
+                result.push(sticky);
         }
         statement.finalize();
         dbConn.close();
         return result;
     },
-    getStickiesByPageId: function(page_id) {
+
+    getStickiesByPageId: function(page_id, key) {
         var sticky, tag;
         var result = [];
         var dbConn = DAO.getDBConn();
@@ -193,6 +197,9 @@ var DAO =
             sticky = new Sticky(DAO.row2Obj(statement.row));
             tag = DAO.getTagsBySticky(sticky);
             sticky.tag = tag;
+            if (key == null ||
+                sticky.content.indexOf(key) != -1 ||
+                sticky.tag.indexOf(key) != -1)
             result.push(sticky);
         }
         statement.finalize();
@@ -346,7 +353,7 @@ var DAO =
         }
         return result;
     },
-    getStickiesByTag: function(tag) {
+    getStickiesByTag: function(tag, key) {
         var result = [];
         var dbConn = DAO.getDBConn();
         var sql = 'SELECT * FROM sticky ' +

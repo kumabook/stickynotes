@@ -141,7 +141,7 @@ Sticky.prototype.createDom = function() {
     this.tagBox = doc.createElement('input');
     this.tagBox.style.position = 'absolute';
     this.tagBox.style.width = '50px';
-    this.tagBox.style.left = this.width - 70 + 'px';
+    this.tagBox.style.right = 30 + 'px';
     this.tagBox.style.top = '0px';
     this.tagBox.value = this.tag ? this.tag.join(',') : '';
     this.tagBox.addEventListener('change', function() {
@@ -155,7 +155,7 @@ Sticky.prototype.createDom = function() {
     this.deleteButton.style.width = '10px';
     this.deleteButton.style.fontFamily = 'fantasy';
     this.deleteButton.style.height = '22px';
-    this.deleteButton.style.left = this.width - 10 + 'px';
+    this.deleteButton.style.right = 0 + 'px';
     this.deleteButton.style.top = '0px';
     this.deleteButton.className = 'deleteButton';
     this.deleteButton.style.backgroundColor = this.color;
@@ -270,16 +270,12 @@ Sticky.prototype.resize = function(elem, e) {
     e.stopPropagation();
     e.preventDefault();
     function moveHandler(e) {
-        that.textarea.style.width = e.clientX - deltaWidth + 'px';
-        that.textarea.style.height = e.clientY - deltaHeight + 'px';
-        var width = that.textarea.style.width;
-        var height = that.textarea.style.height;
+        var width = e.clientX - deltaWidth;
+        var height = e.clientY - deltaHeight;
+        if (width < 100 || height < 30) return;
+        that.textarea.style.width = width + 'px';
+        that.textarea.style.height = height + 'px';
         that.dragBar.style.width = parseInt(width) + 'px';//dragBar width
-        that.deleteButton.style.left = parseInt(width) - 10 + 'px';//deleteButton
-        //        that.textarea.style.width = parseInt(width)  + "px";//text area size
-        //        that.textarea.style.height = parseInt(height) - 7 + "px";
-        // elem.lastChild.style.left = parseInt(width) - 5 + "px";//change_button position
-        //        elem.lastChild.style.top =  parseInt(height) + 6 + "px";
         e.stopPropagation();
     }
     function upHandler(e) {

@@ -41,9 +41,9 @@
 	/> -->
   </menupopup>
   <commandset>
-    <command id="toggle_sticky" oncommand="Sticky.toggleVisibilityAllStickies();"/>
-    <command id="create_sticky" oncommand="StickyNotes.createSticky().focus();"/>
-    <command id="focusSidebar_sticky" oncommand="Sidebar.focusSidebar();"/>
+    <command id="toggle_sticky" oncommand="stickynotes.Sticky.toggleVisibilityAllStickies();"/>
+    <command id="create_sticky" oncommand="stickynotes.createSticky().focus();"/>
+    <command id="focusSidebar_sticky" oncommand="stickynotes.Sidebar.focusSidebar();"/>
   </commandset>
   <broadcasterset>
     <broadcaster
@@ -55,9 +55,9 @@
 	oncommand="toggleSidebar('side_with_sticky');" 
 	/>
   </broadcasterset>
+  <script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sidebar.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/overlay.js" />
-
 </overlay>

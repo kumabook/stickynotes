@@ -1,15 +1,20 @@
-var Sidebar = {
+/**
+ * My namespace's Sidebar
+ * @const
+ * @type {Object}
+ */
+stickynotes.Sidebar = {
     getSidebarDoc: function() {
         return window.parent.document
             .getElementById('sidebar').contentWindow.document;
     },
     createSidebarStickyItem: function(sticky, parent) {
-        var sidebarDoc = Sidebar.getSidebarDoc();
+        var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
         if (!parent) {
             parent = sidebarDoc.getElementById('tree_page_' + sticky.page_id);
             if (!parent)
-                parent = Sidebar
-                .createSidebarUrlItem(DAO.getPageByUrl(sticky.url));
+                parent = stickynotes.Sidebar
+                .createSidebarUrlItem(stickynotes.DAO.getPageByUrl(sticky.url));
         }
         var treeitem_sticky = document.createElement('treeitem');
         var treerow_sticky = document.createElement('treerow');
@@ -59,7 +64,7 @@ var Sidebar = {
         return treeitem_sticky;
     },
     createSidebarUrlItem: function(page, parent, id) {
-        var sidebarDoc = Sidebar.getSidebarDoc();
+        var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
         if (parent == null)
             parent = sidebarDoc.getElementById('sticky_tree');
         var treeitem = sidebarDoc.createElement('treeitem');
@@ -84,13 +89,12 @@ var Sidebar = {
         return treeitem;
     },
     createSidebarTagItem: function(tag, parent) {
-        var sidebarDoc = Sidebar.getSidebarDoc();
+        var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
         if (parent == null)
             parent = sidebarDoc.getElementById('sticky_tree');
         var treeitem = sidebarDoc.createElement('treeitem');
         treeitem.setAttribute('id', 'treeitem_tag_' + tag.id);
         treeitem.setAttribute('container', 'true');
-        
         var treerow = document.createElement('treerow');
         var treecell = document.createElement('treecell');
         treecell.setAttribute('label', tag.name);
@@ -108,16 +112,16 @@ var Sidebar = {
         if (root == null) return;
         document.addEventListener('click', this, true);
         root.addEventListener('dblclick', function(e) {
-            Sidebar.jump();
+            stickynotes.Sidebar.jump();
         }, true);
         root.addEventListener('keydown', function(e) {
             if (e.keyCode == 13 || e.keyCode == 74)//Enter or j  --> Jump
-                Sidebar.jump();
+                stickynotes.Sidebar.jump();
         }, true);
         root.addEventListener('keydown', function(e) {
             if (e.keyCode == 68) {// d  --> Delete
-                Sidebar.remove();
-                Sidebar.focusSidebar();
+                stickynotes.Sidebar.remove();
+                stickynotes.Sidebar.focusSidebar();
             }
         },true);
         var mainWindow = window.
@@ -129,7 +133,7 @@ var Sidebar = {
             .getInterface(Components.interfaces.nsIDOMWindow);
         mainWindow
             .addEventListener('click',
-                              Side_bar_sticky.resizeSidebarHeight, false);
+                              stickynotes.Sidebar.resizeSidebarHeight, false);
     },
     destroy: function() {
         var mainWindow =
@@ -143,11 +147,11 @@ var Sidebar = {
         document.removeEventListener('popupshowing', this, false);
         mainWindow
             .removeEventListener('click',
-                                 Side_bar_sticky.resizeSidebarHeight, false);
+                                 stickynotes.Sidebar.resizeSidebarHeight, false);
     },
     getSelectStickyId: function() {//サイドバーで選択されている付箋の情報を取得
         var id;
-        var sidebarDoc = Sidebar.getSidebarDoc();
+        var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
         var tree = sidebarDoc.getElementById('sticky');
         id = tree.view.getCellText(tree.currentIndex,
                                    tree.columns.getNamedColumn('id'));
@@ -158,7 +162,7 @@ var Sidebar = {
             document.getElementById('clipmenu').hidden = true;
             return;
         }
-        var sticky = Side_bar_sticky.getSelectStickyId();
+        var sticky = stickynotes.Sidebar.getSelectStickyId();
         if (sticky == '') {
             document.getElementById('clipmenu').hidden = true;
         }
@@ -167,7 +171,7 @@ var Sidebar = {
         }
     },
     remove: function() {
-        var sticky = DAO.getStickyById(Sidebar.getSelectStickyId());
+        var sticky = stickynotes.DAO.getStickyById(stickynotes.Sidebar.getSelectStickyId());
         sticky.remove();
         if (document.getElementById('sticky_tree').childNodes.length == 0) {
             document.getElementById('clipmenu').hidden = true;
@@ -175,11 +179,11 @@ var Sidebar = {
         }
     },
     jump: function() {
-        var sticky = DAO.getStickyById(Sidebar.getSelectStickyId());
+        var sticky = stickynotes.DAO.getStickyById(stickynotes.Sidebar.getSelectStickyId());
         sticky.jump();
     },
     focusSidebar: function() {
-        var sidebarDoc = Sidebarl.getSidebarDoc();
+        var sidebarDoc = stickynotes.Sidebarl.getSidebarDoc();
         var tree = sidebarDoc.getElementById('sticky');
         tree.focus();
     },
@@ -205,7 +209,7 @@ var Sidebar = {
             .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
             .getInterface(Components.interfaces.nsIDOMWindow);
         var doc = window.content.document;
-        Sidebar.getSidebarDoc().
+        stickynotes.Sidebar.getSidebarDoc().
             getElementById('sticky').height = window.innerHeight;
     },
     createSidebarTree: function() {
@@ -217,7 +221,7 @@ var Sidebar = {
     },
     getSelectedSort: function() {
         var selectedsort;
-        var doc = Sidebar.getSidebarDoc();
+        var doc = stickynotes.Sidebar.getSidebarDoc();
         selectedsort =
             doc.getElementById('viewButton').getAttribute('selectedsort');
             if (!selectedsort)
@@ -225,56 +229,54 @@ var Sidebar = {
         return selectedsort;
     },
     groupBy: function(selectedsort, key) {
-        var doc = Sidebar.getSidebarDoc();
+        var doc = stickynotes.Sidebar.getSidebarDoc();
         if (!selectedsort) {
-            selectedsort = Sidebar.getSelectedSort();
+            selectedsort = stickynotes.Sidebar.getSelectedSort();
         }
         doc.getElementById('by' + selectedsort)
             .setAttribute('checked', true);
         switch (selectedsort) {
           case 'tag+site':
-            Sidebar.groupByTagAndSite(key);
+            stickynotes.Sidebar.groupByTagAndSite(key);
             break;
           case 'site':
-            Sidebar.groupBySite(key);
+            stickynotes.Sidebar.groupBySite(key);
             break;
           case 'tag':
-            Sidebar.groupByTag(key);
+            stickynotes.Sidebar.groupByTag(key);
             break;
           case 'time':
-            Sidebar.groupByTime(key);
+            stickynotes.Sidebar.groupByTime(key);
             break;
         }
     },
     groupByTagAndSite: function(key) {
-        var sidebarDoc = Sidebar.getSidebarDoc();
-        Sidebar.createSidebarTree();
-        var tags = DAO.getTags();
-        var pages = DAO.getPages();
-        var allStickies = DAO.getStickies(key);
+        var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
+        stickynotes.Sidebar.createSidebarTree();
+        var tags = stickynotes.DAO.getTags();
+        var pages = stickynotes.DAO.getPages();
+        var allStickies = stickynotes.DAO.getStickies(key);
         var stickies;
         var pageItem;
         var i, j, k;
         var tagItem;
-
         for (i = 0; i < tags.length; i++) {
-            stickies = DAO.getStickiesByTag(tags[i]);
+            stickies = stickynotes.DAO.getStickiesByTag(tags[i]);
             if (stickies.length > 0) {
                 tagItem =
-                    Sidebar.createSidebarTagItem({id: tags[i], name: tags[i]});
+                    stickynotes.Sidebar.createSidebarTagItem({id: tags[i], name: tags[i]});
                 for (j = 0; j < stickies.length; j++) {
                     pageItem = sidebarDoc
                         .getElementById('tree_page_' + stickies[j].page_id +
                                         '_tag_' + tags[i]);
                     if (!pageItem) {
-                        pageItem = Sidebar.createSidebarUrlItem(
-                            DAO.getPageByUrl(stickies[j].url),
+                        pageItem = stickynotes.Sidebar.createSidebarUrlItem(
+                            stickynotes.DAO.getPageByUrl(stickies[j].url),
                             tagItem.treechildren,
                             'tree_page_' + stickies[j].page_id +
                                 '_tag_' + tags[i]);
                     }
-
-                    Sidebar.createSidebarStickyItem(stickies[j],
+                    stickynotes.Sidebar.createSidebarStickyItem(stickies[j],
                                                     pageItem.treechildren);
                     for (k = 0; k < allStickies.length; k++) {
                         if (allStickies[k].id == stickies[j].id)
@@ -284,11 +286,22 @@ var Sidebar = {
            }
         }
         if (allStickies.length > 0) {
-            var noTagItem = Sidebar.createSidebarTagItem({id: 0, name: 'タグなし'});
+            var noTagItem =
+                stickynotes.Sidebar.createSidebarTagItem({id: 0, name: 'no tag'});
             noTagItem.setAttribute('open', 'true');
             for (k = 0; k < allStickies.length; k++) {
-                Sidebar.createSidebarStickyItem(allStickies[k],
-                                                noTagItem.treechildren);
+                pageItem = sidebarDoc
+                    .getElementById('tree_page_' + allStickies[k].page_id +
+                                    '_tag_' + '0');
+                if (!pageItem) {
+                    pageItem = stickynotes.Sidebar.createSidebarUrlItem(
+                        stickynotes.DAO.getPageByUrl(allStickies[k].url),
+                        noTagItem.treechildren,
+                        'tree_page_' + allStickies[k].page_id + '_tag_' + '0'
+                    );
+                }
+                stickynotes.Sidebar.createSidebarStickyItem(allStickies[k],
+                                                pageItem.treechildren);
             }
         }
         if (document.getElementById('sticky_tree').childNodes.length == 0) {
@@ -297,18 +310,18 @@ var Sidebar = {
         }
     },
     groupBySite: function(key) {
-        Sidebar.createSidebarTree();
-        var pages = DAO.getPages();
+        stickynotes.Sidebar.createSidebarTree();
+        var pages = stickynotes.DAO.getPages();
         var urlItem;
         var stickies;
         var i;
         for (i = 0; i < pages.length; i++) {
-            stickies = DAO.getStickiesByPageId(pages[i].id, key);
+            stickies = stickynotes.DAO.getStickiesByPageId(pages[i].id, key);
             if (stickies.length > 0) {
-                urlItem = Sidebar
+                urlItem = stickynotes.Sidebar
                     .createSidebarUrlItem(pages[i]);
                 for (var j = 0; j < stickies.length; j++) {
-                    Sidebar.createSidebarStickyItem(stickies[j],
+                    stickynotes.Sidebar.createSidebarStickyItem(stickies[j],
                                                     urlItem.treechildren);
                 }
             }
@@ -319,21 +332,21 @@ var Sidebar = {
         }
     },
     groupByTag: function(tag, key) {
-        Sidebar.createSidebarTree();
-        var tags = DAO.getTags();
-        var pages = DAO.getPages();
-        var allStickies = DAO.getStickies(key);
+        stickynotes.Sidebar.createSidebarTree();
+        var tags = stickynotes.DAO.getTags();
+        var pages = stickynotes.DAO.getPages();
+        var allStickies = stickynotes.DAO.getStickies(key);
         var stickies;
         var tagItem;
         var i, j, k;
 
         for (i = 0; i < tags.length; i++) {
-            stickies = DAO.getStickiesByTag(tags[i]);
+            stickies = stickynotes.DAO.getStickiesByTag(tags[i]);
             if (stickies.length > 0) {
                 tagItem =
-                    Sidebar.createSidebarTagItem({id: tags[i], name: tags[i]});
+                    stickynotes.Sidebar.createSidebarTagItem({id: tags[i], name: tags[i]});
                 for (j = 0; j < stickies.length; j++) {
-                    Sidebar.createSidebarStickyItem(stickies[j],
+                    stickynotes.Sidebar.createSidebarStickyItem(stickies[j],
                                                     tagItem.treechildren);
                     for (k = 0; k < allStickies.length; k++) {
                         if (allStickies[k].id == stickies[j].id)
@@ -343,10 +356,11 @@ var Sidebar = {
            }
         }
         if (allStickies.length > 0) {
-            var noTagItem = Sidebar.createSidebarTagItem({id: 0, name: 'タグなし'});
+            var noTagItem = stickynotes.Sidebar
+                .createSidebarTagItem({id: 0, name: 'タグなし'});
             noTagItem.setAttribute('open', 'true');
             for (k = 0; k < allStickies.length; k++) {
-                Sidebar.createSidebarStickyItem(allStickies[k],
+                stickynotes.Sidebar.createSidebarStickyItem(allStickies[k],
                                                 noTagItem.treechildren);
             }
         }
@@ -356,9 +370,9 @@ var Sidebar = {
         }
     },
     groupByTime: function(key) {
-        Sidebar.createSidebarTree();
+        stickynotes.Sidebar.createSidebarTree();
     },
     searchSticky: function(key) {
-        Sidebar.groupBy(null, key);
+        stickynotes.Sidebar.groupBy(null, key);
     }
 };

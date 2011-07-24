@@ -51,7 +51,7 @@
 	label="&show_sticky_list.label;"
 	autoCheck="false" type="checkbox" group="sidebar"
 	sidebartitle="&sticky_list.sidebarTitle;"
-	sidebarurl="chrome://stickynotes/content/side_bar.xul"
+	sidebarurl="chrome://stickynotes/content/sidebar.xul"
 	oncommand="toggleSidebar('side_with_sticky');" 
 	/>
   </broadcasterset>

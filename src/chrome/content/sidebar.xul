@@ -66,10 +66,10 @@
 	</treeitem>
   </treechildren>
 </tree>
-<script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
-<script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
-<script type="application/x-javascript" src="chrome://stickynotes/content/Sidebar.js" />
-<script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Sidebar.js" />
 <script type="application/x-javascript" src="chrome://stickynotes/content/sidebar_overlay.js" />
 
 </window>

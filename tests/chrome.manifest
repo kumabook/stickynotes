@@ -1,0 +1,3 @@
+content stickynotes-test	chrome/content/
+
+overlay chrome://browser/content/browser.xul chrome://stickynotes-test/stickynotes/content/overlay.xul

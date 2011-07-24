@@ -1,4 +1,4 @@
-(function(){
+(function() {
     var init = function() {
         var root = document.getElementById('sticky');
         if (root == null) return;
@@ -35,4 +35,4 @@
                             function() {
                                 stickynotes.Sidebar.destroy(); },
                             false);
-})();
+}) ();

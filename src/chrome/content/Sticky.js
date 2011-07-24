@@ -54,19 +54,28 @@ stickynotes.Sticky.changeElemSize = 35,
    stikcyをを更新
 */
 stickynotes.Sticky.prototype.update = function() {
+    //textboxの中身で値を更新
+    this.content = this.textarea.value;
+    var tags_str = (this.tagBox.value + ',').replace(/^[\s　]+|[\s　]+$/g, '');
+    
+    this.tags = (tags_str).split(',');
+    this.tags = this.tags.slice(0, this.tags.length - 1);
+    
     stickynotes.DAO.updateSticky(this);
     var tag;
     stickynotes.DAO.deleteRelationStickyAndTag(this);
-    for (var i = 0; i < this.tag.length; i++) {
-        tag = stickynotes.DAO.getTagByName(this.tag[i]);
-        if (tag == null) {
+    for (var i = 0; i < this.tags.length; i++) {
+        tag = stickynotes.DAO.getTagByName(this.tags[i]);
+        if (tag == null && this.tags[i] != '') {
             tag = {id: Math.round(Math.random() * 10000),
-                   name: this.tag[i]};
+                   name: this.tags[i]};
             stickynotes.DAO.insertTag(tag);
+            stickynotes.Sidebar.addTag(tag);
         }
         stickynotes.DAO.insertRelationStickyAndTag(this, tag);
+        
     }
-    this.updateStickySidebar();
+    stickynotes.Sidebar.updateSticky(this);
 };
 /**
    stikcyを削除
@@ -75,7 +84,7 @@ stickynotes.Sticky.prototype.remove = function() {
     //delete from database
     stickynotes.DAO.deleteSticky(this);
     //delete from sidebar
-    this.deleteStickySidebar();
+    stickynotes.Sidebar.deleteSticky(this);
     //delete from content document
     this.deleteDom();
 };
@@ -121,11 +130,6 @@ stickynotes.Sticky.prototype.createDom = function() {
     this.dom.style.position = 'absolute';
     this.dom.style.left = this.left + 'px';
     this.dom.style.top = this.top + 'px';
-    /*    this.dom.style.width = this.width + "px";
-          this.dom.style.height = this.height + "px";
-          this.dom.style.backgroundColor = this.color;
-          this.dom.style.margin = "0px";
-          this.dom.style.opacity = ".75";*/
     //sticky.style.border = "3px outset gray";
     this.dom.style.zIndex = '100';
     this.dom.className = 'sticky';
@@ -166,8 +170,6 @@ stickynotes.Sticky.prototype.createDom = function() {
     this.tagBox.style.top = '0px';
     this.tagBox.value = this.tag ? this.tag.join(',') : '';
     this.tagBox.addEventListener('change', function() {
-        var array = (that.tagBox.value + ',').split(',');
-        that.tag = array.slice(0, array.length - 1);
         that.update();
     }, false);
     //--削除ボタン--
@@ -220,10 +222,9 @@ stickynotes.Sticky.prototype.createDom = function() {
                                             e.stopPropagation();
                                         },
                                         true);
-    this.textarea.addEventListener('blur',
+    this.textarea.addEventListener('change',
                                    function(e) {
                                        if (that.content != that.textarea.value) {
-                                           that.content = that.textarea.value;
                                            that.update();
                                        }
                                    },
@@ -315,60 +316,12 @@ stickynotes.Sticky.prototype.resize = function(elem, e) {
     }
 };
 /**
-   stikcyをサイドバーに追加.
-*/
-stickynotes.Sticky.prototype.addStickySidebar = function() {
-    var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
-    var url_tree = sidebarDoc.getElementById('tree' + this.url);
-    var item = sidebarDoc.getElementById('item' + this.id);
-    var url_item = sidebarDoc.getElementById('tree_page_' + this.page_id);
-    if (!url_item) {
-        url_item = stickynotes.Sidebar.createSidebarUrlItem(
-            { id: this.id, url: this.url, title: this.title });
-    }
-    stickynotes.Sidebar.createSidebarStickyItem(this, url_item.treechildren);
-};
-/**
    stikcyをサイドバーから削除.
 */
 stickynotes.Sticky.prototype.deleteStickySidebar = function() {
-    var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
-    var url_tree = sidebarDoc.getElementById('treeitem_' + this.page_id);
-    if (url_tree == null) return;
-    var sticky_tree = sidebarDoc.getElementById('sticky_tree');
-    var item = sidebarDoc.getElementById('item' + this.id);
-    var url_item = sidebarDoc.getElementById('tree_page_' + this.page_id);
-    url_item.removeChild(item);
-    if (url_item.childNodes.length == 0) {
-        sticky_tree.removeChild(url_tree);
-    }
+    stickynotes.Sidebar.deleteSticky(this);
 };
-/**
-   サイドバー上のstickyを更新.
-*/
-stickynotes.Sticky.prototype.updateStickySidebar = function() {
-    var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
-    var item = sidebarDoc.getElementById('item' + this.id);
-    var url_item = sidebarDoc.getElementById(this.url);
-    var treecell_id = sidebarDoc.getElementById('treecell_id' + this.id);
-    var treecell_text = sidebarDoc.getElementById('treecell_text' + this.id);
-    var treecell_x = sidebarDoc.getElementById('treecell_x' + this.id);
-    var treecell_y = sidebarDoc.getElementById('treecell_y' + this.id);
-    var treecell_width = sidebarDoc.getElementById('treecell_width' + this.id);
-    var treecell_height = sidebarDoc.getElementById('treecell_height' + this.id);
-    var treecell_url = sidebarDoc.getElementById('treecell_url' + this.id);
-    var treecell_title = sidebarDoc.getElementById('treecell_title' + this.id);
-    var treecell_color = sidebarDoc.getElementById('treecell_color' + this.id);
-    treecell_id.setAttribute('label', this.id);
-    treecell_title.setAttribute('label', this.title);
-    treecell_text.setAttribute('label', this.content);
-    treecell_x.setAttribute('label', this.left);
-    treecell_y.setAttribute('label', this.top);
-    treecell_width.setAttribute('label', this.width);
-    treecell_height.setAttribute('label', this.height);
-    treecell_url.setAttribute('label', this.url);
-    treecell_color.setAttribute('label', this.color);
-};
+
 /**
    stikcyにフォーカスを当てる.
 */

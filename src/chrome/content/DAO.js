@@ -290,7 +290,8 @@ stickynotes.DAO.getStickyById = function(id) {
     var statement = dbConn.createStatement(sql);
     try {
         while (statement.executeStep()) {
-            sticky = new stickynotes.Sticky(stickynotes.DAO.row2Obj(statement.row));
+            sticky = new stickynotes.Sticky(
+                stickynotes.DAO.row2Obj(statement.row));
             tag = stickynotes.DAO.getTagsBySticky(sticky);
             sticky.tag = tag;
         }
@@ -318,13 +319,16 @@ stickynotes.DAO.getStickiesByUrl = function(url) {
    @return {Boolean} result.
  */
 stickynotes.DAO.insertTag = function(tag) {
-    tag.name = tag.name.trim();
+    tag.name = tag.name.replace(/^[\s　]+|[\s　]+$/g, '');//tag.name.trim();
     var dbConn = stickynotes.DAO.getDBConn();
-    var sql = 'insert into tag values(' + tag.id + ",'" + tag.name + "')";
+    var statement =
+        dbConn.createStatement('INSERT INTO tag VALUES(:id, :name)');
+    statement.params.id = tag.id;
+    statement.params.name = tag.name;
     try {
-        dbConn.executeSimpleSQL(sql);
+        statement.execute();
     } catch (e) {
-        alert('DataBaseException: insertTag!  ' + e);
+        alert('DataBaseException: insertTag!'+tag.name + e);
         dbConn.asyncClose();
         return false;
     }
@@ -356,6 +360,7 @@ stickynotes.DAO.deleteTag = function(tag) {
    @return {String} tag.
  */
 stickynotes.DAO.getTagByName = function(name) {
+    name = name.replace(/^[\s　]+|[\s　]+$/g, '');
     var dbConn = stickynotes.DAO.getDBConn();
     var statement = dbConn.createStatement(
         'SELECT * FROM tag WHERE name=:name');
@@ -404,13 +409,16 @@ stickynotes.DAO.getRelationStickyAndTag = function() {
  */
 stickynotes.DAO.insertRelationStickyAndTag =
     function(sticky, tag, relation_id) {
-    if (!relation_id)
-        relation_id = Math.round(Math.random() * 10000);
-    var dbConn = stickynotes.DAO.getDBConn();
-    var sql = 'insert into sticky_tag values(' + relation_id + ',' +
-        sticky.id + ',' + tag.id + ')';
-    try {
-        dbConn.executeSimpleSQL(sql);
+        if (!relation_id)
+            relation_id = Math.round(Math.random() * 10000);
+            var dbConn = stickynotes.DAO.getDBConn();
+            var statement = dbConn.createStatement(
+                'INSERT INTO sticky_tag VALUES(:r_id,:s_id,:t_id)');
+        statement.params.r_id = relation_id;
+        statement.params.s_id = sticky.id;
+        statement.params.t_id = tag.id;
+        try {
+            statement.execute();
     } catch (e) {
         dump('DataBaseException: insertRelationStickyAndTag!  ' + e);
         alert('DataBaseException: insertRelationStickyAndTag!  ' + e);
@@ -456,7 +464,7 @@ stickynotes.DAO.getTags = function() {
                 id: statement.row.id,
                 name: statement.row.name
             };
-            result.push(tag.name);
+            result.push(tag);
         }
     } catch (e) {
         alert(e);
@@ -476,7 +484,7 @@ stickynotes.DAO.getStickiesByTag = function(tag, key) {
     var sql = 'SELECT * FROM sticky ' +
         'LEFT OUTER JOIN sticky_tag ON (sticky.id=sticky_tag.sticky_id) ' +
         'LEFT OUTER JOIN tag ON (sticky_tag.tag_id=tag.id) ' +
-        "WHERE tag.name='" + tag + "'";
+        "WHERE tag.id='" + tag.id + "'";
     dump(sql + '\n');
     var statement = dbConn.createStatement(sql);
     try {

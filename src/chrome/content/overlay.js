@@ -1,3 +1,8 @@
+var aConsoleService = Components.classes["@mozilla.org/consoleservice;1"].
+     getService(Components.interfaces.nsIConsoleService);
+
+aConsoleService.logStringMessage("a logging message");
+
 /**
  *  @fileoverview main script of StickyNotes.
  *
@@ -6,20 +11,20 @@
  */
 
 stickynotes.createSticky = function(opt) {
-        var sticky = new stickynotes.Sticky(
-            {
-                left: stickynotes.x, top: stickynotes.y,
-                width: 150, height: 100,
-                content: '', color: 'yellow',
-                tag: ''
-            });
-        sticky.insert();
-        sticky.createDom();
-        stickynotes.Sidebar.createSidebarStickyItem(sticky);
-        return sticky;
+    var sticky = new stickynotes.Sticky(
+        {
+            left: stickynotes.x, top: stickynotes.y,
+            width: 150, height: 100,
+            content: '', color: 'yellow',
+            tag: ''
+        });
+    sticky.insert();
+    sticky.createDom();
+    stickynotes.Sidebar.addSticky(sticky);
+    return sticky;
 };
 stickynotes.deleteSticky = function(sticky) {
-        sticky.delete();
+    sticky.delete();
 };
 stickynotes.onload = function() {//新規文書ごと
     window.content.addEventListener('unload', function() {

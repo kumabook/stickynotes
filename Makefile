@@ -3,8 +3,10 @@
 
 RS = src/chrome.manifest src/install.rdf
 DIR = src/chrome/content
-SRC = $(DIR)/overlay.js $(DIR)/overlay.xul $(DIR)/side_bar.xul $(DIR)/sidebar_overlay.js $(DIR)/Sidebar.js  $(DIR)/Sticky.js $(DIR)/DAO.js 
+SRC = $(DIR)/overlay.js $(DIR)/overlay.xul $(DIR)/sidebar.xul $(DIR)/sidebar_overlay.js \
+$(DIR)/Sidebar.js  $(DIR)/Sticky.js $(DIR)/DAO.js $(DIR)/base.js 
 TARGET = dist/stickynotes.xpi
+TARGET_TEST = dist/stickynotes-test.xpi
 
 
 #firefox environment
@@ -19,6 +21,7 @@ else
 	PROFILE="C:\Users\hiroki\AppData\Roaming\Mozilla\Firefox\Profiles\nabkjmj3.stickysnotes\"
 endif
 DEPLOY_FILE = ${PROFILE}/extensions/stickynotes@kumabook.com.xpi
+DEPLOY_TEST_FILE = ${PROFILE}/extensions/stickynotes-test@kumabook.com.xpi
 
 SQLITE = ${PROFILE}/stickynotes.sqlite
 
@@ -33,23 +36,26 @@ FF_OPTION = --no-remote -p stickynotes
 
 JSDOC = tools/jsdoc-toolkit
 
-createProfile:
-	$(COMMAND) -ProfileManager
 run: deploy
 	${COMMAND}
-	#$(FF_OPTION)
-	#2>&1 > $(LOG_DIR)\stickynotes_`date +%m%d_%H%M`.log
+createProfile:
+	$(COMMAND) -ProfileManager
 deploy: $(TARGET)
 deploy: compile
 	cp $(TARGET) $(DEPLOY_FILE)
 
 compile : $(SRC) $(RS) Makefile
-	cd src ; zip -r ../dist/stickynotes.xpi chrome chrome.manifest install.rdf
+#	cd src ; zip -r ../dist/stickynotes.xpi chrome chrome.manifest install.rdf 
+	cd src ; zip -r ../dist/stickynotes.xpi chrome/locale chrome.manifest install.rdf chrome/content/*.js chrome/content/*.xul
 fixstyle:
 	fixjsstyle src/chrome/content/*
 doc: $(SRC)
 	java -jar $(JSDOC)/jsrun.jar $(JSDOC)/app/run.js  --template=$(JSDOC)/templates/jsdoc --directory=doc src/chrome/content/*.js
-
+test: deploy
+	cd tests ; zip -r ../dist/stickynotes-test.xpi chrome.manifest install.rdf chrome/content/*.js chrome/content/*.xul chrome/qunit
+	cp $(TARGET_TEST) $(DEPLOY_TEST_FILE)
+	${COMMAND}
+	rm $(DEPLOY_TEST_FILE)
 unit: deploy 
 	firefox $(FF_OPTION)   -uxu-testcase $(UNIT_DIR)  -uxu-log $(UNIT_LOG)  -uxu-priority must
 	ruby script/convert.rb  $(UNIT_LOG)
@@ -60,4 +66,4 @@ unit: deploy
 clean: 
 	find . -name \*~ -exec rm {} \; 
 	rm $(SQLITE)
-	rm $(UNIT_LOG)
+	rm $(DEPLOY_TEST_FILE)

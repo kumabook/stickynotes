@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <!DOCTYPE overlay SYSTEM "chrome://stickynotes/locale/">
 <overlay id="stickynotes-overlay"
-	 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+		 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <menupopup id="menu_ToolsPopup">
     <menuitem
-	id="sticky_menu"
-	key="key_openSidebar_stickynotes"
-	observes="side_with_sticky"
-	insertbefore="sanitizeSeparator" />
+	   id="sticky_menu"
+	   key="key_openSidebar_stickynotes"
+	   observes="side_with_sticky"
+	   insertbefore="sanitizeSeparator" />
   </menupopup>
   <popup id="contentAreaContextMenu">
     <menuitem id="sticky_popup"
-	      label="&stickyMenu.label;"
+			  label="&stickyMenu.label;"
 	      key="key_create_stickynotes"
 	      command="create_sticky" 
 	      />
@@ -41,7 +41,7 @@
 	/> -->
   </menupopup>
   <commandset>
-    <command id="toggle_sticky" oncommand="stickynotes.Sticky.toggleVisibilityAllStickies();"/>
+    <command id="toggle_sticky" oncommand="stickynotes.StickyView.toggleVisibilityAllStickies();"/>
     <command id="create_sticky" oncommand="stickynotes.createSticky().focus();"/>
     <command id="focusSidebar_sticky" oncommand="stickynotes.Sidebar.focusSidebar();"/>
   </commandset>
@@ -58,6 +58,9 @@
   <script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Page.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Tag.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/StickyView.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sidebar.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/overlay.js" />
 </overlay>

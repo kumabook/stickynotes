@@ -1,4 +1,3 @@
-
 /**
   @const namespace for stickynotes addon.
  */

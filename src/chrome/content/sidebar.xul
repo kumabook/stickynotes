@@ -18,7 +18,7 @@
     <menuitem
           label="&sticky_list.sidebarDelete;"
           id="popup_delete"
-          oncommand="stickynotes.Sidebar.delete();"
+          oncommand="stickynotes.Sidebar.remove();"
        />
   </menupopup>
 </popupset>
@@ -68,7 +68,9 @@
 </tree>
   <script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
-  <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js"/>
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Page.js"/>
+  <script type="application/x-javascript" src="chrome://stickynotes/content/Tag.js"/>
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sidebar.js" />
 <script type="application/x-javascript" src="chrome://stickynotes/content/sidebar_overlay.js" />
 

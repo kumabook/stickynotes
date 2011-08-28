@@ -279,14 +279,14 @@ stickynotes.Sticky.prototype.getPage = function() {
 
 stickynotes.Sticky.prototype.filter = function(key) {
   if (key == null ||
-      this.content.indexOf(key) != -1) //||
-      //sticky.tags.indexOf(key) != -1)
+      this.content.indexOf(key) != -1) 
     return true;
-  else
-    return false;
+  else if (this.getPage().title.indexOf(key) != -1 )
+    return true;
+  return false;
 };
 /**
- * stikcyへジャンプ.
+ * jump to Sticky.
  */
 stickynotes.Sticky.prototype.jump = function() {
   var href = window.content.document.location.href;
@@ -328,7 +328,7 @@ stickynotes.Sticky.prototype.jump = function() {
 /**
  * transform database result row Object to JS Plain Object.
  * @param {Object} row row.
- * @param {Array<String>} name_array keyの配列.
+ * @param {Array<String>} name_array keys.
  * @return {Object} obj.
  */
 stickynotes.Sticky.row2Obj = function(row, name_array) {

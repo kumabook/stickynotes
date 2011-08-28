@@ -12,7 +12,11 @@
 <!ENTITY sticky_list.sidebarDelete "Delete this sticky">
 <!ENTITY sticky_list.sidebarHide "Hide this sticky">
 <!ENTITY sticky_list.sidebarVisible "Display this sticky">
-
+<!ENTITY stickynotes.list_by_tag_and_site "List by tag and site">
+<!ENTITY stickynotes.list_by_site "List by site">
+<!ENTITY stickynotes.list_by_tag "List by tag">
+<!ENTITY stickynotes.search "search">
+<!ENTITY stickynotes.display "dispaly">
 
 
 

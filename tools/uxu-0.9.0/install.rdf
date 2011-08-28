@@ -20,7 +20,7 @@
 			<!-- Firefox -->
 			<Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
 				em:minVersion="3.0"
-				em:maxVersion="5.*" />
+				em:maxVersion="6.*" />
 		</em:targetApplication>
 		<em:targetApplication>
 			<!-- Thunderbird -->

@@ -4,7 +4,7 @@
 RS = src/chrome.manifest src/install.rdf
 DIR = src/chrome/content
 SRC = $(DIR)/overlay.js $(DIR)/overlay.xul $(DIR)/sidebar.xul $(DIR)/sidebar_overlay.js \
-$(DIR)/Sidebar.js  $(DIR)/Sticky.js $(DIR)/DAO.js $(DIR)/base.js 
+$(DIR)/Sidebar.js  $(DIR)/Sticky.js $(DIR)/base.js 
 TARGET = dist/stickynotes.xpi
 TARGET_TEST = dist/stickynotes-test.xpi
 

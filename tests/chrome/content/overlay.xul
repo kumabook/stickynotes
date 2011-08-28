@@ -2,7 +2,6 @@
 <overlay id="stickynotes-test"
 	 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
-  <script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Page.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Tag.js" />

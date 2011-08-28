@@ -25,7 +25,6 @@
     mainWindow.addEventListener('click',
                                 stickynotes.Sidebar.resizeSidebarHeight,
                                 false);
-    //サイドバーに付箋の一覧を作成
     stickynotes.Sidebar.groupBy();
   };
   stickynotes.Sidebar.resizeSidebarHeight();

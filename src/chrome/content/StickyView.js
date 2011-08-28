@@ -13,11 +13,11 @@ stickynotes.StickyView = function(param) {
 };
 
 /**
- * 大きさかえるDOM要素のサイズ
+ * change element size.
  */
 stickynotes.Sticky.changeElemSize = 35,
 /**
- * stikcyのDOM要素を更新
+ * update dom element.
 */
 stickynotes.StickyView.prototype.updateDom = function() {
   var doc = window.content.document;
@@ -26,17 +26,17 @@ stickynotes.StickyView.prototype.updateDom = function() {
   }
 };
 /**
- * stikcyのDOM要素を削除
+ * remove dom element.
  */
 stickynotes.StickyView.prototype.deleteDom = function() {
   var doc = window.content.document;
   doc.body.removeChild(this.dom);
 };
 /**
- * stikcyのDOM要素を作成
+ * create dom element.
  */
 stickynotes.StickyView.prototype.createDom = function() {
-  var doc = window.content.document;//表示しているDocumentを取得
+  var doc = window.content.document;
   var that = this;
   this.dom = doc.createElement('div');
   this.dom.id = 'sticky' + this.sticky.id;
@@ -103,7 +103,6 @@ stickynotes.StickyView.prototype.createDom = function() {
 };
 stickynotes.StickyView.prototype.createTextarea = function() {
   var doc = window.content.document;
-  //-- テキストを保持するinput要素--
   var textarea = doc.createElement('textarea');
   textarea.style.position = 'relative';
   textarea.style.width = this.sticky.width + 'px';
@@ -190,8 +189,8 @@ stickynotes.StickyView.prototype.createChangeSize = function() {
 };
 
 /**
- * stikcyのDOM要素をドラッグ可能にする.
- * @param {Object} elem DOM要素.
+ * enable drag.
+ * @param {Object} elem target element.
  * @param {e} e event.
  */
 stickynotes.StickyView.prototype.drag = function(elem, e) {
@@ -217,7 +216,7 @@ stickynotes.StickyView.prototype.drag = function(elem, e) {
   }
 };
 /**
- * stikcyのDOM要素をリサイズ可能にする.
+ * enable drag resize.
  */
 stickynotes.StickyView.prototype.resize = function(elem, e) {
   var that = this;
@@ -251,7 +250,7 @@ stickynotes.StickyView.prototype.resize = function(elem, e) {
   }
 };
 /**
- * stikcyにフォーカスを当てる.
+ * focus to sticky.
  */
 stickynotes.StickyView.prototype.focus = function() {
   this.textarea.focus();
@@ -263,9 +262,7 @@ stickynotes.StickyView.prototype.focus = function() {
 stickynotes.StickyView.prototype.toString = function() {
   return 'sticky:' + this.sticky.id;
 };
-/**
- * stickyをkeyで絞り込み.
- */
+
 stickynotes.StickyView.search = function(key) {
   var doc = window.content.document;
   var URL = doc.location.href;
@@ -281,9 +278,6 @@ stickynotes.StickyView.search = function(key) {
     }
   }
 };n
-/**
- * stickyの可視性をトグル.
- */
 stickynotes.StickyView.toggleVisibilityAllStickies = function() {
   var doc = window.content.document;
   var URL = doc.location.href;

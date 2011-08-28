@@ -24,25 +24,27 @@
 </popupset>
 
 <hbox id="sidebar-sticky-search-container" align="center">
-  <label id="sidebar-sticky-search-label" value="検索:" 
+  <label id="sidebar-sticky-search-label" value="&stickynotes.search;" 
 	 accesskey="S" control="search-sticky-box"></label>
   <textbox id="search-sticky-box" class="compact" flex="1" type="search" 
 	   aria-controls="historyTree" oncommand="stickynotes.Sidebar.searchSticky(this.value);" 
 	   aria-autocomplete="list"></textbox>
-  <button id="viewButton" style="min-width:0px !important;" type="menu" label="表示" accesskey="w" selectedsort="site" persist="selectedsort">
+  <button id="viewButton" style="min-width:0px !important;" 
+		  type="menu" label="&stickynotes.display;" 
+		  accesskey="w" selectedsort="site" persist="selectedsort">
     <menupopup>
-      <menuitem id="bytag+site" label="タグとサイト名順に並べる" accesskey="T" type="radio" 
+      <menuitem id="bytag+site" label="&stickynotes.list_by_tag_and_site;" accesskey="T" type="radio" 
 		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag+site'); stickynotes.Sidebar.groupBy('tag+site');" >
       </menuitem>
-      <menuitem id="bysite" label="サイト名順に並べる" accesskey="S" type="radio" 
+      <menuitem id="bysite" label="&stickynotes.list_by_site;" accesskey="S" type="radio" 
 		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'site'); stickynotes.Sidebar.groupBy('site');">
       </menuitem>
-      <menuitem id="bytag" label="タグ順に並べる" accesskey="T" type="radio" 
+      <menuitem id="bytag" label="&stickynotes.list_by_tag;" accesskey="T" type="radio" 
 		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag'); stickynotes.Sidebar.groupBy('tag');" >
       </menuitem>
-      <menuitem id="bytime" label="作成した日時順に並べる" accesskey="M" type="radio" 
-		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'time'); stickynotes.Sidebar.groupBy('time');" >
-      </menuitem>
+<!--      <menuitem id="bytime" label="作成した日時順に並べる" accesskey="M" type="radio" 
+		oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'time'); stickynotes.Sidebar.groupBy('time');" > 
+      </menuitem>-->
     </menupopup>
   </button>
 </hbox>

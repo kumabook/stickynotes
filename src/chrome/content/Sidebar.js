@@ -187,7 +187,7 @@ stickynotes.Sidebar = {
       .removeEventListener('click',
                            stickynotes.Sidebar.resizeSidebarHeight, false);
   },
-  getSelectStickyId: function() {//サイドバーで選択されている付箋の情報を取得
+  getSelectStickyId: function() {
     var id;
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
     var tree = sidebarDoc.getElementById('sticky');
@@ -195,7 +195,7 @@ stickynotes.Sidebar = {
                                tree.columns.getNamedColumn('id'));
     return id;
   },
-  handleEvent: function(event) {//サイドバー上で右クリックしたときの動作
+  handleEvent: function(event) {//function on mouse right clicked.
     if (document.getElementById('sticky_tree').childNodes.length == 0) {
       document.getElementById('clipmenu').hidden = true;
       return;
@@ -340,9 +340,6 @@ stickynotes.Sidebar = {
       }
     }
   },
-  /**
-     サイドバー上のstickyを更新.
-  */
   updateSticky: function(sticky) {
     var items = stickynotes.Sidebar.getStickyElements(sticky);
     for(var i = 0; i < items.length; i++){
@@ -483,8 +480,7 @@ stickynotes.Sidebar = {
     for (i = 0; i < tags.length; i++) {
       stickies = stickynotes.Sticky.fetchByTag(tags[i], key);
       if (stickies.length > 0) {
-        tagItem =
-          stickynotes.Sidebar.createSidebarTagItem({id: tags[i].id, name: tags[i].name});
+        tagItem = stickynotes.Sidebar.createSidebarTagItem(tags[i]);
         for (j = 0; j < stickies.length; j++) {
           var item = stickynotes.Sidebar.createSidebarStickyItem(stickies[j],
                                                                  tagItem.treechildren);

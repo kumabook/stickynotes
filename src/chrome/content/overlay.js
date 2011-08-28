@@ -1,12 +1,14 @@
 /**
- *  @fileoverview main script of StickyNotes.
+ *  @fileoverview overlay.js 
  *
  * @author Hiroki Kumamoto
  * @version 1.0.0
  */
-
+/**
+  * Create sticky element and database.
+  */
 stickynotes.createSticky = function() {
-  var doc = window.content.document;//表示しているDocumentを取得
+  var doc = window.content.document;
   var title = doc.title;
   if (title == '')
     title = 'タイトルなし';
@@ -23,6 +25,10 @@ stickynotes.createSticky = function() {
   stickynotes.Sidebar.addSticky(sticky);
   return sticky;
 };
+/**
+ * Create Sticky element.
+ * @param{stickyntoes.Sticky}
+ */
 stickynotes.createStickyView = function(sticky) {
   var stickyView = new stickynotes.StickyView({
     sticky: sticky,
@@ -74,6 +80,10 @@ stickynotes.createStickyView = function(sticky) {
   });
   return stickyView;
 };
+/**
+ * Delete Sticky.
+ * @param{stickynotes.StickyView}
+ */
 stickynotes.deleteSticky = function(stickyView) {
   //delete from database
   stickyView.sticky.remove();
@@ -82,36 +92,42 @@ stickynotes.deleteSticky = function(stickyView) {
   //delete from content document
   stickyView.deleteDom();
 };
-stickynotes.onload = function() {//新規文書ごと
+/**
+ * document onload function.
+ */
+stickynotes.onload = function() {
   window.content.addEventListener('unload', function() {
     stickynotes.loaded = 0;
   },false);
   var current_page = window.content.document.location.href;
   if (stickynotes.loaded != current_page) stickynotes.loaded = current_page;
   else return;
-  //window.removeEventListener("DOMContentLoaded", StickyNotes.onload, false);//新規文書ごとに挙がるイベント
-  var doc = window.content.document;//表示しているDocumentを取得
+  var doc = window.content.document;
   var page = stickynotes.Page.fetchByUrl(doc.location.href);
   var stickies = stickynotes.Sticky.fetchByPage(page);
-  //現在表示しているDocument上の付箋
   for (var i = 0; i < stickies.length; i++) {
     var stickyView = new stickynotes.createStickyView(stickies[i]);
     doc.body.appendChild(stickyView.dom);
   }
-
+  /*
+   * save click position.
+   */
   doc.addEventListener(
-    'click',//右クリックしたときのマウスの座標を取得しておく
+    'click',
     function(event) {
       stickynotes.x = event.clientX + window.content.pageXOffset;
       stickynotes.y = event.clientY + window.content.pageYOffset;
     },
     false);
 };
-stickynotes.init = function(aPersist) {
+/**
+ * initialize function.
+ */
+stickynotes.init = function() {
   window.addEventListener('DOMContentLoaded',
-                          stickynotes.onload, false);//新規文書ごとに挙がるイベント
+                          stickynotes.onload, false);
   stickynotes.DAO.createTables();
 };
 
-window.addEventListener('load', stickynotes.init, false);  //新規ウィンドウごとに挙がるイベント
+window.addEventListener('load', stickynotes.init, false);
 Application.console.log('sticky extension loaded');

@@ -56,7 +56,6 @@
 	/>
   </broadcasterset>
   <script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
-  <script type="application/x-javascript" src="chrome://stickynotes/content/DAO.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Page.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Tag.js" />

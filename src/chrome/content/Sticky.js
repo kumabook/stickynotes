@@ -300,7 +300,7 @@ stickynotes.Sticky.prototype.jump = function() {
     window.parent.content.document
     .getElementById('sticky_id_' + this.id).focus();
   else {
-    href = url;
+    window.content.document.location.href = url;
     var that = this;
     var focus_sticky = function(e) {
       window.parent

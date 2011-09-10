@@ -2,8 +2,8 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
-    <em:id>stickynotes@kumabook.com</em:id>
     <em:type>2</em:type>
+    <em:id>sticky@filenamezero.dip.jp</em:id>
     <em:name>Sticky Notes</em:name>
     <em:version>0.3.0</em:version>
     <em:description>Put sticky notes on the web page</em:description>
@@ -12,17 +12,16 @@
     <!--		<em:optionsURL>chrome://stickynotes/content/stickynotes-options.xul</em:optionsURL> -->
     <em:localized>
       <Description>
-	<em:locale>ja</em:locale>
-	<em:name>Sticky Notes</em:name>
-	<em:description>Webページに付箋を張り付けます</em:description>
-	<em:creator>Hiroki Kumamoto</em:creator>
+		<em:locale>ja</em:locale>
+		<em:name>Sticky Notes</em:name>
+		<em:description>Webページに付箋を張り付けます</em:description>
       </Description>
     </em:localized>
     <em:targetApplication>
       <Description>
-	<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-	<em:minVersion>3.0</em:minVersion>
-	<em:maxVersion>6.*</em:maxVersion>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+        <em:minVersion>5.0</em:minVersion>
+        <em:maxVersion>9.0a1</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>

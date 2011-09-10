@@ -20,7 +20,7 @@ ifeq (${OS}, Darwin)
 else 
 	PROFILE="C:\Users\hiroki\AppData\Roaming\Mozilla\Firefox\Profiles\nabkjmj3.stickysnotes\"
 endif
-DEPLOY_FILE = ${PROFILE}/extensions/stickynotes@kumabook.com.xpi
+DEPLOY_FILE = ${PROFILE}/extensions/sticky@filenamezero.dip.jp.xpi
 DEPLOY_TEST_FILE = ${PROFILE}/extensions/stickynotes-test@kumabook.com.xpi
 
 SQLITE = ${PROFILE}/stickynotes.sqlite

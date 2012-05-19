@@ -1,7 +1,7 @@
 /**
  * @const namespace for qunit for firefox addon.
  */
-var MozQUnit = exports.QUnit;
+var MozQUnit = QUnit;
 MozQUnit.logStr = '';
 
 for (var prop in MozQUnit) {

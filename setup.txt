@@ -1,17 +1,22 @@
 ---------- 環境構築メモ -----------
 
-----firefoxの開発用プロファイルの追加---
-
-http://firefox.geckodev.org/index.php?%E3%83%97%E3%83%AD%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB　　　を参照
-
-about:config　で以下を設定する。
-
-javascript.options.strict	true	エラーコンソールでの厳密な警告を有効にする
-browser.dom.window.dump.enabled	true	標準コンソールへの出力をするdump()を使用可能にする。
-
-
 --------buildツール　make--- 
-cygwinに付属のものでOK
+gnu make, cygwinに付属のものでOK
+
+---複数firefoxを起動するために(for mac)---
+Firefox.app をリネームしてコピー FirefoxDev.appなど
+Firefox.app/Contents/MacOS/application.iniのNameを書き換える.
+
+----firefoxの開発用プロファイルの追加---
+make createProfile
+新規プロファイルを作成
+プロファイル名:stickynotes_dev, stickynotes_test
+フォルダを選択:新規フォルダstickyntoes_dev, stickynotes_testを作成して選択
+完了して、プロファイルを作成
+---プロファイルの設定--
+about:config　で
+https://developer.mozilla.org/en/Setting_up_extension_development_environmentの
+Development preferences の項の設定をする
 
 --------document ツール  jsdoc toolkit----  
 http://code.google.com/p/jsdoc-toolkit/downloads/list　からダウンロード
@@ -20,11 +25,8 @@ http://code.google.com/p/jsdoc-toolkit/downloads/list　からダウンロード
 正式にはfirefox4に対応していないので
 http://www.clear-code.com/software/uxu/ から
 uxu.xpi と uxu-utilsをダウンロードする。
+*追記 version 0.4.0 から使用していません。
 
 xpiはいったん解凍してinstall.rdfの現在のfirefoxに入るように書き換えて、
 またzipで固めて、xpiにしてインストール。
 
-
-
-
-	

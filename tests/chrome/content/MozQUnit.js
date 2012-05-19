@@ -4,11 +4,12 @@
 var MozQUnit = exports.QUnit;
 MozQUnit.logStr = '';
 
-for ( var prop in MozQUnit ) {
-  if ( MozQUnit[prop] === undefined ) {
-	delete window[prop];
-  } else {
-	window[prop] = MozQUnit[prop];
+for (var prop in MozQUnit) {
+  if (MozQUnit[prop] === undefined) {
+    delete window[prop];
+  }
+  else {
+    window[prop] = MozQUnit[prop];
   }
 }
 
@@ -26,37 +27,36 @@ MozQUnit.done = function(context) {
   MozQUnit.quit();
 };
 MozQUnit.moduleStart = function(context) {
-  MozQUnit.logStr +='Moz Qunit: module start ' + context.name + '\n';
+  MozQUnit.logStr += 'Moz Qunit: module start ' + context.name + '\n';
 };
 MozQUnit.moduleDone = function(context) {
   MozQUnit.logStr += 'Moz Qunit: module done ' + context.name +
-       ' failed: ' + context.failed +
-       ' passed: ' + context.passed +
-       ' total: ' + context.total + 
-       '\n';
+    ' failed: ' + context.failed +
+    ' passed: ' + context.passed +
+    ' total: ' + context.total +
+    '\n';
 };
 MozQUnit.testStart = function(context) {
   MozQUnit.logStr += 'Moz Qunit: test start: ' + context.name + '\n';
 };
 MozQUnit.testDone = function(context) {
   MozQUnit.logStr += 'Moz Qunit: test done: ' + context.name +
-       ' failed: ' + context.failed +
-       ' passed: ' + context.passed +
-       ' total: ' + context.total + 
+    ' failed: ' + context.failed +
+    ' passed: ' + context.passed +
+    ' total: ' + context.total +
        '\n';
 };
 MozQUnit.log = function(context) {
   MozQUnit.logStr += 'Moz Qunit log: result:' + context.result +
-       ' message: ' + (context.message ? context.message : '') +  '\n';
+    ' message: ' + (context.message ? context.message : '') + '\n';
 };
 
 MozQUnit.quit = function(aForceQuit)
 {
   var appStartup = Components.classes['@mozilla.org/toolkit/app-startup;1'].
     getService(Components.interfaces.nsIAppStartup);
-  // eAttemptQuit will try to close each XUL window, but the XUL window can cancel the quit
-  // process if there is unsaved data. eForceQuit will quit no matter what.
-  var quitSeverity = aForceQuit ? Components.interfaces.nsIAppStartup.eForceQuit :
-                                  Components.interfaces.nsIAppStartup.eAttemptQuit;
+  var quitSeverity = aForceQuit ?
+    Components.interfaces.nsIAppStartup.eForceQuit :
+    Components.interfaces.nsIAppStartup.eAttemptQuit;
   appStartup.quit(quitSeverity);
 };

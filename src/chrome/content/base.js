@@ -6,7 +6,7 @@ const stickynotes = {
     y: 0,
     loaded: 0
 };
-    
+
 /** @constructor My namespace's DAO */
 stickynotes.DAO = {};
 stickynotes.DAO.dbName = 'stickynotes';

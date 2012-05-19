@@ -87,7 +87,7 @@ stickynotes.Tag.fetchAll = function() {
     dbConn.asyncClose();
     throw new DBAccessError(e);
   }
-  return result;  
+  return result;
 };
 
 stickynotes.Tag.prototype.remove = function() {

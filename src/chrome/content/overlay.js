@@ -1,5 +1,5 @@
 /**
- *  @fileoverview overlay.js 
+ *  @fileoverview overlay.js.
  *
  * @author Hiroki Kumamoto
  * @version 1.0.0
@@ -27,7 +27,7 @@ stickynotes.createSticky = function() {
 };
 /**
  * Create Sticky element.
- * @param{stickyntoes.Sticky}
+ * @param {stickyntoes.Sticky}
  */
 stickynotes.createStickyView = function(sticky) {
   var stickyView = new stickynotes.StickyView({
@@ -82,7 +82,7 @@ stickynotes.createStickyView = function(sticky) {
 };
 /**
  * Delete Sticky.
- * @param{stickynotes.StickyView}
+ * @param {stickynotes.StickyView}
  */
 stickynotes.deleteSticky = function(stickyView) {
   //delete from database

@@ -10,22 +10,22 @@ module('stickynotes.Sticky', {
 
 test('stickynotes.Sticky.create()', function() {
   var sticky = new stickynotes.Sticky.create(
-    { 
-      url: "http://test"
+    {
+      url: 'http://test'
     });
   ok(sticky, 'test for DAO.insertSticky');
   var stickies = stickynotes.Sticky.fetchAll();
   same(stickies.length, 1, 'test for stickynotes.Page.create');
   raises((function() { stickynotes.Sticky.create(sticky);}),
-        'DBAccessError','同じIDの付箋は二度いれようとするとエラー');
+        'DBAccessError', '同じIDの付箋は二度いれようとするとエラー');
 });
 
 test('stickynotes.Sticky.fetchById()', function() {
   var sticky = new stickynotes.Sticky.create(
-    { id: 2, url: "http://test.jp", title: 'testTitle',
+    { id: 2, url: 'http://test.jp', title: 'testTitle',
       top: 100, left: 100,
       width: 100, height: 100,
-	  content: "test", color: "yellow"
+	  content: 'test', color: 'yellow'
     });
   var result = stickynotes.Sticky.fetchById(2);
   same(sticky.id, result.id, 'test for DAO.getStickyId');
@@ -36,10 +36,10 @@ test('stickynotes.Sticky.fetchByPage()', function() {
     id: 110, url: 'http://test.jp', title: 'testTitle'
   });
   var sticky = new stickynotes.Sticky.create(
-    { id: 2, url: "http://test.jp",
+    { id: 2, url: 'http://test.jp',
       top: 100, left: 100,
       width: 100, height: 100,
-	  content: "test", color: "yellow"
+	  content: 'test', color: 'yellow'
     });
   var stickies = stickynotes.Sticky.fetchByPage(page);
   same(stickies.length, 1, 'test for stickynotes.Page.fetchByPage');
@@ -47,17 +47,17 @@ test('stickynotes.Sticky.fetchByPage()', function() {
 
 test('stickynotes.Sticky.fetchAll()', function() {
   var sticky = new stickynotes.Sticky.create(
-    { id: 2, url: "http://test.jp", title: 'testTitle',
+    { id: 2, url: 'http://test.jp', title: 'testTitle',
       top: 100, left: 100,
       width: 100, height: 100,
-	  content: "test", color: "yellow"
+	  content: 'test', color: 'yellow'
     });
 
     var sticky2 = new stickynotes.Sticky.create(
-    { id: 3, url: "http://test.jp", title: 'testTitle',
+    { id: 3, url: 'http://test.jp', title: 'testTitle',
       top: 100, left: 100,
       width: 100, height: 100,
-	  content: "test", color: "yellow"
+	  content: 'test', color: 'yellow'
     });
   var stickies = stickynotes.Sticky.fetchAll();
   same(stickies.length, 2, 'test for stickynotes.Page.fetchAll');
@@ -66,10 +66,10 @@ test('stickynotes.Sticky.fetchAll()', function() {
 test('stickynotes.Sticky.prototype.save()', function() {
   var sticky = new stickynotes.Sticky.create(
     { id: 1,
-      url: "http://test",
+      url: 'http://test',
       top: 100, left: 100,
-      width: 100, height: 100, 
-	  content: "test", color: "yellow", tag : "test"
+      width: 100, height: 100,
+	  content: 'test', color: 'yellow', tag: 'test'
     });
   sticky.top = 200;
   sticky.left = 200;
@@ -89,10 +89,10 @@ test('stickynotes.Sticky.prototype.save()', function() {
 
 test('stickynotes.Sticky.fetchAll()', function() {
   var sticky = new stickynotes.Sticky.create(
-    { id: 2, url: "test", title: 'test',
+    { id: 2, url: 'test', title: 'test',
       top: 100, left: 100,
       width: 100, height: 100,
-	  content: "test", color: "yellow", tag : "test"
+	  content: 'test', color: 'yellow', tag: 'test'
     });
   var result = stickynotes.Sticky.fetchAll();
   same(1, result.length, 'stickies size');
@@ -100,10 +100,10 @@ test('stickynotes.Sticky.fetchAll()', function() {
 
 test('stickynotes.Sticky.prototype.remove()', function() {
   var sticky = new stickynotes.Sticky.create(
-    { id: 3, url: "http://test", title: 'test',
+    { id: 3, url: 'http://test', title: 'test',
       top: 100, left: 100,
-      width: 100, height: 100, 
-	  content: "test", color: "yellow", tag : "test"
+      width: 100, height: 100,
+	  content: 'test', color: 'yellow', tag: 'test'
     });
   ok(sticky.remove(), '消せるとTrue');
   var stickies = stickynotes.Sticky.fetchAll();
@@ -114,24 +114,24 @@ test('stickynotes.Sticky.prototype.remove()', function() {
 
 test('stickynotes.Sticky.prototype.save()', function() {
   var sticky = new stickynotes.Sticky.create(
-    { id: 1, url: "http://test", title: 'test',
+    { id: 1, url: 'http://test', title: 'test',
       top: 100, left: 100,
-      width: 100, height: 100, 
-	  content: "test", color: "yellow", tag : "test" });
-  sticky.content = "change!";
+      width: 100, height: 100,
+	  content: 'test', color: 'yellow', tag: 'test' });
+  sticky.content = 'change!';
   sticky.save();
   same(sticky.content, stickynotes.Sticky.fetchById(sticky.id).content);
 });
 
-test('stickynotes.Sticky.prototype.getPage()', function(){
+test('stickynotes.Sticky.prototype.getPage()', function() {
   var page = stickynotes.Page.create({
     id: 110, url: 'http://test.jp', title: 'testTitle'
   });
   var sticky = stickynotes.Sticky.create(
-    { id: 1, url: "http://test.jp",
+    { id: 1, url: 'http://test.jp',
       top: 100, left: 100,
-      width: 100, height: 100, 
-	  content: "test", color: "yellow", tag : "test" });
+      width: 100, height: 100,
+	  content: 'test', color: 'yellow', tag: 'test' });
   var page1 = sticky.getPage();
   same(page1.id, page.id);
   same(page1.url, page.url);
@@ -140,10 +140,10 @@ test('stickynotes.Sticky.prototype.getPage()', function(){
 
 test('stickynotes.Sticky.prototype.setTags() and getTags()', function() {
   var sticky = stickynotes.Sticky.create(
-    { id: 1, url: "http://test.jp",
+    { id: 1, url: 'http://test.jp',
       top: 100, left: 100,
-      width: 100, height: 100, 
-	  content: "test", color: "yellow", tag : "test" });
+      width: 100, height: 100,
+	  content: 'test', color: 'yellow', tag: 'test' });
   var tag1 = stickynotes.Tag.create({name: 'tag1'});
   var tag2 = stickynotes.Tag.create({name: 'tag2'});
   var tag3 = stickynotes.Tag.create({name: 'tag3'});

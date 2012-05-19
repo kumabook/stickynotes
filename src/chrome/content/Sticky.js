@@ -106,9 +106,9 @@ stickynotes.Sticky.fetchAll = function(key) {
     while (statement.executeStep()) {
       sticky = new stickynotes.Sticky(stickynotes.Sticky.row2Obj(statement.row));
       if (sticky.filter(key)) {
-        result.push(sticky);  
+        result.push(sticky);
       }
-        
+
     }
   } catch (e) {
     dbConn.asyncClose();
@@ -151,7 +151,7 @@ stickynotes.Sticky.create = function(param) {
   statement.params.width = param.width ? param.width : 100;
   statement.params.height = param.height ? param.height : 100;
   statement.params.content = param.content ? param.content : '';
-  statement.params.color = param.color ? param.color: 'blue';
+  statement.params.color = param.color ? param.color : 'blue';
 
   try {
     statement.execute();
@@ -203,7 +203,7 @@ stickynotes.Sticky.prototype.remove = function() {
     return true;
   }
   else
-    return false;    
+    return false;
 };
 /**
  * set tags.
@@ -220,7 +220,7 @@ stickynotes.Sticky.prototype.setTags = function(tagStrs) {
     dbConn.asyncClose();
     throw new DBAccessError();
   }
-  
+
   var str, tag, id, relation_id;
   for (var i = 0; i < tagStrs.length; i++) {
     str = tagStrs[i].replace(/^[\s　]+|[\s　]+$/g, '');//trim;
@@ -279,9 +279,9 @@ stickynotes.Sticky.prototype.getPage = function() {
 
 stickynotes.Sticky.prototype.filter = function(key) {
   if (key == null ||
-      this.content.indexOf(key) != -1) 
+      this.content.indexOf(key) != -1)
     return true;
-  else if (this.getPage().title.indexOf(key) != -1 )
+  else if (this.getPage().title.indexOf(key) != -1)
     return true;
   return false;
 };

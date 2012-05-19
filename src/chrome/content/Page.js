@@ -5,15 +5,15 @@ stickynotes.Page = function(param) {
 };
 
 stickynotes.Page.prototype.save = function() {
-  
+
 };
 
 stickynotes.Page.prototype.update = function() {
-    
+
 };
 /**
  * insert page to page table.
- * @param {Object} page page object
+ * @param {Object} page page object.
  * @return {Boolean} success->true, fail->false.
 */
 stickynotes.Page.create = function(param) {

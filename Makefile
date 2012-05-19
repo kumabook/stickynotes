@@ -49,6 +49,7 @@ compile : $(SRC) $(RS) Makefile
 	cd src ; zip -r ../dist/stickynotes.xpi chrome/locale chrome.manifest install.rdf chrome/content/*.js chrome/content/*.xul
 fixstyle:
 	fixjsstyle src/chrome/content/*
+	find tests/chrome/content/ -name "*.js" -and ! -name qunit.js | xargs fixjsstyle ;
 doc: $(SRC)
 	java -jar $(JSDOC)/jsrun.jar $(JSDOC)/app/run.js  --template=$(JSDOC)/templates/jsdoc --directory=doc src/chrome/content/*.js
 test: deploy
@@ -56,7 +57,7 @@ test: deploy
 	cp $(TARGET_TEST) $(DEPLOY_TEST_FILE)
 	${COMMAND}
 	rm $(DEPLOY_TEST_FILE)
-unit: deploy 
+unit: deploy 　
 	firefox $(FF_OPTION)   -uxu-testcase $(UNIT_DIR)  -uxu-log $(UNIT_LOG)  -uxu-priority must
 	ruby script/convert.rb  $(UNIT_LOG)
 	mv $(UNIT_LOG_SJIS) $(UNIT_LOG)	

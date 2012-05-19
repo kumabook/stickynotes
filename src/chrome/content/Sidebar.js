@@ -8,16 +8,16 @@ stickynotes.Sidebar = {
     return window.parent.document
       .getElementById('sidebar').contentWindow.document;
   },
-  getStickyElements: function(sticky){
+  getStickyElements: function(sticky) {
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
     var elem;
     var elements = [];
     var i = 0;
-    while(true){
-      var _id ='sticky_' + sticky.id + '_' + i;
+    while (true) {
+      var _id = 'sticky_' + sticky.id + '_' + i;
       elem = sidebarDoc.getElementById(_id);
       i++;
-      if(!elem){
+      if (!elem) {
         break;
       }
       else
@@ -29,7 +29,7 @@ stickynotes.Sidebar = {
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
     var tree = sidebarDoc.getElementById('sticky_tree');
     for (var i = 0; i < tree.childNodes.length; i++) {
-      if(tree.childNodes[i].id == 'treeitem_tag_' + tag)
+      if (tree.childNodes[i].id == 'treeitem_tag_' + tag)
         return true;
     }
     return false;
@@ -57,11 +57,11 @@ stickynotes.Sidebar = {
     // set id
     var elem, id;
     var i = 0;
-    while(true){
-      var _id ='sticky_' + sticky.id + '_' + i;
+    while (true) {
+      var _id = 'sticky_' + sticky.id + '_' + i;
       i++;
       elem = sidebarDoc.getElementById(_id);
-      if(!elem){
+      if (!elem) {
         id = _id;
         break;
       }
@@ -282,38 +282,38 @@ stickynotes.Sidebar = {
       if (tags.length == 0)
         tags.push(new stickynotes.Tag({id: 0, name: 'No Tag'}));
 
-      for (var i = 0; i < tags.length; i++){
+      for (var i = 0; i < tags.length; i++) {
         var tag = tags[i];
         parent = sidebarDoc.getElementById('tree_page_' + sticky.page_id +
                                            '_tag_' + tag.id);
         if (!parent) {
           var tagItem = sidebarDoc.getElementById('tree_tag_' + tag.id);
-          if(!tagItem){
+          if (!tagItem) {
             tagItem = stickynotes.Sidebar.createSidebarTagItem(tag).treechildren;
           }
           parent = stickynotes.Sidebar.createSidebarPageItem(
             sticky.getPage(),
-            tagItem).treechildren;          
+            tagItem).treechildren;
         }
         stickynotes.Sidebar.createSidebarStickyItem(sticky, parent);
       }
       break;
-     case 'site':      
+     case 'site':
       var url_item = sidebarDoc.getElementById('tree_page_' + sticky.page_id);
       parent = url_item;
       if (!url_item) {
         parent = stickynotes.Sidebar.createSidebarPageItem(sticky.getPage()).treechildren;
       }
-      stickynotes.Sidebar.createSidebarStickyItem(sticky, parent);  
+      stickynotes.Sidebar.createSidebarStickyItem(sticky, parent);
       break;
      case 'tag':
       tags = sticky.getTags();
       if (tags.length == 0)
         tags.push(new stickynotes.Tag({id: 0, name: 'No Tag'}));
-      for (i = 0; i < tags.length; i++){
+      for (i = 0; i < tags.length; i++) {
         var tag = tags[i];
         parent = sidebarDoc.getElementById('tree_tag_' + tag.id);
-        if(!parent) {
+        if (!parent) {
           parent = stickynotes.Sidebar.createSidebarTagItem(tag).treechildren;
         }
         stickynotes.Sidebar.createSidebarStickyItem(sticky, parent);
@@ -327,11 +327,11 @@ stickynotes.Sidebar = {
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
     var sticky_tree = sidebarDoc.getElementById('sticky_tree');
     var items = stickynotes.Sidebar.getStickyElements(sticky);
-    for(var i = 0; i < items.length; i++){
+    for (var i = 0; i < items.length; i++) {
       var parent = items[i].parentNode;
       parent.removeChild(items[i]);
-      while(parent.childNodes.length == 0 &&
-            parent.id != 'sticky_tree'){
+      while (parent.childNodes.length == 0 &&
+            parent.id != 'sticky_tree') {
         var _parent = parent.parentNode;
         var __parent = _parent.parentNode;
         _parent.removeChild(parent);
@@ -342,7 +342,7 @@ stickynotes.Sidebar = {
   },
   updateSticky: function(sticky) {
     var items = stickynotes.Sidebar.getStickyElements(sticky);
-    for(var i = 0; i < items.length; i++){
+    for (var i = 0; i < items.length; i++) {
       var id = items[i].id;
       var t = items[i];
       t.treecell_id.setAttribute('label', sticky.id);
@@ -354,15 +354,15 @@ stickynotes.Sidebar = {
       t.treecell_height.setAttribute('label', sticky.height);
       t.treecell_url.setAttribute('label', sticky.url);
       t.treecell_color.setAttribute('label', sticky.color);
-    }            
+    }
   },
-  addTag: function(tag){
+  addTag: function(tag) {
     var doc = stickynotes.Sidebar.getSidebarDoc();
     var tagItem = doc.getElementById('tree_tag_' + tag.id);
-    if(!tagItem){
+    if (!tagItem) {
       tagItem =
         stickynotes.Sidebar.createSidebarTagItem(
-          {id: tag.id, name: tag.name});            
+          {id: tag.id, name: tag.name});
     }
   },
   groupBy: function(selectedsort, key) {

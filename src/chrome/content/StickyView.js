@@ -51,13 +51,13 @@ stickynotes.StickyView.prototype.createDom = function() {
   this.tagBox = this.createTagBox();
   this.deleteButton = this.createDeleteButton();
   this.changeSize = this.createChangeSize();
-  
+
   this.dom.appendChild(this.dragBar);
   this.dom.appendChild(this.deleteButton);
   this.dom.appendChild(this.textarea);
   this.dom.appendChild(this.changeSize);
   this.dom.appendChild(this.tagBox);
-  
+
   this.dragBar.addEventListener('mousedown',
                                 function(e) {
                                   that.drag(this.parentNode, e);
@@ -277,7 +277,7 @@ stickynotes.StickyView.search = function(key) {
       stickyDom.style.visibility = 'hidden';
     }
   }
-};n
+};n;
 stickynotes.StickyView.toggleVisibilityAllStickies = function() {
   var doc = window.content.document;
   var URL = doc.location.href;

@@ -277,7 +277,7 @@ stickynotes.StickyView.search = function(key) {
       stickyDom.style.visibility = 'hidden';
     }
   }
-};n;
+};
 stickynotes.StickyView.toggleVisibilityAllStickies = function() {
   var doc = window.content.document;
   var URL = doc.location.href;
@@ -285,9 +285,12 @@ stickynotes.StickyView.toggleVisibilityAllStickies = function() {
   var stickies = stickynotes.Sticky.fetchByPage(page);
   for (var i = 0; i < stickies.length; i++) {
     var stickyDom = doc.getElementById('sticky' + stickies[i].id);
-    if (stickyDom.style.visibility == 'hidden')
-      stickyDom.style.visibility = 'visible';
-    else
+    if (stickynotes.StickyView.StickiesVisibility)
       stickyDom.style.visibility = 'hidden';
+    else
+      stickyDom.style.visibility = 'visible';
   }
+  stickynotes.StickyView.StickiesVisibility =
+    !stickynotes.StickyView.StickiesVisibility;
 };
+stickynotes.StickyView.StickiesVisibility = true;

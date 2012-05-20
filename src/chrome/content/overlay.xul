@@ -15,7 +15,7 @@
 		<menuitem 
 		   id="SNB" placesanonid="view-toolbar"
 		   toolbarId="StickyNotesToolbar"
-		   observes="side_with_sticky"/>
+		   observes="stickyListSidebarVisibility"/>
 		<menuseparator/>
 		<menuitem 
 		   id="stickynotes-menu-button-menuitem-create" 
@@ -23,8 +23,7 @@
 		   command="create_sticky"	/>
 		<menuitem 
 		   id="stickynotes-menu-button-menuitem-toggle"
-		   label="&stickyToggleMenu.label;"
-		   command="toggle_sticky"/>
+		   observes="stickiesVisibility"/>
 	  </menupopup>
 	</toolbarbutton>
   </toolbar>
@@ -33,7 +32,7 @@
     <menuitem
 	   id="sticky_menu"
 	   key="key_openSidebar_stickynotes"
-	   observes="side_with_sticky"
+	   observes="stickyListSidebarVisibility"
 	   insertbefore="sanitizeSeparator" />
   </menupopup>
   <popup id="contentAreaContextMenu">
@@ -45,29 +44,18 @@
 	   />
     <menuitem 
 	   id="sticky_toggle_popup"
-	   label="&stickyToggleMenu.label;"
 	   key="key_toggle_stickynotes"			  
-	   observes="toggle_sticky"
+	   observes="stickiesVisibility"
 	   />
   </popup>
   <keyset id="mainKeyset">
-    <key id="key_openSidebar_stickynotes" key="s" modifiers="accel shift" command="side_with_sticky"/>
+    <key id="key_openSidebar_stickynotes" key="s" modifiers="accel shift" command="stickyListSidebarVisibility"/>
     <key id="key_toggle_stickynotes" key="q" modifiers="control" command="toggle_sticky"/>
     <key id="key_create_stickynotes" key="c" modifiers="control shift" command="create_sticky"/>
     <key id="key_focusSidebar_stickynotes" key="f" modifiers="control shift" command="focusSidebar_sticky"/>
   </keyset>
   <menupopup id="viewSidebarMenu">
-    <menuitem observes="side_with_sticky" key="key_openSidebar_stickynotes"/>
-    <!--		  <menuitem id="sticky_focus_popup"
-	label="&stickyFocusMenu.label;"
-	key="key_focusSidebar_stickynotes"
-	command="focusSidebar_sticky"
-	/>
-	<menuitem id="sticky_toggle_popup"
-	label="&stickyToggleMenu.label;"
-	key="key_toggle_stickynotes"
-	command="toggle_sticky"
-	/> -->
+    <menuitem observes="stickyListSidebarVisibility" key="key_openSidebar_stickynotes"/>
   </menupopup>
   <commandset>
     <command id="toggle_sticky" oncommand="stickynotes.StickyView.toggleVisibilityAllStickies();"/>
@@ -76,12 +64,16 @@
   </commandset>
   <broadcasterset>
     <broadcaster
-	   id="side_with_sticky"
+	   id="stickyListSidebarVisibility"
 	   label="&show_sticky_list.label;"
 	   autoCheck="false" type="checkbox" group="sidebar"
 	   sidebartitle="&sticky_list.sidebarTitle;"
 	   sidebarurl="chrome://stickynotes/content/sidebar.xul"
-	   oncommand="toggleSidebar('side_with_sticky');"/>
+	   oncommand="toggleSidebar('stickyListSidebarVisibility');"/>
+	<broadcaster
+	   id="stickiesVisibility"
+	   label="&stickyToggleMenu.label;"
+	   oncommand="stickynotes.StickyView.toggleVisibilityAllStickies();"/>
   </broadcasterset>
   <script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />

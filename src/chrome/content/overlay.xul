@@ -2,6 +2,33 @@
 <!DOCTYPE overlay SYSTEM "chrome://stickynotes/locale/">
 <overlay id="stickynotes-overlay"
 		 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <toolbar id="nav-bar">
+	<toolbarbutton
+	   id="stickynotes-menu-button" type="menu-button"
+	   class="toolbarbutton-1 chromeclass-toolbar-additional"
+	   image="chrome://stickynotes/content/stickynotes-icon.png"
+	   label="StickyNotes" tooltiptext="StickyNotes Menu">
+	  <menupopup 
+		 id="SNB_bookmarksPopup" placespopup="true"
+		 context="placesContext" openInTabs="children"
+		 popupsinherittooltip="true">
+		<menuitem 
+		   id="SNB" placesanonid="view-toolbar"
+		   toolbarId="StickyNotesToolbar"
+		   observes="side_with_sticky"/>
+		<menuseparator/>
+		<menuitem 
+		   id="stickynotes-menu-button-menuitem-create" 
+		   label="&stickyMenu.label;"
+		   command="create_sticky"	/>
+		<menuitem 
+		   id="stickynotes-menu-button-menuitem-toggle"
+		   label="&stickyToggleMenu.label;"
+		   command="toggle_sticky"/>
+	  </menupopup>
+	</toolbarbutton>
+  </toolbar>
+
   <menupopup id="menu_ToolsPopup">
     <menuitem
 	   id="sticky_menu"
@@ -10,16 +37,18 @@
 	   insertbefore="sanitizeSeparator" />
   </menupopup>
   <popup id="contentAreaContextMenu">
-    <menuitem id="sticky_popup"
-			  label="&stickyMenu.label;"
-	      key="key_create_stickynotes"
-	      command="create_sticky" 
-	      />
-    <menuitem id="sticky_toggle_popup"
-	      label="&stickyToggleMenu.label;"
-	      key="key_toggle_stickynotes"
-	      command="toggle_sticky"
-	      />
+    <menuitem 
+	   id="sticky_popup"
+	   label="&stickyMenu.label;"
+	   key="key_create_stickynotes"
+	   command="create_sticky" 
+	   />
+    <menuitem 
+	   id="sticky_toggle_popup"
+	   label="&stickyToggleMenu.label;"
+	   key="key_toggle_stickynotes"			  
+	   observes="toggle_sticky"
+	   />
   </popup>
   <keyset id="mainKeyset">
     <key id="key_openSidebar_stickynotes" key="s" modifiers="accel shift" command="side_with_sticky"/>
@@ -47,13 +76,12 @@
   </commandset>
   <broadcasterset>
     <broadcaster
-	id="side_with_sticky"
-	label="&show_sticky_list.label;"
-	autoCheck="false" type="checkbox" group="sidebar"
-	sidebartitle="&sticky_list.sidebarTitle;"
-	sidebarurl="chrome://stickynotes/content/sidebar.xul"
-	oncommand="toggleSidebar('side_with_sticky');" 
-	/>
+	   id="side_with_sticky"
+	   label="&show_sticky_list.label;"
+	   autoCheck="false" type="checkbox" group="sidebar"
+	   sidebartitle="&sticky_list.sidebarTitle;"
+	   sidebarurl="chrome://stickynotes/content/sidebar.xul"
+	   oncommand="toggleSidebar('side_with_sticky');"/>
   </broadcasterset>
   <script type="application/x-javascript" src="chrome://stickynotes/content/base.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sticky.js" />

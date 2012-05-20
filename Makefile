@@ -41,7 +41,7 @@ run: deploy
 	${COMMAND} -P stickynotes_dev
 createProfile:
 	$(COMMAND) -ProfileManager
-deploy: $(TARGET) compile
+deploy: compile
 	cp $(TARGET) $(DEPLOY_FILE)
 deploy_test: $(TARGET_TEST) compile
 	cp $(TARGET_TEST) $(DEPLOY_TEST_FILE)
@@ -49,7 +49,7 @@ deploy_test: $(TARGET_TEST) compile
 
 compile : $(SRC) $(RS) Makefile
 #	cd src ; zip -r ../dist/stickynotes.xpi chrome chrome.manifest install.rdf 
-	cd src ; zip -r ../dist/stickynotes.xpi chrome/locale chrome.manifest install.rdf chrome/content/*.js chrome/content/*.xul
+	cd src ; zip -r ../dist/stickynotes.xpi chrome/locale chrome.manifest install.rdf chrome/content/*.js chrome/content/*.xul chrome/content/*.png
 fixstyle:
 	fixjsstyle src/chrome/content/*
 	find tests/chrome/content/ -name "*.js" -and ! -name qunit.js | xargs fixjsstyle ;

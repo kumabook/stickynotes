@@ -43,8 +43,6 @@ createProfile:
 	$(COMMAND) -ProfileManager
 deploy: compile
 	cp $(TARGET) $(DEPLOY_FILE)
-deploy_test: $(TARGET_TEST) compile
-	cp $(TARGET_TEST) $(DEPLOY_TEST_FILE)
 
 
 compile : $(SRC) $(RS) Makefile
@@ -55,7 +53,8 @@ fixstyle:
 	find tests/chrome/content/ -name "*.js" -and ! -name qunit.js | xargs fixjsstyle ;
 doc: $(SRC)
 	java -jar $(JSDOC)/jsrun.jar $(JSDOC)/app/run.js  --template=$(JSDOC)/templates/jsdoc --directory=doc src/chrome/content/*.js
-test: 
+test: compile
+	cp $(TARGET) ${TEST_PROFILE}/extensions/sticky@filenamezero.dip.jp.xpi
 	cd tests ; zip -r ../$(TARGET_TEST) chrome.manifest install.rdf chrome/content/*.js chrome/content/*.xul chrome/qunit
 	cp $(TARGET_TEST) $(DEPLOY_TEST_FILE)
 	${COMMAND} -P stickynotes_test

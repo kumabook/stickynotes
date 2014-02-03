@@ -17,6 +17,5 @@
 <!ENTITY stickynotes.list_by_tag "List by tag">
 <!ENTITY stickynotes.search "search">
 <!ENTITY stickynotes.display "dispaly">
-
-
-
+<!ENTITY sticky.noTitle "no title">
+<!ENTITY sticky.defaultContent "">

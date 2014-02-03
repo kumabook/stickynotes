@@ -85,7 +85,8 @@
   <script type="application/x-javascript">
     var localizedStrings = {
       noTitle: "&sticky.noTitle;",
-      defaultContent: "&sticky.defaultContent;"
+      defaultContent: "&sticky.defaultContent;",
+      placeholderText: "&sticky.placeholderText;"
     };
   </script>
 </overlay>

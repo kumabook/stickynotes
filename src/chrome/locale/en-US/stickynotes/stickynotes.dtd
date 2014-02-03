@@ -19,3 +19,4 @@
 <!ENTITY stickynotes.display "dispaly">
 <!ENTITY sticky.noTitle "no title">
 <!ENTITY sticky.defaultContent "">
+<!ENTITY sticky.placeholderText "Insert a note here">

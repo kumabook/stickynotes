@@ -82,4 +82,11 @@
   <script type="application/x-javascript" src="chrome://stickynotes/content/StickyView.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/Sidebar.js" />
   <script type="application/x-javascript" src="chrome://stickynotes/content/overlay.js" />
+  <script type="application/x-javascript">
+    var localizedStrings = {
+      noTitle: "&sticky.noTitle;",
+      defaultContent: "&sticky.defaultContent;",
+      placeholderText: "&sticky.placeholderText;"
+    };
+  </script>
 </overlay>

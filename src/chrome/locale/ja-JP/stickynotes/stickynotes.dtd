@@ -17,5 +17,6 @@
 <!ENTITY stickynotes.list_by_tag "タグ順に並べる">
 <!ENTITY stickynotes.search "検索">
 <!ENTITY stickynotes.display "表示">
-
-
+<!ENTITY sticky.noTitle "タイトルなし">
+<!ENTITY sticky.defaultContent "">
+<!ENTITY sticky.placeholderText "ここにメモを挿入">

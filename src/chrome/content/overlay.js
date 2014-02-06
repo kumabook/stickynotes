@@ -11,13 +11,14 @@ stickynotes.createSticky = function() {
   var doc = window.content.document;
   var title = doc.title;
   if (title == '')
-    title = 'タイトルなし';
+    title = localizedStrings.noTitle;
   var sticky = stickynotes.Sticky.create({
     left: stickynotes.x, top: stickynotes.y,
     width: 150, height: 100,
     url: doc.location.href,
     title: title,
-    content: 'ここにメモを挿入.', color: 'yellow',
+    content: localizedStrings.defaultContent,
+    color: 'yellow',
     tags: ''
   });
   var stickyView = stickynotes.createStickyView(sticky);

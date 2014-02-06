@@ -116,7 +116,14 @@ stickynotes.StickyView.prototype.createTextarea = function() {
   //textarea.style.opacity= "1.5";
   textarea.style.overflow = 'auto';
   textarea.className = 'textArea';
+  textarea.placeholder = localizedStrings.placeholderText;
   textarea.sticky = this;
+  textarea.addEventListener('focus', function(e) {
+      this.placeholder = '';
+  },false);
+  textarea.addEventListener('blur', function(e) {
+      this.placeholder = localizedStrings.placeholderText;
+  },false);
   textarea.addEventListener('keydown', function(e) {
     if (e.keyCode == 68 && e.ctrlKey && e.shiftKey) {
       e.target.sticky.remove();

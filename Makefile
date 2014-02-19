@@ -14,7 +14,7 @@ TARGET_TEST = dist/stickynotes-test.xpi
 
 OS=$(shell uname)
 ifeq (${OS}, Darwin)
-	FIREFOX_ROOT=/Applications/FirefoxDev.app/Contents/MacOS/
+	FIREFOX_ROOT=/Applications/Firefox.app/Contents/MacOS/
 	COMMAND=$(FIREFOX_ROOT)/firefox 
 	PROFILE=~/Library/Application\ Support/Firefox/Profiles/stickynotes_dev
 	TEST_PROFILE=~/Library/Application\ Support/Firefox/Profiles/stickynotes_test

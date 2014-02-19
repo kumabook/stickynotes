@@ -96,29 +96,29 @@ stickynotes.deleteSticky = function(stickyView) {
 /**
  * document onload function.
  */
-stickynotes.onload = function() {
-  window.content.addEventListener('unload', function() {
+stickynotes.onload = function(e) {
+  var doc = e.target;
+  this.addEventListener('unload', function() {
     stickynotes.currentPage = 0;
   },false);
-  var current_page = window.content.document.location.href;
+  var current_page = doc.location.href;
   if (stickynotes.currentPage != current_page) {
       stickynotes.currentPage = current_page;
   } else {
-    window.content.document.removeEventListener('click',
-                                             stickynotes.watchClickPosition,
-                                             false);
+    doc.removeEventListener('click',
+                            stickynotes.watchClickPosition,
+                            false);
   }
-    stickynotes.fetchStickies();
-    window.content.document.addEventListener('click',
-                                             stickynotes.watchClickPosition,
-                                             false);
+  stickynotes.fetchStickies(doc);
+  doc.addEventListener('click',
+                       stickynotes.watchClickPosition,
+                       false);
 };
 stickynotes.watchClickPosition = function(event) {
     stickynotes.x = event.clientX + window.content.pageXOffset;
     stickynotes.y = event.clientY + window.content.pageYOffset;
 };
-stickynotes.sweepPreviousStickies = function() {
-  var doc = window.content.document;
+stickynotes.sweepPreviousStickies = function(doc) {
   var stickyDoms = doc.getElementsByClassName('sticky');
   if (stickyDoms && stickyDoms.length) {
     for (var i = 0, l = stickyDoms.length; i < l; i++) {
@@ -128,11 +128,10 @@ stickynotes.sweepPreviousStickies = function() {
     }
   }
 };
-stickynotes.fetchStickies = function() {
-  var doc = window.content.document;
+stickynotes.fetchStickies = function(doc) {
   var page = stickynotes.Page.fetchByUrl(doc.location.href);
 
-  stickynotes.sweepPreviousStickies();
+  stickynotes.sweepPreviousStickies(doc);
   if (page === null) return;
 
   var stickies = stickynotes.Sticky.fetchByPage(page);

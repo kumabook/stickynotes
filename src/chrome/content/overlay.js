@@ -9,9 +9,13 @@
   */
 stickynotes.createSticky = function() {
   var doc = window.content.document;
+  if (doc.body === null || doc.body === undefined) {
+      return;
+  }
   var title = doc.title;
-  if (title == '')
+  if (title == '') {
     title = localizedStrings.noTitle;
+  }
   var sticky = stickynotes.Sticky.create({
     left: stickynotes.x, top: stickynotes.y,
     width: 150, height: 100,
@@ -23,8 +27,9 @@ stickynotes.createSticky = function() {
   });
   var stickyView = stickynotes.createStickyView(sticky);
   doc.body.appendChild(stickyView.dom);
-  stickynotes.Sidebar.addSticky(sticky);
-  return sticky;
+  if (stickynotes.Sidebar.isVisible()) {
+    stickynotes.Sidebar.addSticky(sticky);
+  }
 };
 /**
  * Create Sticky element.
@@ -36,15 +41,21 @@ stickynotes.createStickyView = function(sticky) {
     onClickDeleteButton: function(e) {
       this.deleteDom();
       this.sticky.remove();
-      stickynotes.Sidebar.deleteSticky(sticky);
+      if (stickynotes.Sidebar.isVisible()) {
+        stickynotes.Sidebar.deleteSticky(sticky);
+      }
     },
     onTextareaChange: function(e) {
       this.sticky.content = this.textarea.value;
       this.sticky.save();
-      stickynotes.Sidebar.updateSticky(sticky);
+      if (stickynotes.Sidebar.isVisible()) {
+        stickynotes.Sidebar.updateSticky(sticky);
+      }
     },
     onTagTextareaChange: function(e) {
-      stickynotes.Sidebar.deleteSticky(sticky);
+      if (stickynotes.Sidebar.isVisible()) {
+        stickynotes.Sidebar.deleteSticky(sticky);
+      }
       var tags_str = (this.tagBox.value + ',').replace(/^[\s　]+|[\s　]+$/g, '');
       var tags = [];
       var _tags = (tags_str).split(',');
@@ -64,19 +75,25 @@ stickynotes.createStickyView = function(sticky) {
       }
       this.sticky.setTags(tags);
       this.tagBox.value = tags.join(',');
-      stickynotes.Sidebar.addSticky(sticky);
+      if (stickynotes.Sidebar.isVisible()) {
+        stickynotes.Sidebar.addSticky(sticky);
+      }
     },
     onMoveEnd: function(e) {
       this.sticky.left = parseInt(this.dom.style.left);
       this.sticky.top = parseInt(this.dom.style.top);
       this.sticky.save();
-      stickynotes.Sidebar.updateSticky(sticky);
+      if (stickynotes.Sidebar.isVisible()) {
+        stickynotes.Sidebar.updateSticky(sticky);
+      }
     },
     onResizeEnd: function(e) {
       this.sticky.width = parseInt(this.textarea.style.width);
       this.sticky.height = parseInt(this.textarea.style.height) + 7;
       this.sticky.save();
-      stickynotes.Sidebar.updateSticky(sticky);
+      if (stickynotes.Sidebar.isVisible()) {
+        stickynotes.Sidebar.updateSticky(sticky);
+      }
     }
   });
   return stickyView;
@@ -89,7 +106,9 @@ stickynotes.deleteSticky = function(stickyView) {
   //delete from database
   stickyView.sticky.remove();
   //delete from sidebar
-  stickynotes.Sidebar.deleteSticky(stickyView.stikcy);
+  if (stickynotes.Sidebar.isVisible()) {
+    stickynotes.Sidebar.deleteSticky(stickyView.stikcy);
+  }
   //delete from content document
   stickyView.deleteDom();
 };

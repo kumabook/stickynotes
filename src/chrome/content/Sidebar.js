@@ -4,6 +4,10 @@
  * @type {Object}
  */
 stickynotes.Sidebar = {
+  isVisible: function() {
+      var sidebar = window.parent.document.getElementById('sidebar');
+      return sidebar && sidebar.document;
+  },
   getSidebarDoc: function() {
     return window.parent.document
       .getElementById('sidebar').contentWindow.document;

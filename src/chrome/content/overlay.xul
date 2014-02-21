@@ -59,7 +59,7 @@
   </menupopup>
   <commandset>
     <command id="toggle_sticky" oncommand="stickynotes.StickyView.toggleVisibilityAllStickies();"/>
-    <command id="create_sticky" oncommand="stickynotes.createSticky().focus();"/>
+    <command id="create_sticky" oncommand="stickynotes.createSticky();"/>
     <command id="focusSidebar_sticky" oncommand="stickynotes.Sidebar.focusSidebar();"/>
   </commandset>
   <broadcasterset>

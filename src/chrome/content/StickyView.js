@@ -137,7 +137,7 @@ stickynotes.StickyView.prototype.createDeleteButton = function() {
   deleteButton.style.position = 'absolute';
   deleteButton.style.width = '10px';
   deleteButton.style.fontFamily = 'fantasy';
-  deleteButton.style.height = '22px';
+  deleteButton.style.height = '30px';
   deleteButton.style.right = 0 + 'px';
   deleteButton.style.top = '0px';
   deleteButton.className = 'deleteButton';
@@ -155,7 +155,7 @@ stickynotes.StickyView.prototype.createDragBar = function() {
   var dragBar = doc.createElement('div');
   dragBar.style.position = 'relative';
   dragBar.style.width = this.sticky.width - 10 + 'px';
-  dragBar.style.height = '22px';
+  dragBar.style.height = '30px';
   dragBar.style.borderBottom = 'inset';
   dragBar.style.margin = '0px';
   dragBar.className = 'dragBar';
@@ -172,8 +172,9 @@ stickynotes.StickyView.prototype.createTagBox = function() {
   }
   tagBox.value = str;
   tagBox.style.position = 'absolute';
+//  tagBox.style.height = '50px';
   tagBox.style.width = '50px';
-  tagBox.style.right = 30 + 'px';
+  tagBox.style.right = '30px';
   tagBox.style.top = '0px';
   return tagBox;
 };

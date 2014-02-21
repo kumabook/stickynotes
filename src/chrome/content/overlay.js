@@ -96,30 +96,49 @@ stickynotes.deleteSticky = function(stickyView) {
 /**
  * document onload function.
  */
-stickynotes.onload = function() {
-  window.content.addEventListener('unload', function() {
-    stickynotes.loaded = 0;
+stickynotes.onload = function(e) {
+  var doc = e.target;
+  this.addEventListener('unload', function() {
+    stickynotes.currentPage = 0;
   },false);
-  var current_page = window.content.document.location.href;
-  if (stickynotes.loaded != current_page) stickynotes.loaded = current_page;
-  else return;
-  var doc = window.content.document;
+  var current_page = doc.location.href;
+  if (stickynotes.currentPage != current_page) {
+      stickynotes.currentPage = current_page;
+  } else {
+    doc.removeEventListener('click',
+                            stickynotes.watchClickPosition,
+                            false);
+  }
+  stickynotes.fetchStickies(doc);
+  doc.addEventListener('click',
+                       stickynotes.watchClickPosition,
+                       false);
+};
+stickynotes.watchClickPosition = function(event) {
+    stickynotes.x = event.clientX + window.content.pageXOffset;
+    stickynotes.y = event.clientY + window.content.pageYOffset;
+};
+stickynotes.sweepPreviousStickies = function(doc) {
+  var stickyDoms = doc.getElementsByClassName('sticky');
+  if (stickyDoms && stickyDoms.length) {
+    for (var i = 0, l = stickyDoms.length; i < l; i++) {
+      if (stickyDoms[i]) {
+        doc.body.removeChild(stickyDoms[i]);
+      }
+    }
+  }
+};
+stickynotes.fetchStickies = function(doc) {
   var page = stickynotes.Page.fetchByUrl(doc.location.href);
+
+  stickynotes.sweepPreviousStickies(doc);
+  if (page === null) return;
+
   var stickies = stickynotes.Sticky.fetchByPage(page);
   for (var i = 0; i < stickies.length; i++) {
     var stickyView = new stickynotes.createStickyView(stickies[i]);
     doc.body.appendChild(stickyView.dom);
   }
-  /*
-   * save click position.
-   */
-  doc.addEventListener(
-    'click',
-    function(event) {
-      stickynotes.x = event.clientX + window.content.pageXOffset;
-      stickynotes.y = event.clientY + window.content.pageYOffset;
-    },
-    false);
 };
 /**
  * initialize function.

@@ -43,19 +43,19 @@ stickynotes.StickyView.prototype.createDom = function() {
   this.dom.style.position = 'absolute';
   this.dom.style.left = this.sticky.left + 'px';
   this.dom.style.top = this.sticky.top + 'px';
-  //sticky.style.border = "3px outset gray";
-  this.dom.style.zIndex = '100';
+  this.dom.style.background = '#f1c40f';
+  this.dom.style.opacity = 0.85;
+  this.dom.style.borderRadius = '10px';
+  this.dom.style.zIndex = '10000';
   this.dom.className = 'sticky';
   this.textarea = this.createTextarea();
   this.dragBar = this.createDragBar();
   this.tagBox = this.createTagBox();
   this.deleteButton = this.createDeleteButton();
-  this.changeSize = this.createChangeSize();
 
   this.dom.appendChild(this.dragBar);
   this.dom.appendChild(this.deleteButton);
   this.dom.appendChild(this.textarea);
-  this.dom.appendChild(this.changeSize);
   this.dom.appendChild(this.tagBox);
 
   this.dragBar.addEventListener('mousedown',
@@ -92,10 +92,11 @@ stickynotes.StickyView.prototype.createDom = function() {
       var pos = getElementPosition(that.textarea);
       var right = pos.left + parseInt(that.textarea.style.width);
       var bottom = pos.top + parseInt(that.textarea.style.height);
+
       if ((right - stickynotes.Sticky.changeElemSize < e.clientX &&
-           e.clientX < right) &&
+           e.clientX < right + stickynotes.Sticky.changeElemSize) &&
           (bottom - stickynotes.Sticky.changeElemSize < e.clientY &&
-           e.clientY < bottom)) {
+           e.clientY < bottom + stickynotes.Sticky.changeElemSize)) {
         that.resize(that.dom, e);
       }
     },
@@ -108,13 +109,17 @@ stickynotes.StickyView.prototype.createTextarea = function() {
   textarea.style.width = this.sticky.width + 'px';
   textarea.style.height = this.sticky.height - 7 + 'px';
   textarea.value = this.sticky.content;
-  textarea.style.fontWeight = 'bold';
+  textarea.style.backgroundColor = 'transparent';
   textarea.id = 'sticky_id_' + this.sticky.id;
   textarea.style.border = 'none';
   textarea.style.margin = '0px';
-  textarea.style.backgroundColor = this.sticky.color;
-  //textarea.style.opacity= "1.5";
   textarea.style.overflow = 'auto';
+  textarea.style.fontSize = '13px';
+  textarea.style.fontWeight = 'normal';
+  textarea.style.lineHeight = '14px';
+  textarea.style.fontFamily = 'trebuchet ms';
+  textarea.style.paddingTop = '4px';
+  textarea.style.paddingLeft = '4px';
   textarea.className = 'textArea';
   textarea.placeholder = localizedStrings.placeholderText;
   textarea.sticky = this;
@@ -133,20 +138,29 @@ stickynotes.StickyView.prototype.createTextarea = function() {
 };
 stickynotes.StickyView.prototype.createDeleteButton = function() {
   var doc = window.content.document;
-  var deleteButton = doc.createElement('div');
+  var deleteButton = doc.createElement('button');
   deleteButton.style.position = 'absolute';
-  deleteButton.style.width = '10px';
+  deleteButton.style.width = '22px';
+  deleteButton.style.cursor = 'pointer';
+  deleteButton.style.borderRadius = '22px';
+  deleteButton.style.border = '1px solid #AEAEAE';
+  deleteButton.style.color = '#FFFFFF';
+  deleteButton.style.backgroundColor = '#605F61';
+
   deleteButton.style.fontFamily = 'fantasy';
-  deleteButton.style.height = '30px';
-  deleteButton.style.right = 0 + 'px';
+  deleteButton.style.fontWeight = 'bold';
+  deleteButton.style.fontSize = '22px';
+  deleteButton.style.lineHeight = '0px';
+  deleteButton.style.height = '22px';
+  deleteButton.style.right = '0px';
   deleteButton.style.top = '0px';
   deleteButton.className = 'deleteButton';
-  deleteButton.style.backgroundColor = this.sticky.color;
-  deleteButton.style.margin = '0px';
-  deleteButton.style.padding = '0px';
-  deleteButton.style.textAlign = 'start';
-  deleteButton.style.borderBottom = 'inset';
-  deleteButton.style.color = 'black';
+  deleteButton.style.marginTop = '-6px';
+  deleteButton.style.marginRight = '-6px';
+  deleteButton.style.display = 'inline-block';
+  deleteButton.style.textAlign = 'center';
+
+
   deleteButton.innerHTML = 'x';
   return deleteButton;
 };
@@ -155,11 +169,12 @@ stickynotes.StickyView.prototype.createDragBar = function() {
   var dragBar = doc.createElement('div');
   dragBar.style.position = 'relative';
   dragBar.style.width = this.sticky.width - 10 + 'px';
-  dragBar.style.height = '30px';
-  dragBar.style.borderBottom = 'inset';
+  dragBar.style.height = '26px';
+  dragBar.style.borderBottom = 'solid 1px yellow';
   dragBar.style.margin = '0px';
+  dragBar.style.cursor = 'move';
   dragBar.className = 'dragBar';
-  dragBar.style.backgroundColor = this.sticky.color;
+//  dragBar.style.backgroundColor = this.sticky.color;
   return dragBar;
 };
 stickynotes.StickyView.prototype.createTagBox = function() {
@@ -172,28 +187,23 @@ stickynotes.StickyView.prototype.createTagBox = function() {
   }
   tagBox.value = str;
   tagBox.style.position = 'absolute';
-//  tagBox.style.height = '50px';
+  tagBox.style.backgroundColor = 'white';
+  tagBox.style.height = '20px';
   tagBox.style.width = '50px';
-  tagBox.style.right = '30px';
-  tagBox.style.top = '0px';
+  tagBox.style.right = '26px';
+  tagBox.style.top = '2px';
+  tagBox.style.margin = '0px';
+  tagBox.style.padding = '0px';
+  tagBox.style.borderRadius = '3px';
+  tagBox.style.border = 'solid 1px #ccc';
+  tagBox.placeholder = 'tag';
+
+  tagBox.style.fontSize = '13px';
+  tagBox.style.fontWeight = 'normal';
+  tagBox.style.lineHeight = '14px';
+  tagBox.style.fontFamily = 'trebuchet ms';
+
   return tagBox;
-};
-stickynotes.StickyView.prototype.createChangeSize = function() {
-  var doc = window.content.document;
-  var changeSize = doc.createElement('div');
-  changeSize.style.position = 'absolute';
-  changeSize.style.left = this.sticky.width - 5 + 'px';
-  changeSize.style.top = this.sticky.height + 6 + 'px';
-  changeSize.style.width = '20px';
-  changeSize.style.height = '20px';
-  changeSize.className = 'changeSize';
-  changeSize.style.fontSize = '70%';
-  changeSize.style.fontFamily = 'san-serif';
-  changeSize.innerHTML = '';
-  changeSize.style.padding = '0px';
-  changeSize.style.margin = '0px';
-  changeSize.style.textAlign = 'start';
-  return changeSize;
 };
 
 /**

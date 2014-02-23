@@ -140,28 +140,29 @@ stickynotes.StickyView.prototype.createDeleteButton = function() {
   var doc = window.content.document;
   var deleteButton = doc.createElement('button');
   deleteButton.style.position = 'absolute';
-  deleteButton.style.width = '22px';
+  deleteButton.style.width = '20px';
   deleteButton.style.cursor = 'pointer';
-  deleteButton.style.borderRadius = '22px';
+  deleteButton.style.borderRadius = '20px';
   deleteButton.style.border = '1px solid #AEAEAE';
   deleteButton.style.color = '#FFFFFF';
   deleteButton.style.backgroundColor = '#605F61';
 
   deleteButton.style.fontFamily = 'fantasy';
   deleteButton.style.fontWeight = 'bold';
-  deleteButton.style.fontSize = '22px';
+  deleteButton.style.fontSize = '20px';
   deleteButton.style.lineHeight = '0px';
-  deleteButton.style.height = '22px';
+  deleteButton.style.height = '20px';
   deleteButton.style.right = '0px';
   deleteButton.style.top = '0px';
   deleteButton.className = 'deleteButton';
-  deleteButton.style.marginTop = '-6px';
-  deleteButton.style.marginRight = '-6px';
+  deleteButton.style.marginTop = '3px';
+  deleteButton.style.marginRight = '3px';
+  deleteButton.style.paddingTop = '7px';
+  deleteButton.style.paddingLeft = '7px';
   deleteButton.style.display = 'inline-block';
   deleteButton.style.textAlign = 'center';
 
-
-  deleteButton.innerHTML = 'x';
+  deleteButton.innerHTML = '✖';
   return deleteButton;
 };
 stickynotes.StickyView.prototype.createDragBar = function() {

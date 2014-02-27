@@ -87,5 +87,5 @@
   <script type="application/x-javascript"
           src="chrome://stickynotes/content/Sidebar.js" />
   <script type="application/x-javascript"
-          src="chrome://stickynotes/content/sidebar_overlay.js" />
+          src="chrome://stickynotes/content/sidebar_main.js" />
 </window>

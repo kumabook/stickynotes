@@ -190,29 +190,31 @@ stickynotes.Sidebar = {
       .removeEventListener('click',
                            stickynotes.Sidebar.resizeSidebarHeight, false);
   },
-  getSelectStickyId: function() {
+  getSelectedStickyId: function() {
     var id;
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
     var tree = sidebarDoc.getElementById('sticky');
     id = tree.view.getCellText(tree.currentIndex,
                                tree.columns.getNamedColumn('id'));
-    return id;
+    return id === '' ? null : id;
   },
   handleEvent: function(event) {//function on mouse right clicked.
     if (document.getElementById('sticky_tree').childNodes.length == 0) {
       document.getElementById('clipmenu').hidden = true;
       return;
     }
-    var sticky = stickynotes.Sidebar.getSelectStickyId();
-    if (sticky == '') {
+    var sticky = stickynotes.Sidebar.getSelectedStickyId();
+    if (sticky == null) {
       document.getElementById('clipmenu').hidden = true;
-        }
-    else {
+    } else {
       document.getElementById('clipmenu').hidden = false;
     }
   },
   remove: function() {
-    var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectStickyId());
+    var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectedStickyId());
+    if (sticky == null) {
+      return;
+    }
     sticky.remove();
     stickynotes.Sidebar.deleteSticky(sticky);
     var doc = window.content.document;
@@ -224,7 +226,10 @@ stickynotes.Sidebar = {
     }
   },
   jump: function() {
-    var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectStickyId());
+    var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectedStickyId());
+    if (sticky == null) {
+      return;
+    }
     var page = sticky.getPage();
     addon.port.emit('jump', sticky, page.url);
     document.getElementById('sticky').blur();

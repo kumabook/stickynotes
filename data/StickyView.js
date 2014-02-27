@@ -189,12 +189,12 @@ stickynotes.StickyView.prototype.createTagBox = function() {
   tagBox.style.padding = '0px';
   tagBox.style.borderRadius = '3px';
   tagBox.style.border = 'solid 1px #ccc';
-  tagBox.placeholder = 'tag,...';
+  tagBox.placeholder = 'tag, ...';
   tagBox.addEventListener('focus', function(e) {
     this.placeholder = '';
   },false);
   tagBox.addEventListener('blur', function(e) {
-    this.placeholder = 'tag,...';;
+    this.placeholder = 'tag, ...';;
   },false);
 
   tagBox.style.fontSize = '13px';

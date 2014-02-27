@@ -9,8 +9,7 @@ stickynotes.Sidebar = {
       return sidebar && sidebar.document;
   },
   getSidebarDoc: function() {
-    return window.parent.document
-      .getElementById('sidebar').contentWindow.document;
+    return document;
   },
   getStickyElements: function(sticky) {
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
@@ -226,7 +225,9 @@ stickynotes.Sidebar = {
   },
   jump: function() {
     var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectStickyId());
-    sticky.jump();
+    var page = sticky.getPage();
+    addon.port.emit('jump', sticky, page.url);
+    document.getElementById('sticky').blur();
   },
   focusSidebar: function() {
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();

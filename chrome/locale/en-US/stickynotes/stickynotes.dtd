@@ -1,7 +1,7 @@
 <!ENTITY stickyMenu.label "Create sticky here">
 <!ENTITY stickyToggleMenu.label   "Toggle stickies visibility">
 <!ENTITY stickyFocusMenu.label   "focus on sticky sidebar">
-<!ENTITY show_sticky_list.label   "display Sticky List">
+<!ENTITY show_sticky_list.label   "Display Sticky List">
 <!ENTITY sticky_list.sidebarTitle "Sticky List">
 <!ENTITY sticky_list.sidebarText "Text">
 <!ENTITY sticky_list.sidebarX "X">

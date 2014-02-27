@@ -1,7 +1,3 @@
-/**
- * @constructor
- * @param {Object} param param.
- */
 stickynotes.StickyView = function(param) {
   this.sticky = param.sticky;
   this.onClickDeleteButton = param.onClickDeleteButton;
@@ -12,15 +8,13 @@ stickynotes.StickyView = function(param) {
   this.createDom();
 };
 
-/**
- * change element size.
- */
-stickynotes.Sticky.changeElemSize = 35,
+stickynotes.StickyView.changeElemSize = 35;
+
 /**
  * update dom element.
 */
 stickynotes.StickyView.prototype.updateDom = function() {
-  var doc = window.content.document;
+  var doc = document;
   var stickyDom = doc.getElementById('sticky' + this.id);
   if (stickyDom) {
   }
@@ -29,14 +23,14 @@ stickynotes.StickyView.prototype.updateDom = function() {
  * remove dom element.
  */
 stickynotes.StickyView.prototype.deleteDom = function() {
-  var doc = window.content.document;
+  var doc = document;
   doc.body.removeChild(this.dom);
 };
 /**
  * create dom element.
  */
 stickynotes.StickyView.prototype.createDom = function() {
-  var doc = window.content.document;
+  var doc = document;
   var that = this;
   this.dom = doc.createElement('div');
   this.dom.id = 'sticky' + this.sticky.id;
@@ -93,17 +87,17 @@ stickynotes.StickyView.prototype.createDom = function() {
       var right = pos.left + parseInt(that.textarea.style.width);
       var bottom = pos.top + parseInt(that.textarea.style.height);
 
-      if ((right - stickynotes.Sticky.changeElemSize < e.clientX &&
-           e.clientX < right + stickynotes.Sticky.changeElemSize) &&
-          (bottom - stickynotes.Sticky.changeElemSize < e.clientY &&
-           e.clientY < bottom + stickynotes.Sticky.changeElemSize)) {
+      if ((right - stickynotes.StickyView.changeElemSize < e.clientX &&
+           e.clientX < right + stickynotes.StickyView.changeElemSize) &&
+          (bottom - stickynotes.StickyView.changeElemSize < e.clientY &&
+           e.clientY < bottom + stickynotes.StickyView.changeElemSize)) {
         that.resize(that.dom, e);
       }
     },
     true);
 };
 stickynotes.StickyView.prototype.createTextarea = function() {
-  var doc = window.content.document;
+  var doc = document;
   var textarea = doc.createElement('textarea');
   textarea.style.position = 'relative';
   textarea.style.width = this.sticky.width + 'px';
@@ -121,13 +115,13 @@ stickynotes.StickyView.prototype.createTextarea = function() {
   textarea.style.paddingTop = '4px';
   textarea.style.paddingLeft = '4px';
   textarea.className = 'textArea';
-  textarea.placeholder = localizedStrings.placeholderText;
+  textarea.placeholder = 'memo';
   textarea.sticky = this;
   textarea.addEventListener('focus', function(e) {
       this.placeholder = '';
   },false);
   textarea.addEventListener('blur', function(e) {
-      this.placeholder = localizedStrings.placeholderText;
+      this.placeholder = 'memo';
   },false);
   textarea.addEventListener('keydown', function(e) {
     if (e.keyCode == 68 && e.ctrlKey && e.shiftKey) {
@@ -137,7 +131,7 @@ stickynotes.StickyView.prototype.createTextarea = function() {
   return textarea;
 };
 stickynotes.StickyView.prototype.createDeleteButton = function() {
-  var doc = window.content.document;
+  var doc = document;
   var deleteButton = doc.createElement('button');
   deleteButton.style.position = 'absolute';
   deleteButton.style.width = '20px';
@@ -155,10 +149,8 @@ stickynotes.StickyView.prototype.createDeleteButton = function() {
   deleteButton.style.right = '0px';
   deleteButton.style.top = '0px';
   deleteButton.className = 'deleteButton';
-  deleteButton.style.marginTop = '3px';
-  deleteButton.style.marginRight = '3px';
-  deleteButton.style.paddingTop = '7px';
-  deleteButton.style.paddingLeft = '7px';
+  deleteButton.style.margin = '3px 3px 0px 0px';
+  deleteButton.style.padding = '1% 0 0 1%';
   deleteButton.style.display = 'inline-block';
   deleteButton.style.textAlign = 'center';
 
@@ -166,7 +158,7 @@ stickynotes.StickyView.prototype.createDeleteButton = function() {
   return deleteButton;
 };
 stickynotes.StickyView.prototype.createDragBar = function() {
-  var doc = window.content.document;
+  var doc = document;
   var dragBar = doc.createElement('div');
   dragBar.style.position = 'relative';
   dragBar.style.width = this.sticky.width - 10 + 'px';
@@ -179,9 +171,9 @@ stickynotes.StickyView.prototype.createDragBar = function() {
   return dragBar;
 };
 stickynotes.StickyView.prototype.createTagBox = function() {
-  var doc = window.content.document;
+  var doc = document;
   var tagBox = doc.createElement('input');
-  var tags = this.sticky.getTags();
+  var tags = [];//this.sticky.getTags();
   var str = '';
   for (var i = 0; i < tags.length; str += ',', i++) {
     str += tags[i].name;
@@ -197,7 +189,13 @@ stickynotes.StickyView.prototype.createTagBox = function() {
   tagBox.style.padding = '0px';
   tagBox.style.borderRadius = '3px';
   tagBox.style.border = 'solid 1px #ccc';
-  tagBox.placeholder = 'tag';
+  tagBox.placeholder = 'tag,...';
+  tagBox.addEventListener('focus', function(e) {
+    this.placeholder = '';
+  },false);
+  tagBox.addEventListener('blur', function(e) {
+    this.placeholder = 'tag,...';;
+  },false);
 
   tagBox.style.fontSize = '13px';
   tagBox.style.fontWeight = 'normal';
@@ -214,7 +212,7 @@ stickynotes.StickyView.prototype.createTagBox = function() {
  */
 stickynotes.StickyView.prototype.drag = function(elem, e) {
   var that = this;
-  var URL = window.content.document.location.href;
+  var URL = document.location.href;
   var startX = e.clientX, startY = e.clientY;
   var origX = elem.offsetLeft, origY = elem.offsetTop;
   var deltaX = startX - origX, deltaY = startY - origY;
@@ -239,7 +237,7 @@ stickynotes.StickyView.prototype.drag = function(elem, e) {
  */
 stickynotes.StickyView.prototype.resize = function(elem, e) {
   var that = this;
-  var URL = window.content.document.location.href;
+  var URL = document.location.href;
   var origX = elem.offsetLeft, origY = elem.offsetTop;
   var deltaX = startX - origX, deltaY = startY - origY;
   var startX = e.clientX, startY = e.clientY;
@@ -274,6 +272,26 @@ stickynotes.StickyView.prototype.resize = function(elem, e) {
 stickynotes.StickyView.prototype.focus = function() {
   this.textarea.focus();
 };
+stickynotes.StickyView.str2Tags = function(str) {
+  var tags_str = (str + ',').replace(/^[\s　]+|[\s　]+$/g, '');
+  var tags = [];
+  var _tags = (tags_str).split(',');
+  _tags = _tags.slice(0, _tags.length - 1);
+  for (var i = 0; i < _tags.length; i++) {
+    _tags[i] = _tags[i].replace(/^[\s　]+|[\s　]+$/g, '');
+    if (!_tags[i] == '') {//remove blank str
+      var isUnique = true;
+      for (var j = 0; j < tags.length; j++) {//remove duplicated str
+        if (tags[j] == _tags[i]) {
+          isUnique = false;
+        }
+      }
+      if (isUnique)
+        tags.push(_tags[i]);
+    }
+  }
+  return tags;
+};
 /**
  * toString
  * @return {String} string.
@@ -283,7 +301,7 @@ stickynotes.StickyView.prototype.toString = function() {
 };
 
 stickynotes.StickyView.search = function(key) {
-  var doc = window.content.document;
+  var doc = document;
   var URL = doc.location.href;
   var page = stickynotes.Page.fetchByUrl(URL);
   var stickies = stickynotes.Sticky.fetchByPage(page);
@@ -297,13 +315,9 @@ stickynotes.StickyView.search = function(key) {
     }
   }
 };
-stickynotes.StickyView.toggleVisibilityAllStickies = function() {
-  var doc = window.content.document;
-  var URL = doc.location.href;
-  var page = stickynotes.Page.fetchByUrl(URL);
-  var stickies = stickynotes.Sticky.fetchByPage(page);
+stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
   for (var i = 0; i < stickies.length; i++) {
-    var stickyDom = doc.getElementById('sticky' + stickies[i].id);
+    var stickyDom = document.getElementById('sticky' + stickies[i].id);
     if (stickynotes.StickyView.StickiesVisibility)
       stickyDom.style.visibility = 'hidden';
     else

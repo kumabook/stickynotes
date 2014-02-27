@@ -11,7 +11,7 @@
     }, true);
     root.addEventListener('keydown', function(e) {
       if (e.keyCode == 68) {// d  --> Delete
-        stickynotes.Sidebar.delete();
+        stickynotes.Sidebar.remove();
         stickynotes.Sidebar.focusSidebar();
       }
     },true);
@@ -34,4 +34,16 @@
                           function() {
                             stickynotes.Sidebar.destroy(); },
                           false);
+  addon.port.on('focus', function() {
+    stickynotes.Sidebar.focusSidebar();
+  });
+  addon.port.on('add', function(sticky) {
+    stickynotes.Sidebar.addSticky(new stickynotes.Sticky(sticky));
+  });
+  addon.port.on('delete', function(sticky) {
+    stickynotes.Sidebar.deleteSticky(new stickynotes.Sticky(sticky));
+  });
+  addon.port.on('save', function(sticky) {
+    stickynotes.Sidebar.updateSticky(new stickynotes.Sticky(sticky));
+  });
 }) ();

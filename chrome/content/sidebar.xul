@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://stickynotes/locale/">
+<window xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  title="temp_sidebar"
+  id="mainwindow"
+  context="clipmenu">
+
+  <popupset>
+    <menupopup id="clipmenu" >
+      <menuitem
+          label="&sticky_list.sidebarJump;"
+          id="popup_jump"
+          oncommand="stickynotes.Sidebar.jump();"
+          />
+      <menuitem
+          label="&sticky_list.sidebarDelete;"
+          id="popup_delete"
+          oncommand="stickynotes.Sidebar.remove();"
+          />
+    </menupopup>
+  </popupset>
+
+  <hbox id="sidebar-sticky-search-container" align="center">
+    <label id="sidebar-sticky-search-label" value="&stickynotes.search;"
+           accesskey="S" control="search-sticky-box"></label>
+    <textbox id="search-sticky-box" class="compact" flex="1" type="search"
+             aria-controls="historyTree" oncommand="stickynotes.Sidebar.searchSticky(this.value);" 
+             aria-autocomplete="list"></textbox>
+    <button id="viewButton" style="min-width:0px !important;"
+            type="menu" label="&stickynotes.display;"
+            accesskey="w" selectedsort="site" persist="selectedsort">
+      <menupopup>
+      <menuitem id="bytag+site"
+                label="&stickynotes.list_by_tag_and_site;"
+                accesskey="T" type="radio"
+                oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag+site'); stickynotes.Sidebar.groupBy('tag+site');" >
+      </menuitem>
+      <menuitem id="bysite"
+                label="&stickynotes.list_by_site;"
+                accesskey="S" type="radio"
+                oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'site'); stickynotes.Sidebar.groupBy('site');">
+      </menuitem>
+      <menuitem id="bytag"
+                label="&stickynotes.list_by_tag;"
+                accesskey="T"
+                type="radio"
+                oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag'); stickynotes.Sidebar.groupBy('tag');" >
+      </menuitem>
+      <!--      <menuitem id="bytime" label="作成した日時順に並べる" accesskey="M" type="radio"
+           oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'time'); stickynotes.Sidebar.groupBy('time');" > 
+           </menuitem>-->
+      </menupopup>
+    </button>
+  </hbox>
+
+  <tree  id="sticky" seltype="single" hidecolumnpicker="true">
+    <treecols>
+      <treecol id="text" label="&sticky_list.sidebarText;"
+               primary="true" flex="10"/>
+      <treecol id="id" label="ID" hidden="true"  flex="1"/>
+      <treecol id="left" label="&sticky_list.sidebarX;"  flex="2"/>
+      <treecol id="top" label="&sticky_list.sidebarY;"  flex="2"/>
+      <treecol id="uri" label="URL" hidden="true"/>
+      <treecol id="title" label="title" hidden="true"/>
+      <treecol id="width" label="width" hidden="true"/>
+      <treecol id="height" label="height" hidden="true"/>
+      <treecol id="color" label="color" hidden="true"/>
+    </treecols>
+
+    <treechildren id="sticky_tree" >
+      <treeitem id="sticky_tree_item" container="true" open="true">
+      </treeitem>
+    </treechildren>
+  </tree>
+  <script type="application/x-javascript" src="chrome://stickynotes/content/stickynotes.js" />
+  <script type="application/x-javascript"
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/DAO.js"/>
+  <script type="application/x-javascript"
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/Sticky.js"/>
+  <script type="application/x-javascript"
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/Page.js"/>
+  <script type="application/x-javascript"
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/Tag.js"/>
+  <script type="application/x-javascript"
+          src="chrome://stickynotes/content/Sidebar.js" />
+  <script type="application/x-javascript"
+          src="chrome://stickynotes/content/sidebar_overlay.js" />
+</window>

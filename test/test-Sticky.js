@@ -3,8 +3,8 @@ var stickynotes = require('./stickynotes');
 var testStickyParam;
 var testUrl = 'http://test.stickynotes.co.jp';
 var setup = function() {
-  stickynotes.DAO.dropTables();
-  stickynotes.DAO.createTables();
+  stickynotes.DBHelper.dropTables();
+  stickynotes.DBHelper.createTables();
   testStickyParam = {
     left: 0, top: 0,
     width: 150, height: 100,
@@ -17,13 +17,13 @@ var setup = function() {
 };
 
 var teardown = function() {
-  stickynotes.DAO.dropTables();
+  stickynotes.DBHelper.dropTables();
 };
 
 exports['test stickynotes.Sticky.create()'] = function(assert) {
   setup();
   var sticky = stickynotes.Sticky.create(testStickyParam);
-  assert.ok(sticky, 'test for DAO.insertSticky');
+  assert.ok(sticky, 'test for DBHelper.insertSticky');
   var stickies = stickynotes.Sticky.fetchAll();
   assert.equal(stickies.length, 1, 'test for stickynotes.Page.create');
   assert.throws(
@@ -31,7 +31,7 @@ exports['test stickynotes.Sticky.create()'] = function(assert) {
       testStickyParam.id = sticky.id;
       stickynotes.Sticky.create(testStickyParam);
     },
-    stickynotes.DAO.DBAccessError,
+    stickynotes.DBHelper.DBAccessError,
     'Cannot add sticky that have duplicated id');
   teardown();
 };
@@ -40,7 +40,7 @@ exports['test stickynotes.Sticky.fetchById()'] = function(assert) {
   setup();
   var sticky = stickynotes.Sticky.create(testStickyParam);
   var result = stickynotes.Sticky.fetchById(sticky.id);
-  assert.equal(sticky.id, result.id, 'test for DAO.getStickyId');
+  assert.equal(sticky.id, result.id, 'test for stickynotes.Sticky.getStickyId');
 };
 
 exports['test stickynotes.Sticky.fetchByUrl()'] = function(assert) {

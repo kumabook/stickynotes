@@ -2,12 +2,12 @@ var stickynotes = require('./stickynotes');
 var test = require("sdk/test");
 
 var setup = function() {
-  stickynotes.DAO.dropTables();
-  stickynotes.DAO.createTables();
+  stickynotes.DBHelper.dropTables();
+  stickynotes.DBHelper.createTables();
 };
 
 var teardown = function() {
-  stickynotes.DAO.dropTables();
+  stickynotes.DBHelper.dropTables();
 };
 
 exports['test stickynotes.Tag.create()'] = function(assert) {
@@ -16,10 +16,10 @@ exports['test stickynotes.Tag.create()'] = function(assert) {
   assert.ok(tag != null);
   assert.throws(function() {
     stickynotes.Tag.create({ id: 100, name: 'test1'});
-  }, stickynotes.DAO.DBAccessError);
+  }, stickynotes.DBHelper.DBAccessError);
   assert.throws(function() {
     stickynotes.Tag.create({ id: 101, name: 'test'});
-  }, stickynotes.DAO.DBAccessError);
+  }, stickynotes.DBHelper.DBAccessError);
 };
 
 exports['test stickynotes.Tag.fetchById'] = function(assert) {

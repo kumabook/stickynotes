@@ -1,11 +1,11 @@
 var stickynotes = require('./stickynotes');
 var setup = function() {
-  stickynotes.DAO.dropTables();
-  stickynotes.DAO.createTables();
+  stickynotes.DBHelper.dropTables();
+  stickynotes.DBHelper.createTables();
 };
 
 var teardown = function() {
-  stickynotes.DAO.dropTables();
+  stickynotes.DBHelper.dropTables();
 };
 
 exports['test stickynotes.Page.create'] = function(assert) {
@@ -23,7 +23,7 @@ exports['test stickynotes.Page.create'] = function(assert) {
         title: 'test page'
       });
     },
-    stickynotes.DAO.DBAccessError);
+    stickynotes.DBHelper.DBAccessError);
 };
 
 exports['test stickynotes.Page.fetchById()'] = function(assert) {
@@ -76,7 +76,7 @@ exports['test stickynotes.Page.fetchAll()'] = function(assert) {
         title: 'test page'
       });
     },
-    stickynotes.DAO.DBAccessError);
+    stickynotes.DBHelper.DBAccessError);
 };
 
 require("sdk/test").run(exports);

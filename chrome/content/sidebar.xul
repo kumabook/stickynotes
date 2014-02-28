@@ -77,7 +77,7 @@
   </tree>
   <script type="application/x-javascript" src="chrome://stickynotes/content/stickynotes.js" />
   <script type="application/x-javascript"
-          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/DAO.js"/>
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/DBHelper.js"/>
   <script type="application/x-javascript"
           src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/Sticky.js"/>
   <script type="application/x-javascript"

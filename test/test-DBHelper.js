@@ -1,16 +1,16 @@
 var stickynotes = require('./stickynotes');
 var setup = function() {
-  stickynotes.DAO.dropTables();
-  stickynotes.DAO.createTables();
+  stickynotes.DBHelper.dropTables();
+  stickynotes.DBHelper.createTables();
 };
 
 var teardown = function() {
-  stickynotes.DAO.dropTables();
+  stickynotes.DBHelper.dropTables();
 };
 
 exports['test get database connection'] = function(assert) {
   setup();
-  var con = stickynotes.DAO.getDBConn();
+  var con = stickynotes.DBHelper.getDBConn();
   assert.ok(con != null, 'get dbconnection');
 };
 

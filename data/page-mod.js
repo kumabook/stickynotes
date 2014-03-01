@@ -33,7 +33,6 @@ self.port.on('toggle-visibility', function(stickies) {
 var watchClickPosition = function(event) {
   stickynotes.x = event.clientX + window.content.pageXOffset;
   stickynotes.y = event.clientY + window.content.pageYOffset;
-  console.log('x:' + stickynotes.x + ' ,y:' + stickynotes.y);
 };
 document.addEventListener('mousedown',
                           watchClickPosition,

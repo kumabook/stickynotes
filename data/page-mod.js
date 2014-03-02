@@ -1,9 +1,15 @@
+self.port.on('strings', function(_strings) {
+  stickynotes.strings = _strings;
+});
+
 self.port.on('create-sticky', function(sticky) {
   sticky.left = stickynotes.x;
   sticky.top = stickynotes.y;
   var stickyView = stickynotes.createStickyView(sticky);
   document.body.appendChild(stickyView.dom);
   stickynotes.saveSticky(sticky);
+  stickynotes.x += 10;
+  stickynotes.y += 10;
 });
 self.port.on('delete-sticky', function(message) {
   console.log('page-mod: delete-sticky');
@@ -26,7 +32,8 @@ self.port.on('load-stickies', function(stickies) {
 });
 
 self.port.on('toggle-visibility', function(stickies) {
-  stickynotes.StickyView.toggleVisibilityAllStickies(stickies);
+  var enabled = stickynotes.StickyView.toggleVisibilityAllStickies(stickies);
+  self.port.emit('toggle-menu', enabled);
 });
 
 

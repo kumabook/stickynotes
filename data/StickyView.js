@@ -115,13 +115,13 @@ stickynotes.StickyView.prototype.createTextarea = function() {
   textarea.style.paddingTop = '4px';
   textarea.style.paddingLeft = '4px';
   textarea.className = 'textArea';
-  textarea.placeholder = 'memo';
+  textarea.placeholder = stickynotes.strings['sticky.placeholderText'];
   textarea.sticky = this;
   textarea.addEventListener('focus', function(e) {
       this.placeholder = '';
   },false);
   textarea.addEventListener('blur', function(e) {
-      this.placeholder = 'memo';
+      this.placeholder = stickynotes.strings['sticky.placeholderText'];
   },false);
   textarea.addEventListener('keydown', function(e) {
     if (e.keyCode == 68 && e.ctrlKey && e.shiftKey) {
@@ -260,7 +260,7 @@ stickynotes.StickyView.prototype.resize = function(elem, e) {
   function upHandler(e) {
     document.removeEventListener('mouseup', upHandler, true);
     document.removeEventListener('mousemove', moveHandler, true);
-    that.width = parseInt(that.textarea.style.width);//サイズの更新を記録
+    that.width = parseInt(that.textarea.style.width);
     that.height = parseInt(that.textarea.style.height) + 7;
     that.onResizeEnd();
     e.stopPropagation();
@@ -325,5 +325,6 @@ stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
   }
   stickynotes.StickyView.StickiesVisibility =
     !stickynotes.StickyView.StickiesVisibility;
+  return stickynotes.StickyView.StickiesVisibility;
 };
 stickynotes.StickyView.StickiesVisibility = true;

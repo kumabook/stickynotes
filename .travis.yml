@@ -1,11 +1,14 @@
 language: node_js
 
+before_install:
+  - "export DISPLAY=:99.0"
+  - "Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &"
+  - sleep 5
+
 before_script:
-  - sh -e /etc/init.d/xvfb start
   - cd addon-sdk
   - . bin/activate
   - cd ../
-env:
-  - DISPLAY=':99.0'
 
-script: cfx test
+script:
+ - "cfx test"

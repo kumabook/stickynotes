@@ -1,0 +1,9 @@
+{
+  "name": "stickynotes",
+  "title": "Sticky Notes",
+  "id": "sticky@filenamezero.dip.jp",
+  "description": "Put sticky notes on the web page",
+  "author": "Hiroki Kumamoto",
+  "license": "MPL 2.0",
+  "version": "0.4.5"
+}

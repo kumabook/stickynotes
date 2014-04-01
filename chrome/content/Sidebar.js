@@ -166,12 +166,12 @@ stickynotes.Sidebar = {
       }
     },true);
     var mainWindow = window.
-      QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-      .getInterface(Components.interfaces.nsIWebNavigation)
-      .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+      QueryInterface(Ci.nsIInterfaceRequestor)
+      .getInterface(Ci.nsIWebNavigation)
+      .QueryInterface(Ci.nsIDocShellTreeItem)
       .rootTreeItem
-      .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-      .getInterface(Components.interfaces.nsIDOMWindow);
+      .QueryInterface(Ci.nsIInterfaceRequestor)
+      .getInterface(Ci.nsIDOMWindow);
     mainWindow
       .addEventListener('click',
                         stickynotes.Sidebar.resizeSidebarHeight, false);
@@ -179,12 +179,12 @@ stickynotes.Sidebar = {
   destroy: function() {
     var mainWindow =
       window
-      .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-      .getInterface(Components.interfaces.nsIWebNavigation)
-      .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+      .QueryInterface(Ci.nsIInterfaceRequestor)
+      .getInterface(Ci.nsIWebNavigation)
+      .QueryInterface(Ci.nsIDocShellTreeItem)
       .rootTreeItem
-      .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-      .getInterface(Components.interfaces.nsIDOMWindow);
+      .QueryInterface(Ci.nsIInterfaceRequestor)
+      .getInterface(Ci.nsIDOMWindow);
     document.removeEventListener('popupshowing', this, false);
     mainWindow
       .removeEventListener('click',
@@ -260,12 +260,12 @@ stickynotes.Sidebar = {
   },
   resizeSidebarHeight: function() {
     var mainWindow = window.
-      QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-      .getInterface(Components.interfaces.nsIWebNavigation)
-      .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+      QueryInterface(Ci.nsIInterfaceRequestor)
+      .getInterface(Ci.nsIWebNavigation)
+      .QueryInterface(Ci.nsIDocShellTreeItem)
       .rootTreeItem
-      .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-      .getInterface(Components.interfaces.nsIDOMWindow);
+      .QueryInterface(Ci.nsIInterfaceRequestor)
+      .getInterface(Ci.nsIDOMWindow);
     var doc = window.content.document;
     stickynotes.Sidebar.getSidebarDoc().
       getElementById('sticky').height = window.innerHeight;

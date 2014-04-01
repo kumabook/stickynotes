@@ -4,7 +4,5 @@ self.port.on('focus', function(sticky) {
     elem.focus();
   }
 });
-self.port.on('transition', function(url) {
-  document.location.href = url;
-});
+
 self.postMessage(document.location.href);

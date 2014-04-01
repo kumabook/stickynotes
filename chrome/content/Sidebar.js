@@ -233,6 +233,12 @@ stickynotes.Sidebar = {
     var page = sticky.getPage();
     addon.port.emit('jump', sticky, page.url);
     document.getElementById('sticky').blur();
+    if (window.content.document.location.href != page.url) {
+      Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer).initWithCallback(
+        function() { window.content.document.location.href = page.url;  },
+        200,
+        Ci.nsITimer.TYPE_ONE_SHOT);
+    }
   },
   focusSidebar: function() {
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();

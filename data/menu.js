@@ -1,6 +1,6 @@
 var sidebarMenu, toggleMenu, createMenu;
 var strings;
-var check = '&#10004;';
+const checkChar = '✔';
 window.onload = function() {
   sidebarMenu =  document.getElementById('sidebar-menu');
   sidebarMenu.addEventListener('click', function() {
@@ -17,11 +17,11 @@ window.onload = function() {
 };
 
 var updateMenuLabel = function() {
-  sidebarMenu.innerHTML = (sidebarMenu.enabled ? check : '') +
+  sidebarMenu.textContent = (sidebarMenu.enabled ? checkChar : '') +
     strings['show_sticky_list.label'];
-  toggleMenu.innerHTML = (toggleMenu.enabled ? check : '') +
+  toggleMenu.textContent = (toggleMenu.enabled ? checkChar : '') +
     strings['stickyToggleMenu.label'];
-  createMenu.innerHTML = (createMenu.enabled ? check : '') +
+  createMenu.textContent = (createMenu.enabled ? checkChar : '') +
     strings['stickyMenu.label'];
 }
 

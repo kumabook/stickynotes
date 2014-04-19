@@ -4,7 +4,7 @@
 <window xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  title="temp_sidebar"
+  title="Stickynotes sidebar"
   id="mainwindow"
   context="clipmenu">
 
@@ -49,9 +49,6 @@
                 type="radio"
                 oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag'); stickynotes.Sidebar.groupBy('tag');" >
       </menuitem>
-      <!--      <menuitem id="bytime" label="作成した日時順に並べる" accesskey="M" type="radio"
-           oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'time'); stickynotes.Sidebar.groupBy('time');" > 
-           </menuitem>-->
       </menupopup>
     </button>
   </hbox>

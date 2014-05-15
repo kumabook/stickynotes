@@ -31,5 +31,6 @@ In sidebar, stickies are gathered by tag.
 ## How to build
 ```
 $ git submodule init
-$ addon-sdk/bin/cfx xpi
+$ git submodule update
+$ addon-sdk/bin/cfx xpi|run
 ``` 

@@ -1,4 +1,4 @@
-var sidebarMenu, toggleMenu, createMenu;
+var sidebarMenu, toggleMenu, createMenu, preferenceMenu;
 var strings;
 const checkChar = '✔';
 window.onload = function() {
@@ -14,6 +14,10 @@ window.onload = function() {
   createMenu.addEventListener('click', function() {
     self.port.emit('create-menu');
   }, true);
+  preferenceMenu =  document.getElementById('preference-menu');
+  preferenceMenu.addEventListener('click', function() {
+    self.port.emit('preference-menu');
+  }, true);
 };
 
 var updateMenuLabel = function() {
@@ -23,6 +27,8 @@ var updateMenuLabel = function() {
     strings['stickyToggleMenu.label'];
   createMenu.textContent = (createMenu.enabled ? checkChar : '') +
     strings['stickyMenu.label'];
+  preferenceMenu.textContent = (preferenceMenu.enabled ? checkChar : '') +
+    strings['preferenceMenu.label'];
 }
 
 self.port.on('strings', function(_strings) {

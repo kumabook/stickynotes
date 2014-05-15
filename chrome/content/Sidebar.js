@@ -88,7 +88,7 @@ stickynotes.Sidebar = {
     t.treecell_y.setAttribute('label', sticky.top);
     t.treecell_width.setAttribute('label', sticky.width);
     t.treecell_height.setAttribute('label', sticky.height);
-    t.treecell_url.setAttribute('label', sticky.url);
+    t.treecell_url.setAttribute('label', sticky.url ? sticky.url : '');
     t.treecell_color.setAttribute('label', sticky.color);
     // appendChild
     t.treerow_sticky.appendChild(t.treecell_text);

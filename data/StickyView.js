@@ -327,4 +327,10 @@ stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
     !stickynotes.StickyView.StickiesVisibility;
   return stickynotes.StickyView.StickiesVisibility;
 };
+
+stickynotes.StickyView.deleteDom = function(sticky) {
+  var dom = document.getElementById('sticky' + sticky.id);
+  document.body.removeChild(dom);
+};
+
 stickynotes.StickyView.StickiesVisibility = true;

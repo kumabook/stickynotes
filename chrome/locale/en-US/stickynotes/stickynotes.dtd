@@ -20,3 +20,4 @@
 <!ENTITY sticky.noTitle "no title">
 <!ENTITY sticky.defaultContent "">
 <!ENTITY sticky.placeholderText "Insert a note here">
+<!ENTITY sticky.needConfirmDelete "Confirm before delete a sticky.">

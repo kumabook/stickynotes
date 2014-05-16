@@ -9,8 +9,7 @@ stickynotes.createStickyView = function(sticky) {
   var stickyView = new stickynotes.StickyView({
     sticky: sticky,
     onClickDeleteButton: function(e) {
-      this.deleteDom();
-      stickynotes.deleteSticky(this.sticky);
+        stickynotes.deleteSticky(this.sticky);
     },
     onTextareaChange: function(e) {
       this.sticky.content = this.textarea.value;

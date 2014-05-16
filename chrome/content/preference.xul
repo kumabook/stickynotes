@@ -8,7 +8,7 @@
             style="width: 300px; hight: 300px">
   </prefpane>-->
   <prefpane id="shortcut-pane" label="Shortcuts"
-            style="width: 500px; hight: 300px">
+            style="width: 500px; height: 300px">
     <tree id="stickynotes-preference-tree"
           editable="true"
           rows="10"

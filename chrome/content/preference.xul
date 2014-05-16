@@ -1,17 +1,25 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://stickynotes/locale/">
 <prefwindow
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     id="stickynotesPreferences"
     label="Sticky Notes Preferences">
-<!--  <prefpane id="sticky-pane" label="Sticky"
-            style="width: 300px; hight: 300px">
-  </prefpane>-->
+  <prefpane id="general-pane" label="General"
+            style="width: 500px; height: 100px;">
+    <preferences>
+      <preference id="needConfirmBeforeDelete"
+                  name="extensions.stickynotes.needConfirmBeforeDelete"
+                  type="bool"/>
+    </preferences>
+    <checkbox label="&sticky.needConfirmDelete;"
+              preference="needConfirmBeforeDelete"/>
+  </prefpane>
   <prefpane id="shortcut-pane" label="Shortcuts"
-            style="width: 500px; height: 300px">
+            style="width: 500px; height: 100px;">
     <tree id="stickynotes-preference-tree"
           editable="true"
-          rows="10"
+          rows="5"
           seltype="cell"
           selstyle="primary"
           hidecolumnpicker="true">

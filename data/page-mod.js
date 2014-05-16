@@ -11,8 +11,9 @@ self.port.on('create-sticky', function(sticky) {
   stickynotes.x += 10;
   stickynotes.y += 10;
 });
-self.port.on('delete-sticky', function(message) {
-  console.log('page-mod: delete-sticky');
+self.port.on('delete-sticky', function(sticky) {
+  console.log('page-mod: delete-sticky ' + sticky.id);
+  stickynotes.StickyView.deleteDom(sticky);
 });
 self.port.on('jump-sticky', function(message) {
   console.log('page-mod: jump-sticky');

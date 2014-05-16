@@ -173,7 +173,7 @@ stickynotes.StickyView.prototype.createDragBar = function() {
 stickynotes.StickyView.prototype.createTagBox = function() {
   var doc = document;
   var tagBox = doc.createElement('input');
-  var tags = [];//this.sticky.getTags();
+  var tags = this.sticky.tags;
   var str = '';
   for (var i = 0; i < tags.length; str += ',', i++) {
     str += tags[i].name;

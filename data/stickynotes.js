@@ -19,7 +19,6 @@ stickynotes.createStickyView = function(sticky) {
       var tagStrs = stickynotes.StickyView.str2Tags(this.tagBox.value);
       stickynotes.setTags(sticky, tagStrs);
       this.tagBox.value = tagStrs.join(',');
-      sticky.tagStrs = tagStrs;
     },
     onMoveEnd: function(e) {
       this.sticky.left = parseInt(this.dom.style.left);

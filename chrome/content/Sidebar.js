@@ -215,15 +215,7 @@ stickynotes.Sidebar = {
     if (sticky == null) {
       return;
     }
-    sticky.remove();
-    stickynotes.Sidebar.deleteSticky(sticky);
-    var doc = window.content.document;
-    var stickyDom = doc.getElementById('sticky' + sticky.id);
-    doc.body.removeChild(stickyDom);
-    if (document.getElementById('sticky_tree').childNodes.length == 0) {
-      document.getElementById('clipmenu').hidden = true;
-      return;
-    }
+    addon.port.emit('delete', sticky);
   },
   jump: function() {
     var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectedStickyId());
@@ -354,6 +346,9 @@ stickynotes.Sidebar = {
         __parent.removeChild(_parent);
         parent = __parent;
       }
+    }
+    if (sidebarDoc.getElementById('sticky_tree').childNodes.length == 0) {
+      sidebarDoc.getElementById('clipmenu').hidden = true;
     }
   },
   updateSticky: function(sticky) {

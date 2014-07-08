@@ -512,7 +512,7 @@ stickynotes.Sidebar = {
     if (type === 'sticky') {
       jumpMenu.hidden = false;
       deleteMenu.hidden = false;
-      exportMenu.hidden = true;
+      exportMenu.hidden = false;
     }
     if (type === 'page' || type == 'tag') {
       jumpMenu.hidden = true;

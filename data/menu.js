@@ -100,7 +100,8 @@ self.port.on('toggle-menu', function(enabled) {
   updateMenuLabel();
 });
 
-self.port.on('export', function(stickies) {
+self.port.on('export', function(stickies, name) {
   console.log(stickies);
-  downloadAsFile('stickynotes.json', JSON.stringify(stickies));
+  var fileName = 'stickynotes_' + name + '.json';
+  downloadAsFile(fileName, JSON.stringify(stickies));
 });

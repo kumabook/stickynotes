@@ -4,10 +4,10 @@
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   title="Stickynotes sidebar"
   id="mainwindow"
-  context="clipmenu">
+  context="context-menu">
 
   <popupset>
-    <menupopup id="clipmenu" >
+    <menupopup id="context-menu" >
       <menuitem
           label="&sticky_list.sidebarJump;"
           id="popup_jump"
@@ -15,9 +15,15 @@
           />
       <menuitem
           label="&sticky_list.sidebarDelete;"
-          id="popup_delete"
+                    id="popup_delete"
           oncommand="stickynotes.Sidebar.remove();"
           />
+      <menuitem
+          label="&sticky_list.sidebarExport;"
+          id="popup_export"
+          oncommand="stickynotes.Sidebar.exportStickies();"
+          />
+
     </menupopup>
   </popupset>
 
@@ -25,7 +31,7 @@
     <label id="sidebar-sticky-search-label" value="&stickynotes.search;"
            accesskey="S" control="search-sticky-box"></label>
     <textbox id="search-sticky-box" class="compact" flex="1" type="search"
-             aria-controls="historyTree" oncommand="stickynotes.Sidebar.searchSticky(this.value);" 
+             aria-controls="historyTree" oncommand="stickynotes.Sidebar.searchSticky(this.value);"
              aria-autocomplete="list"></textbox>
     <button id="viewButton" style="min-width:0px !important;"
             type="menu" label="&stickynotes.display;"
@@ -55,7 +61,8 @@
     <treecols>
       <treecol id="text" label="&sticky_list.sidebarText;"
                primary="true" flex="10"/>
-      <treecol id="id" label="ID" hidden="true"  flex="1"/>
+      <treecol id="id" label="ID" hidden="true"/>
+      <treecol id="type" label="type" hidden="true"/>
       <treecol id="left" label="&sticky_list.sidebarX;"  flex="2"/>
       <treecol id="top" label="&sticky_list.sidebarY;"  flex="2"/>
       <treecol id="uri" label="URL" hidden="true"/>

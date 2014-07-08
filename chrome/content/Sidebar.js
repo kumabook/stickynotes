@@ -4,11 +4,11 @@
  * @type {Object}
  */
 stickynotes.Sidebar = {
-  updateClipMenuVisibility: function() {
+  updateContextMenuVisibility: function() {
     if (document.getElementById('sticky_tree').childNodes.length === 0) {
-      document.getElementById('clipmenu').hidden = true;
+      document.getElementById('context-menu').hidden = true;
     } else {
-      document.getElementById('clipmenu').hidden = false;
+      document.getElementById('context-menu').hidden = false;
     }
   },
   isVisible: function() {
@@ -56,6 +56,7 @@ stickynotes.Sidebar = {
     var t = treeitem_sticky;
     t.treerow_sticky = document.createElement('treerow');
     t.treecell_id = document.createElement('treecell');
+    t.treecell_type = document.createElement('treecell');
     t.treecell_text = document.createElement('treecell');
     t.treecell_x = document.createElement('treecell');
     t.treecell_y = document.createElement('treecell');
@@ -79,6 +80,7 @@ stickynotes.Sidebar = {
     treeitem_sticky.id = id;
     t.treerow_sticky.id = 'treerow_' + id;
     t.treecell_id.id = 'treecell_id_' + id;
+    t.treecell_type.id = 'treecell_type_' + id;
     t.treecell_text.id = 'treecell_text_' + id;
     t.treecell_x.id = 'treecell_x_' + id;
     t.treecell_y.id = 'treecell_y_' + id;
@@ -89,6 +91,7 @@ stickynotes.Sidebar = {
     t.treecell_color.id = 'treecell_color_' + id;
     // setAttribute
     t.treecell_id.setAttribute('label', sticky.id);
+    t.treecell_type.setAttribute('label', 'sticky');
     t.treecell_title.setAttribute('label', sticky.title);
     t.treecell_text.setAttribute('label', sticky.content);
     t.treecell_x.setAttribute('label', sticky.left);
@@ -100,6 +103,7 @@ stickynotes.Sidebar = {
     // appendChild
     t.treerow_sticky.appendChild(t.treecell_text);
     t.treerow_sticky.appendChild(t.treecell_id);
+    t.treerow_sticky.appendChild(t.treecell_type);
     t.treerow_sticky.appendChild(t.treecell_x);
     t.treerow_sticky.appendChild(t.treecell_y);
     t.treerow_sticky.appendChild(t.treecell_url);
@@ -125,9 +129,15 @@ stickynotes.Sidebar = {
       treeitem.setAttribute('open', 'false');
     }
     var treerow = document.createElement('treerow');
-    var treecell = document.createElement('treecell');
-    treecell.setAttribute('label', page.title);
-    treerow.appendChild(treecell);
+    var treecell_text = document.createElement('treecell');
+    var treecell_id   = document.createElement('treecell');
+    var treecell_type = document.createElement('treecell');
+    treecell_text.setAttribute('label', page.title);
+    treecell_id.setAttribute('label', page.id);
+    treecell_type.setAttribute('label', 'page');
+    treerow.appendChild(treecell_text);
+    treerow.appendChild(treecell_id);
+    treerow.appendChild(treecell_type);
     var treechildren = document.createElement('treechildren');
     treechildren.setAttribute('id', 'tree_page_' + page.id);
     treeitem.appendChild(treerow);
@@ -143,10 +153,16 @@ stickynotes.Sidebar = {
     var treeitem = sidebarDoc.createElement('treeitem');
     treeitem.setAttribute('id', 'treeitem_tag_' + tag.name);
     treeitem.setAttribute('container', 'true');
-    var treerow = document.createElement('treerow');
-    var treecell = document.createElement('treecell');
-    treecell.setAttribute('label', tag.name);
-    treerow.appendChild(treecell);
+    var treerow       = document.createElement('treerow');
+    var treecell_text = document.createElement('treecell');
+    var treecell_id   = document.createElement('treecell');
+    var treecell_type = document.createElement('treecell');
+    treecell_text.setAttribute('label', tag.name);
+    treecell_id.setAttribute('label', tag.id);
+    treecell_type.setAttribute('label', 'tag');
+    treerow.appendChild(treecell_text);
+    treerow.appendChild(treecell_id);
+    treerow.appendChild(treecell_type);
     var treechildren = document.createElement('treechildren');
     treechildren.setAttribute('id', 'tree_tag_' + tag.id);
     treeitem.appendChild(treerow);
@@ -155,68 +171,46 @@ stickynotes.Sidebar = {
     treeitem.treechildren = treechildren;
     return treeitem;
   },
-  init: function() {
-    var root = document.getElementById('sticky');
-    if (root == null) return;
-    document.addEventListener('click', this, true);
-    root.addEventListener('dblclick', function(e) {
-      stickynotes.Sidebar.jump();
-    }, true);
-    root.addEventListener('keydown', function(e) {
-      if (e.keyCode == 13 || e.keyCode == 74)//Enter or j  --> Jump
-        stickynotes.Sidebar.jump();
-    }, true);
-    root.addEventListener('keydown', function(e) {
-      if (e.keyCode == 68) {// d  --> Delete
-        stickynotes.Sidebar.remove();
-        stickynotes.Sidebar.focusSidebar();
-      }
-    },true);
-    var mainWindow = window.
-      QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIWebNavigation)
-      .QueryInterface(Ci.nsIDocShellTreeItem)
-      .rootTreeItem
-      .QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindow);
-    mainWindow
-      .addEventListener('click',
-                        stickynotes.Sidebar.resizeSidebarHeight, false);
-  },
-  destroy: function() {
-    var mainWindow =
-      window
-      .QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIWebNavigation)
-      .QueryInterface(Ci.nsIDocShellTreeItem)
-      .rootTreeItem
-      .QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindow);
-    document.removeEventListener('popupshowing', this, false);
-    mainWindow
-      .removeEventListener('click',
-                           stickynotes.Sidebar.resizeSidebarHeight, false);
-  },
-  getSelectedStickyId: function() {
-    var id;
+  getSelectedItemId: function() {
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
     var tree = sidebarDoc.getElementById('sticky');
-    if (tree.currentIndex === -1) {
-      return null;
+    return tree.view.getCellText(tree.currentIndex,
+                                 tree.columns.getNamedColumn('id'));
+  },
+  getSelectedItemType: function() {
+    var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
+    var tree = sidebarDoc.getElementById('sticky');
+    return tree.view.getCellText(tree.currentIndex,
+                               tree.columns.getNamedColumn('type'));
+  },
+  exportStickies: function() {
+    var id   = this.getSelectedItemId();
+    var type = this.getSelectedItemType();
+    var stickies = [];
+    switch (type)  {
+      case 'page':
+        stickies = stickynotes.Sticky.fetchByPage({ id: id});
+        break;
+      case 'tag':
+        stickies = stickynotes.Sticky.fetchByTag( { id: id});
+        break;
+      case 'sticky':
+        stickies = [stickynotes.Sticky.fetchById(id)];
+        break;
+      default:
+        break;
     }
-    id = tree.view.getCellText(tree.currentIndex,
-                               tree.columns.getNamedColumn('id'));
-    return id === '' ? null : id;
+    addon.port.emit('export', stickies, type + '_' + id);
   },
   remove: function() {
-    var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectedStickyId());
+    var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectedItemId());
     if (sticky == null) {
       return;
     }
     addon.port.emit('delete', sticky);
   },
   jump: function() {
-    var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectedStickyId());
+    var sticky = stickynotes.Sticky.fetchById(stickynotes.Sidebar.getSelectedItemId());
     if (sticky == null) {
       return;
     }
@@ -328,7 +322,7 @@ stickynotes.Sidebar = {
      case 'time':
       break;
     }
-    stickynotes.Sidebar.updateClipMenuVisibility();
+    stickynotes.Sidebar.updateContextMenuVisibility();
   },
   deleteSticky: function(sticky) {
     var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
@@ -346,7 +340,7 @@ stickynotes.Sidebar = {
         parent = __parent;
       }
     }
-    stickynotes.Sidebar.updateClipMenuVisibility();
+    stickynotes.Sidebar.updateContextMenuVisibility();
   },
   updateSticky: function(sticky) {
     var items = stickynotes.Sidebar.getStickyElements(sticky);
@@ -452,7 +446,7 @@ stickynotes.Sidebar = {
                                                     pageItem.treechildren);
       }
     }
-    stickynotes.Sidebar.updateClipMenuVisibility();
+    stickynotes.Sidebar.updateContextMenuVisibility();
   },
   groupBySite: function(key) {
     stickynotes.Sidebar.createSidebarTree();
@@ -469,7 +463,7 @@ stickynotes.Sidebar = {
         }
       }
     }
-    stickynotes.Sidebar.updateClipMenuVisibility();
+    stickynotes.Sidebar.updateContextMenuVisibility();
   },
   groupByTag: function(key) {
     stickynotes.Sidebar.createSidebarTree();
@@ -503,12 +497,35 @@ stickynotes.Sidebar = {
                                                     noTagItem.treechildren);
       }
     }
-    stickynotes.Sidebar.updateClipMenuVisibility();
+    stickynotes.Sidebar.updateContextMenuVisibility();
   },
   groupByTime: function(key) {
     stickynotes.Sidebar.createSidebarTree();
   },
   searchSticky: function(key) {
     stickynotes.Sidebar.groupBy(null, key);
+  },
+  filterContextMenu: function(e) {
+    var sidebarDoc = stickynotes.Sidebar.getSidebarDoc();
+    var tree = sidebarDoc.getElementById('sticky');
+    if (tree.currentIndex === -1) {
+      return null;
+    }
+    var type = tree.view.getCellText(tree.currentIndex,
+                               tree.columns.getNamedColumn('type'));
+    var jumpMenu = sidebarDoc.getElementById("popup_jump");
+    var deleteMenu = sidebarDoc.getElementById("popup_delete");
+    var exportMenu = sidebarDoc.getElementById("popup_export");
+    jumpMenu.hidden = (document.popupNode.localName != "IMG");
+    if (type === 'sticky') {
+      jumpMenu.hidden = false;
+      deleteMenu.hidden = false;
+      exportMenu.hidden = true;
+    }
+    if (type === 'page' || type == 'tag') {
+      jumpMenu.hidden = true;
+      deleteMenu.hidden = true;
+      exportMenu.hidden = false;
+    }
   }
 };

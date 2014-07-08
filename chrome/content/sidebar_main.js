@@ -26,14 +26,33 @@
                                 stickynotes.Sidebar.resizeSidebarHeight,
                                 false);
     stickynotes.Sidebar.groupBy();
+    var contextMenu = document.getElementById('context-menu');
+    contextMenu.addEventListener('popupshowing',
+                                 stickynotes.Sidebar.filterContextMenu,
+                                 false);
   };
+  var destroy = function() {
+    var mainWindow =
+      window
+      .QueryInterface(Ci.nsIInterfaceRequestor)
+      .getInterface(Ci.nsIWebNavigation)
+      .QueryInterface(Ci.nsIDocShellTreeItem)
+      .rootTreeItem
+      .QueryInterface(Ci.nsIInterfaceRequestor)
+      .getInterface(Ci.nsIDOMWindow);
+    var contextMenu = document.getElementById('context-menu');
+    contextMenu.removeEventListener('popupshowing',
+                                    stickynotes.Sidebar.filterContextMenu,
+                                    false);
+    mainWindow
+      .removeEventListener('click',
+                           stickynotes.Sidebar.resizeSidebarHeight, false);
+  };
+
   stickynotes.Sidebar.resizeSidebarHeight();
   //Sidebar.getSidebarDoc().getElementById("sticky").height;
-      window.addEventListener('load', function() { init(); }, false);
-  window.addEventListener('unload',
-                          function() {
-                            stickynotes.Sidebar.destroy(); },
-                          false);
+  window.addEventListener('load', init, false);
+  window.addEventListener('unload', destroy, false);
   addon.port.on('focus', function() {
     stickynotes.Sidebar.focusSidebar();
   });

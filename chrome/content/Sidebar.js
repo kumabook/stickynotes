@@ -53,18 +53,18 @@ stickynotes.Sidebar = {
     }
     var treeitem_sticky = document.createElement('treeitem');
     var t = treeitem_sticky;
-    t.treerow_sticky = document.createElement('treerow');
-    t.treecell_id = document.createElement('treecell');
-    t.treecell_type = document.createElement('treecell');
-    t.treecell_text = document.createElement('treecell');
-    t.treecell_x = document.createElement('treecell');
-    t.treecell_y = document.createElement('treecell');
-    t.treecell_width = document.createElement('treecell');
+    t.treerow_sticky  = document.createElement('treerow');
+    t.treecell_text   = document.createElement('treecell');
+    t.treecell_id     = document.createElement('treecell');
+    t.treecell_type   = document.createElement('treecell');
+    t.treecell_x      = document.createElement('treecell');
+    t.treecell_y      = document.createElement('treecell');
+    t.treecell_width  = document.createElement('treecell');
     t.treecell_height = document.createElement('treecell');
-    t.treecell_url = document.createElement('treecell');
-    t.treecell_title = document.createElement('treecell');
-    t.treecell_color = document.createElement('treecell');
-    // set id
+    t.treecell_url    = document.createElement('treecell');
+    t.treecell_title  = document.createElement('treecell');
+    t.treecell_color  = document.createElement('treecell');
+
     var elem, id;
     var i = 0;
     while (true) {
@@ -76,30 +76,31 @@ stickynotes.Sidebar = {
         break;
       }
     }
-    treeitem_sticky.id = id;
-    t.treerow_sticky.id = 'treerow_' + id;
-    t.treecell_id.id = 'treecell_id_' + id;
-    t.treecell_type.id = 'treecell_type_' + id;
-    t.treecell_text.id = 'treecell_text_' + id;
-    t.treecell_x.id = 'treecell_x_' + id;
-    t.treecell_y.id = 'treecell_y_' + id;
-    t.treecell_width.id = 'treecell_width_' + id;
+    treeitem_sticky.id   = id;
+    t.treerow_sticky.id  = 'treerow_' + id;
+
+    t.treecell_text.id   = 'treecell_text_' + id;
+    t.treecell_id.id     = 'treecell_id_' + id;
+    t.treecell_type.id   = 'treecell_type_' + id;
+    t.treecell_x.id      = 'treecell_x_' + id;
+    t.treecell_y.id      = 'treecell_y_' + id;
+    t.treecell_width.id  = 'treecell_width_' + id;
     t.treecell_height.id = 'treecell_height_' + id;
-    t.treecell_url.id = 'treecell_url_' + id;
+    t.treecell_url.id    = 'treecell_url_' + id;
     t.treecell_title .id = 'treecell_title_' + id;
-    t.treecell_color.id = 'treecell_color_' + id;
-    // setAttribute
+    t.treecell_color.id  = 'treecell_color_' + id;
+
+    t.treecell_text.setAttribute('label', sticky.content);
     t.treecell_id.setAttribute('label', sticky.id);
     t.treecell_type.setAttribute('label', 'sticky');
     t.treecell_title.setAttribute('label', sticky.title);
-    t.treecell_text.setAttribute('label', sticky.content);
     t.treecell_x.setAttribute('label', sticky.left);
     t.treecell_y.setAttribute('label', sticky.top);
     t.treecell_width.setAttribute('label', sticky.width);
     t.treecell_height.setAttribute('label', sticky.height);
     t.treecell_url.setAttribute('label', sticky.url ? sticky.url : '');
     t.treecell_color.setAttribute('label', sticky.color);
-    // appendChild
+
     t.treerow_sticky.appendChild(t.treecell_text);
     t.treerow_sticky.appendChild(t.treecell_id);
     t.treerow_sticky.appendChild(t.treecell_type);
@@ -123,11 +124,10 @@ stickynotes.Sidebar = {
     treeitem.setAttribute('container', 'true');
     if (page.url == window.content.document.location.href) {
       treeitem.setAttribute('open', 'true');
-    }
-    else {
+    } else {
       treeitem.setAttribute('open', 'false');
     }
-    var treerow = document.createElement('treerow');
+    var treerow       = document.createElement('treerow');
     var treecell_text = document.createElement('treecell');
     var treecell_id   = document.createElement('treecell');
     var treecell_type = document.createElement('treecell');
@@ -255,7 +255,9 @@ stickynotes.Sidebar = {
   createSidebarTree: function() {
     var old_tree = document.getElementById('sticky_tree');
     var new_tree = document.createElement('treechildren');
-    if (old_tree == null) return;
+    if (old_tree == null) {
+       return;
+    }
     new_tree.setAttribute('id', 'sticky_tree');
     document.getElementById('sticky').replaceChild(new_tree, old_tree);
   },
@@ -277,8 +279,9 @@ stickynotes.Sidebar = {
     switch (selectedsort) {
      case 'tag+site':
       var tags = sticky.getTags();
-      if (tags.length == 0)
+      if (tags.length == 0) {
         tags.push(new stickynotes.Tag({id: 0, name: 'No Tag'}));
+      }
 
       for (var i = 0; i < tags.length; i++) {
         var tag = tags[i];
@@ -328,8 +331,7 @@ stickynotes.Sidebar = {
     for (var i = 0; i < items.length; i++) {
       var parent = items[i].parentNode;
       parent.removeChild(items[i]);
-      while (parent.childNodes.length == 0 &&
-            parent.id != 'sticky_tree') {
+      while (parent.childNodes.length == 0 && parent.id != 'sticky_tree') {
         var _parent = parent.parentNode;
         var __parent = _parent.parentNode;
         _parent.removeChild(parent);
@@ -344,9 +346,9 @@ stickynotes.Sidebar = {
     for (var i = 0; i < items.length; i++) {
       var id = items[i].id;
       var t = items[i];
+      t.treecell_text.setAttribute('label', sticky.content);
       t.treecell_id.setAttribute('label', sticky.id);
       t.treecell_title.setAttribute('label', sticky.title);
-      t.treecell_text.setAttribute('label', sticky.content);
       t.treecell_x.setAttribute('label', sticky.left);
       t.treecell_y.setAttribute('label', sticky.top);
       t.treecell_width.setAttribute('label', sticky.width);

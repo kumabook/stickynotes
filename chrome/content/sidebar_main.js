@@ -1,18 +1,21 @@
 (function() {
+  var Sidebar = stickynotes.Sidebar;
+  var resizeSidebarHeight = Sidebar.resizeSidebarHeight.bind(Sidebar);
+  var filterContextMenu   = Sidebar.filterContextMenu.bind(Sidebar);
   var init = function() {
     var root = document.getElementById('sticky');
     if (root == null) return;
     root.addEventListener('dblclick', function(e) {
-      stickynotes.Sidebar.jump();
+      Sidebar.jump();
     }, true);
     root.addEventListener('keydown', function(e) {
       if (e.keyCode == 13 || e.keyCode == 74)//Enter or j  --> Jump
-        stickynotes.Sidebar.jump();
+        Sidebar.jump();
     }, true);
     root.addEventListener('keydown', function(e) {
       if (e.keyCode == 68) {// d  --> Delete
-        stickynotes.Sidebar.remove();
-        stickynotes.Sidebar.focusSidebar();
+        Sidebar.remove();
+        Sidebar.focusSidebar();
       }
     },true);
     var mainWindow = window
@@ -22,14 +25,10 @@
       .rootTreeItem
       .QueryInterface(Ci.nsIInterfaceRequestor)
       .getInterface(Ci.nsIDOMWindow);
-    mainWindow.addEventListener('click',
-                                stickynotes.Sidebar.resizeSidebarHeight,
-                                false);
+    mainWindow.addEventListener('click', resizeSidebarHeight, false);
     stickynotes.Sidebar.groupBy();
     var contextMenu = document.getElementById('context-menu');
-    contextMenu.addEventListener('popupshowing',
-                                 stickynotes.Sidebar.filterContextMenu,
-                                 false);
+    contextMenu.addEventListener('popupshowing', filterContextMenu, false);
   };
   var destroy = function() {
     var mainWindow =
@@ -41,16 +40,11 @@
       .QueryInterface(Ci.nsIInterfaceRequestor)
       .getInterface(Ci.nsIDOMWindow);
     var contextMenu = document.getElementById('context-menu');
-    contextMenu.removeEventListener('popupshowing',
-                                    stickynotes.Sidebar.filterContextMenu,
-                                    false);
-    mainWindow
-      .removeEventListener('click',
-                           stickynotes.Sidebar.resizeSidebarHeight, false);
+    contextMenu.removeEventListener('popupshowing', filterContextMenu, false);
+    mainWindow.removeEventListener('click', resizeSidebarHeight, false);
   };
 
   stickynotes.Sidebar.resizeSidebarHeight();
-  //Sidebar.getSidebarDoc().getElementById("sticky").height;
   window.addEventListener('load', init, false);
   window.addEventListener('unload', destroy, false);
   addon.port.on('focus', function() {
@@ -65,4 +59,4 @@
   addon.port.on('save', function(sticky) {
     stickynotes.Sidebar.updateSticky(new stickynotes.Sticky(sticky));
   });
-}) ();
+})();

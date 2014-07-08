@@ -59,4 +59,9 @@
   addon.port.on('save', function(sticky) {
     stickynotes.Sidebar.updateSticky(new stickynotes.Sticky(sticky));
   });
+  addon.port.on('import', function(stickies) {
+    stickies.forEach(function(s) {
+      stickynotes.Sidebar.addSticky(new stickynotes.Sticky(s));
+    });
+  });
 })();

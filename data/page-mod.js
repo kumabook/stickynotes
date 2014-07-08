@@ -24,12 +24,16 @@ self.port.on('focus-sticky', function(sticky) {
   }, 500);
 });
 
+var load = function(stickies) {
+  stickies.forEach(function(s) {
+    var view = stickynotes.createStickyView(s);
+    document.body.appendChild(view.dom);
+  });
+};
+
 self.port.on('load-stickies', function(stickies) {
-  for (var i = 0; i < stickies.length; i++) {
-    var stickyView = stickynotes.createStickyView(stickies[i]);
-    document.body.appendChild(stickyView.dom);
-  }
   console.log('page-mod: load-stickies: count=' + stickies.length);
+  load(stickies);
 });
 
 self.port.on('toggle-visibility', function(stickies) {
@@ -37,6 +41,10 @@ self.port.on('toggle-visibility', function(stickies) {
   self.port.emit('toggle-menu', enabled);
 });
 
+self.port.on('import', function(stickies) {
+  console.log('page-mod: imported ' + stickies.length + ' stickies.');
+  load(stickies);
+});
 
 var watchClickPosition = function(event) {
   stickynotes.x = event.clientX + window.content.pageXOffset;

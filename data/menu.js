@@ -7,6 +7,18 @@ var sidebarMenu,
 var filePicker;
 var strings;
 const checkChar = '✔';
+function getExtention(fileName) {
+  if (!fileName) {
+    return null;
+  }
+  var fileTypes = fileName.split(".");
+  var len = fileTypes.length;
+  if (len === 0) {
+    return null;
+  }
+  return fileTypes[len - 1];
+}
+
 window.onload = function() {
   sidebarMenu = document.getElementById('sidebar-menu');
   sidebarMenu.addEventListener('click', function() {
@@ -30,8 +42,10 @@ window.onload = function() {
     var files = e.target.files;
     for (i = 0; i < files.length; i++) {
       var file = files[i];
+      var isJSON = file.type == 'application/json' ||
+                   getExtention(file.name) === 'json';
       console.log('import ' + file.name + ' ' + file.type);
-      if (file.type == 'application/json') {
+      if (isJSON) {
         var reader = new FileReader();
         reader.onload = function(event) {
           try {

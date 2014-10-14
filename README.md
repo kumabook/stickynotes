@@ -1,4 +1,4 @@
-# Sticky Notes ![TravisCI](https://travis-ci.org/kumabook/stickynotes.svg?branch=master)
+# Sticky Notes ![TravisCI](https://travis-ci.org/kumabook/stickynotes.svg?branch=master) [![Code Climate](https://codeclimate.com/github/kumabook/stickynotes/badges/gpa.svg)](https://codeclimate.com/github/kumabook/stickynotes)
 
 <img align="right" height="260" src="stickynotes-icon.png">
 Sticky Notes is a firefox addon that enable firefox to put sticky to web page.

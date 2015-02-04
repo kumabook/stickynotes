@@ -12,9 +12,9 @@ stickynotes.StickyView = function(param) {
 stickynotes.StickyView.changeElemSize = 35;
 
 stickynotes.StickyView.deleteAll = function() {
-  var elements = document.getElementsByClassName(CONTAINER_CLASS_NAME);
+  var elements = stickynotes.doc.getElementsByClassName(CONTAINER_CLASS_NAME);
   for (var i = elements.length - 1; i >= 0; i--) {
-    document.body.removeChild(elements[i]);
+    stickynotes.doc.body.removeChild(elements[i]);
   }
 };
 
@@ -22,8 +22,7 @@ stickynotes.StickyView.deleteAll = function() {
  * update dom element.
 */
 stickynotes.StickyView.prototype.updateDom = function() {
-  var doc = document;
-  var stickyDom = doc.getElementById('sticky' + this.id);
+  var stickyDom = stickynotes.doc.getElementById('sticky' + this.id);
   if (stickyDom) {
   }
 };
@@ -31,16 +30,14 @@ stickynotes.StickyView.prototype.updateDom = function() {
  * remove dom element.
  */
 stickynotes.StickyView.prototype.deleteDom = function() {
-  var doc = document;
-  doc.body.removeChild(this.dom);
+  stickynotes.doc.body.removeChild(this.dom);
 };
 /**
  * create dom element.
  */
 stickynotes.StickyView.prototype.createDom = function() {
-  var doc = document;
   var that = this;
-  this.dom = doc.createElement('div');
+  this.dom = stickynotes.doc.createElement('div');
   this.dom.id = 'sticky' + this.sticky.id;
   this.dom.style.position = 'absolute';
   this.dom.style.left = this.sticky.left + 'px';
@@ -105,8 +102,7 @@ stickynotes.StickyView.prototype.createDom = function() {
     true);
 };
 stickynotes.StickyView.prototype.createTextarea = function() {
-  var doc = document;
-  var textarea = doc.createElement('textarea');
+  var textarea = stickynotes.doc.createElement('textarea');
   textarea.style.position = 'relative';
   textarea.style.width = this.sticky.width + 'px';
   textarea.style.height = this.sticky.height - 7 + 'px';
@@ -139,8 +135,7 @@ stickynotes.StickyView.prototype.createTextarea = function() {
   return textarea;
 };
 stickynotes.StickyView.prototype.createDeleteButton = function() {
-  var doc = document;
-  var deleteButton = doc.createElement('button');
+  var deleteButton = stickynotes.doc.createElement('button');
   deleteButton.style.position = 'absolute';
   deleteButton.style.width = '20px';
   deleteButton.style.cursor = 'pointer';
@@ -166,8 +161,7 @@ stickynotes.StickyView.prototype.createDeleteButton = function() {
   return deleteButton;
 };
 stickynotes.StickyView.prototype.createDragBar = function() {
-  var doc = document;
-  var dragBar = doc.createElement('div');
+  var dragBar = stickynotes.doc.createElement('div');
   dragBar.style.position = 'relative';
   dragBar.style.width = this.sticky.width - 10 + 'px';
   dragBar.style.height = '26px';
@@ -179,8 +173,7 @@ stickynotes.StickyView.prototype.createDragBar = function() {
   return dragBar;
 };
 stickynotes.StickyView.prototype.createTagBox = function() {
-  var doc = document;
-  var tagBox = doc.createElement('input');
+  var tagBox = stickynotes.doc.createElement('input');
   var tags = this.sticky.tags;
   var str = '';
   for (var i = 0; i < tags.length; str += ',', i++) {
@@ -220,12 +213,12 @@ stickynotes.StickyView.prototype.createTagBox = function() {
  */
 stickynotes.StickyView.prototype.drag = function(elem, e) {
   var that = this;
-  var URL = document.location.href;
+  var URL = stickynotes.doc.location.href;
   var startX = e.clientX, startY = e.clientY;
   var origX = elem.offsetLeft, origY = elem.offsetTop;
   var deltaX = startX - origX, deltaY = startY - origY;
-  document.addEventListener('mousemove', moveHandler, true);
-  document.addEventListener('mouseup', upHandler, true);
+  stickynotes.doc.addEventListener('mousemove', moveHandler, true);
+  stickynotes.doc.addEventListener('mouseup', upHandler, true);
   e.stopPropagation();
   e.preventDefault();
   function moveHandler(e) {
@@ -234,8 +227,8 @@ stickynotes.StickyView.prototype.drag = function(elem, e) {
     e.stopPropagation();
   }
   function upHandler(e) {
-    document.removeEventListener('mouseup', upHandler, true);
-    document.removeEventListener('mousemove', moveHandler, true);
+    stickynotes.doc.removeEventListener('mouseup', upHandler, true);
+    stickynotes.doc.removeEventListener('mousemove', moveHandler, true);
     that.onMoveEnd();
     e.stopPropagation();
   }
@@ -245,15 +238,15 @@ stickynotes.StickyView.prototype.drag = function(elem, e) {
  */
 stickynotes.StickyView.prototype.resize = function(elem, e) {
   var that = this;
-  var URL = document.location.href;
+  var URL = stickynotes.doc.location.href;
   var origX = elem.offsetLeft, origY = elem.offsetTop;
   var deltaX = startX - origX, deltaY = startY - origY;
   var startX = e.clientX, startY = e.clientY;
   var origWidth = parseInt(that.textarea.style.width),
       origHeight = parseInt(that.textarea.style.height);
   var deltaWidth = startX - origWidth, deltaHeight = startY - origHeight;
-  document.addEventListener('mousemove', moveHandler, true);
-  document.addEventListener('mouseup', upHandler, true);
+  stickynotes.doc.addEventListener('mousemove', moveHandler, true);
+  stickynotes.doc.addEventListener('mouseup', upHandler, true);
   e.stopPropagation();
   e.preventDefault();
   function moveHandler(e) {
@@ -266,8 +259,8 @@ stickynotes.StickyView.prototype.resize = function(elem, e) {
     e.stopPropagation();
   }
   function upHandler(e) {
-    document.removeEventListener('mouseup', upHandler, true);
-    document.removeEventListener('mousemove', moveHandler, true);
+    stickynotes.doc.removeEventListener('mouseup', upHandler, true);
+    stickynotes.doc.removeEventListener('mousemove', moveHandler, true);
     that.width = parseInt(that.textarea.style.width);
     that.height = parseInt(that.textarea.style.height) + 7;
     that.onResizeEnd();
@@ -309,12 +302,11 @@ stickynotes.StickyView.prototype.toString = function() {
 };
 
 stickynotes.StickyView.search = function(key) {
-  var doc = document;
-  var URL = doc.location.href;
+  var URL = stickynotes.doc.location.href;
   var page = stickynotes.Page.fetchByUrl(URL);
   var stickies = stickynotes.Sticky.fetchByPage(page);
   for (var i = 0; i < stickies.length; i++) {
-    var stickyDom = doc.getElementById('sticky' + stickies[i].id);
+    var stickyDom = stickynotes.doc.getElementById('sticky' + stickies[i].id);
     if (stickies[i].filter(key)) {
       stickyDom.style.visibility = 'visible';
     }
@@ -325,7 +317,7 @@ stickynotes.StickyView.search = function(key) {
 };
 stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
   for (var i = 0; i < stickies.length; i++) {
-    var stickyDom = document.getElementById('sticky' + stickies[i].id);
+    var stickyDom = stickynotes.doc.getElementById('sticky' + stickies[i].id);
     if (stickynotes.StickyView.StickiesVisibility)
       stickyDom.style.visibility = 'hidden';
     else
@@ -337,8 +329,8 @@ stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
 };
 
 stickynotes.StickyView.deleteDom = function(sticky) {
-  var dom = document.getElementById('sticky' + sticky.id);
-  document.body.removeChild(dom);
+  var dom = stickynotes.doc.getElementById('sticky' + sticky.id);
+  stickynotes.doc.body.removeChild(dom);
 };
 
 stickynotes.StickyView.StickiesVisibility = true;

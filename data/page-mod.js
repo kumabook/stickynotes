@@ -1,14 +1,16 @@
 stickynotes.MARKER_ID = 'stickynotes-marker';
+stickynotes.doc = document;
 stickynotes.isAlreadyLoaded = function() {
   return document.getElementById(this.MARKER_ID) !== null;
 };
 
 stickynotes.markAsLoaded = function() {
   console.log('setup stickynotes for ' + document.location.href);
-  var isEventAddedElem   = document.createElement('meta');
-  isEventAddedElem.id    = 'stickynotes-marker';
-  isEventAddedElem.style = 'display: none;';
-  document.head.appendChild(isEventAddedElem);
+  stickynotes.marker       = document.createElement('meta');
+  stickynotes.marker.id    = 'stickynotes-marker';
+  stickynotes.marker.style = 'display: none;';
+  stickynotes.head         = document.head;
+  stickynotes.head.appendChild(stickynotes.marker);
 };
 
 var onStrings = function(_strings) {
@@ -90,13 +92,9 @@ if (!stickynotes.isAlreadyLoaded()) {
     self.port.removeListener('load-stickies',     onLoadStickies);
     self.port.removeListener('toggle-visibility', onToggleVisibility);
     self.port.removeListener('import',            onImport);
+    stickynotes.head.removeChild(stickynotes.marker);
+    stickynotes.doc.removeEventListener('mousedown', watchClickPosition, false);
     stickynotes.StickyView.deleteAll();
-    var marker = document.getElementById(stickynotes.MARKER_ID);
-    document.head.removeChild(marker);
-    try {
-      document.removeEventListener('mousedown', watchClickPosition, false);
-    } catch (e) {
-      console.log(e);
-    }
+
   });
 }

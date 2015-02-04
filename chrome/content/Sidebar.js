@@ -4,6 +4,10 @@
  * @type {Object}
  */
 stickynotes.Sidebar = {
+  close: function() {
+    console.log('addon not found');
+    window.close();
+  },
   updateContextMenuVisibility: function() {
     if (document.getElementById('sticky_tree').childNodes.length === 0) {
       document.getElementById('context-menu').hidden = true;
@@ -183,6 +187,10 @@ stickynotes.Sidebar = {
                                tree.columns.getNamedColumn('type'));
   },
   exportStickies: function() {
+    if (!addon) {
+      this.close();
+      return;
+    }
     var id   = this.getSelectedItemId();
     var type = this.getSelectedItemType();
     var stickies = [];
@@ -202,6 +210,10 @@ stickynotes.Sidebar = {
     addon.port.emit('export', stickies, type + '_' + id);
   },
   remove: function() {
+    if (!addon) {
+      this.close();
+      return;
+    }
     var sticky = stickynotes.Sticky.fetchById(this.getSelectedItemId());
     if (sticky == null) {
       return;
@@ -209,6 +221,10 @@ stickynotes.Sidebar = {
     addon.port.emit('delete', sticky);
   },
   jump: function() {
+    if (!addon) {
+      this.close();
+      return;
+    }
     var sticky = stickynotes.Sticky.fetchById(this.getSelectedItemId());
     if (sticky == null) {
       return;

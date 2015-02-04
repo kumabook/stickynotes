@@ -47,6 +47,11 @@
   stickynotes.Sidebar.resizeSidebarHeight();
   window.addEventListener('load', init, false);
   window.addEventListener('unload', destroy, false);
+  if (!addon) {
+    console.log('addon is not found.');
+    window.close();
+    return;
+  }
   addon.port.on('focus', function() {
     stickynotes.Sidebar.focusSidebar();
   });

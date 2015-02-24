@@ -5,7 +5,6 @@
  */
 stickynotes.Sidebar = {
   close: function() {
-    console.log('addon not found');
     window.close();
   },
   updateContextMenuVisibility: function() {

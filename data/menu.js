@@ -7,6 +7,15 @@ var sidebarMenu,
 var filePicker;
 var strings;
 const checkChar = '✔';
+const logger         = {
+  fatal: function(msg) {},
+  error: function(msg) {},
+  warn:  function(msg) {},
+  info:  function(msg) {},
+  debug: function(msg) {},
+  trace: function(msg) {}
+};
+
 function getExtention(fileName) {
   if (!fileName) {
     return null;
@@ -44,16 +53,16 @@ window.onload = function() {
       var file = files[i];
       var isJSON = file.type == 'application/json' ||
                    getExtention(file.name) === 'json';
-      console.log('import ' + file.name + ' ' + file.type);
+      logger.trace('import ' + file.name + ' ' + file.type);
       if (isJSON) {
         var reader = new FileReader();
         reader.onload = function(event) {
           try {
-            console.log(reader.result);
+            logger.trace(reader.result);
             var data = JSON.parse(reader.result);
             self.port.emit('import-menu', data);
           } catch (e) {
-            console.log('failed to import:' + e);
+            logger.trace('failed to import:' + e);
           }
         };
         reader.readAsText(file);
@@ -85,8 +94,8 @@ var updateMenuLabel = function() {
 }
 
 var downloadAsFile = function(fileName, content) {
-  console.log(fileName);
-  console.log(content);
+  logger.trace(fileName);
+  logger.trace(content);
   var blob = new Blob([content]);
   var url = window.URL;
   var blobURL = url.createObjectURL(blob);
@@ -115,7 +124,7 @@ self.port.on('toggle-menu', function(enabled) {
 });
 
 self.port.on('export', function(stickies, name) {
-  console.log(stickies);
+  logger.trace(stickies);
   var fileName = 'stickynotes_' + name + '.json';
   downloadAsFile(fileName, JSON.stringify(stickies));
 });

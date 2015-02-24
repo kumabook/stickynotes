@@ -48,7 +48,6 @@
   window.addEventListener('load', init, false);
   window.addEventListener('unload', destroy, false);
   if (!addon) {
-    console.log('addon is not found.');
     window.close();
     return;
   }

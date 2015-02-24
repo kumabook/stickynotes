@@ -1,3 +1,12 @@
+var logger = {
+  fatal: function(msg) {},
+  error: function(msg) {},
+  warn:  function(msg) {},
+  info:  function(msg) {},
+  debug: function(msg) {},
+  trace: function(msg) {}
+};
+
 stickynotes.MARKER_ID = 'stickynotes-marker';
 stickynotes.doc = document;
 stickynotes.isAlreadyLoaded = function() {
@@ -5,7 +14,7 @@ stickynotes.isAlreadyLoaded = function() {
 };
 
 stickynotes.markAsLoaded = function() {
-  console.log('setup stickynotes for ' + document.location.href);
+  logger.trace('setup stickynotes for ' + document.location.href);
   stickynotes.marker       = document.createElement('meta');
   stickynotes.marker.id    = 'stickynotes-marker';
   stickynotes.marker.style = 'display: none;';
@@ -18,7 +27,7 @@ var onStrings = function(_strings) {
 };
 
 var onCreateSticky = function(sticky) {
-  console.log('create-sticky');
+  logger.trace('create-sticky');
   sticky.left = stickynotes.x;
   sticky.top = stickynotes.y;
   var stickyView = stickynotes.createStickyView(sticky);
@@ -29,12 +38,12 @@ var onCreateSticky = function(sticky) {
 };
 
 var onDeleteSticky = function(sticky) {
-  console.log('page-mod: delete-sticky ' + sticky.id);
+  logger.trace('page-mod: delete-sticky ' + sticky.id);
   stickynotes.StickyView.deleteDom(sticky);
 };
 
 var onJumpSticky = function(message) {
-  console.log('page-mod: jump-sticky');
+  logger.trace('page-mod: jump-sticky');
 };
 
 var onFocusSticky = function(sticky) {
@@ -50,7 +59,7 @@ var load = function(stickies) {
 };
 var onLoadStickies = function(stickies) {
   load(stickies);
-  console.log('page-mod: load-stickies: count=' + stickies.length);
+  logger.trace('page-mod: load-stickies: count=' + stickies.length);
 };
 
 var onToggleVisibility = function(stickies) {
@@ -59,7 +68,7 @@ var onToggleVisibility = function(stickies) {
 };
 
 var onImport = function(stickies) {
-  console.log('page-mod: imported ' + stickies.length + ' stickies.');
+  logger.trace('page-mod: imported ' + stickies.length + ' stickies.');
   load(stickies);
 };
 
@@ -68,7 +77,7 @@ var watchClickPosition = function(event) {
     stickynotes.x = event.clientX + window.content.pageXOffset;
     stickynotes.y = event.clientY + window.content.pageYOffset;
   } catch (e) {
-    console.log(e);
+    logger.trace(e);
   }
 };
 

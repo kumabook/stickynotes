@@ -9,6 +9,7 @@ var logger = {
 
 stickynotes.MARKER_ID = 'stickynotes-marker';
 stickynotes.doc = document;
+stickynotes.window = window;
 stickynotes.isAlreadyLoaded = function() {
   return document.getElementById(this.MARKER_ID) !== null;
 };
@@ -51,16 +52,30 @@ var onFocusSticky = function(sticky) {
     document.getElementById('sticky_id_' + sticky.id).focus();
   }, 500);
 };
+
 var load = function(stickies) {
   stickies.forEach(function(s) {
     var view = stickynotes.createStickyView(s);
     document.body.appendChild(view.dom);
   });
 };
+
 var onLoadStickies = function(stickies) {
+  stickynotes.StickyView.deleteAll();
   load(stickies);
   logger.trace('page-mod: load-stickies: count=' + stickies.length);
 };
+
+var onHashChange = function(e) {
+  logger.info('hashchange: ' + e.newURL);
+  self.port.emit('reload-stickies', e.newURL);
+};
+
+var onPopState = function(e) {
+  logger.info('popstate: ' + e.state + ', ' + document.location.href);
+  self.port.emit('reload-stickies', document.location.href);
+};
+
 
 var onToggleVisibility = function(stickies) {
   var enabled = stickynotes.StickyView.toggleVisibilityAllStickies(stickies);
@@ -91,7 +106,10 @@ if (!stickynotes.isAlreadyLoaded()) {
   self.port.on('load-stickies',     onLoadStickies);
   self.port.on('toggle-visibility', onToggleVisibility);
   self.port.on('import',            onImport);
+
   document.addEventListener('mousedown', watchClickPosition, false);
+  window.addEventListener('hashchange',  onHashChange);
+  window.addEventListener('popstate',    onPopState);
 
   self.port.once('detach', function() {
     self.port.removeListener('create-sticky',     onCreateSticky);
@@ -102,8 +120,9 @@ if (!stickynotes.isAlreadyLoaded()) {
     self.port.removeListener('toggle-visibility', onToggleVisibility);
     self.port.removeListener('import',            onImport);
     stickynotes.head.removeChild(stickynotes.marker);
-    stickynotes.doc.removeEventListener('mousedown', watchClickPosition, false);
+    stickynotes.doc.removeEventListener('mousedown',     watchClickPosition, false);
+    stickynotes.window.removeEventListener('hashchange', onHashChange);
+    stickynotes.window.removeEventListener('popstate',   onPopState);
     stickynotes.StickyView.deleteAll();
-
   });
 }

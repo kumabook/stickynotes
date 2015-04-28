@@ -121,8 +121,8 @@ if (!stickynotes.isAlreadyLoaded()) {
     self.port.removeListener('import',            onImport);
     stickynotes.head.removeChild(stickynotes.marker);
     stickynotes.doc.removeEventListener('mousedown',     watchClickPosition, false);
-    stickynotes.window.removeEventListener('hashchange', onHashChange);
-    stickynotes.window.removeEventListener('popstate',   onPopState);
+//  stickynotes.window.removeEventListener('hashchange', onHashChange);
+//  stickynotes.window.removeEventListener('popstate',   onPopState);
     stickynotes.StickyView.deleteAll();
   });
 }

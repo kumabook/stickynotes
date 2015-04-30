@@ -71,4 +71,7 @@
   addon.port.on('search', function() {
     stickynotes.Sidebar.focusSearchBox();
   });
+  addon.port.on('display-option', function() {
+    stickynotes.Sidebar.openDisplayOptionMenu();
+  });
 })();

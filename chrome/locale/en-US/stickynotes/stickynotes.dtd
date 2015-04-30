@@ -14,11 +14,11 @@
 <!ENTITY sticky_list.sidebarHide "Hide this sticky">
 <!ENTITY sticky_list.sidebarVisible "Display this sticky">
 <!ENTITY sticky_list.sidebarExport "Export">
-<!ENTITY stickynotes.list_by_tag_and_site "List by tag and site">
-<!ENTITY stickynotes.list_by_site "List by site">
-<!ENTITY stickynotes.list_by_tag "List by tag">
+<!ENTITY stickynotes.list_by_tag_and_site "Both tag and site">
+<!ENTITY stickynotes.list_by_site "Site">
+<!ENTITY stickynotes.list_by_tag "Tag">
 <!ENTITY stickynotes.search "Search">
-<!ENTITY stickynotes.display "Display">
+<!ENTITY stickynotes.display "Display by">
 <!ENTITY sticky.noTitle "no title">
 <!ENTITY sticky.defaultContent "">
 <!ENTITY sticky.placeholderText "Insert a note here">

@@ -248,6 +248,12 @@ stickynotes.Sidebar = {
     var searchBox = sidebarDoc.getElementById('search-sticky-box');
     searchBox.focus();
   },
+  openDisplayOptionMenu: function() {
+    var sidebarDoc = this.getSidebarDoc();
+    var displayOptionButton = sidebarDoc.getElementById('display-option-button');
+    displayOptionButton.open = true;
+    displayOptionButton.focus();
+  },
   toggleVisibilityAllStickies: function() {
     var doc = window.content.document;
     var URL = doc.location.href;
@@ -285,7 +291,7 @@ stickynotes.Sidebar = {
     var selectedsort;
     var doc = this.getSidebarDoc();
     selectedsort =
-      doc.getElementById('viewButton').getAttribute('selectedsort');
+      doc.getElementById('display-option-button').getAttribute('selectedsort');
     if (!selectedsort)
       selectedsort = 'tag+site';
     return selectedsort;

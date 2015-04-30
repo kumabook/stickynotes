@@ -29,27 +29,29 @@
 
   <hbox id="sidebar-sticky-search-container" align="center">
     <label id="sidebar-sticky-search-label" value="&stickynotes.search;"
-           accesskey="S" control="search-sticky-box"></label>
+           control="search-sticky-box"></label>
     <textbox id="search-sticky-box" class="compact" flex="1" type="search"
+             tabIndex="1"
              aria-controls="historyTree" oncommand="stickynotes.Sidebar.searchSticky(this.value);"
              aria-autocomplete="list"></textbox>
-    <button id="viewButton" style="min-width:0px !important;"
+    <button id="display-option-button" style="min-width:0px !important;"
+            tabIndex="2"
             type="menu" label="&stickynotes.display;"
-            accesskey="w" selectedsort="site" persist="selectedsort">
-      <menupopup>
+            selectedsort="site" persist="selectedsort">
+      <menupopup id="display-option-menupopup">
       <menuitem id="bytag+site"
                 label="&stickynotes.list_by_tag_and_site;"
-                accesskey="T" type="radio"
+                accesskey="b" type="radio"
                 oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag+site'); stickynotes.Sidebar.groupBy('tag+site');" >
       </menuitem>
       <menuitem id="bysite"
                 label="&stickynotes.list_by_site;"
-                accesskey="S" type="radio"
+                accesskey="s" type="radio"
                 oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'site'); stickynotes.Sidebar.groupBy('site');">
       </menuitem>
       <menuitem id="bytag"
                 label="&stickynotes.list_by_tag;"
-                accesskey="T"
+                accesskey="t"
                 type="radio"
                 oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag'); stickynotes.Sidebar.groupBy('tag');" >
       </menuitem>

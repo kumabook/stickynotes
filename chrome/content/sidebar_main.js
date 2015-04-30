@@ -68,4 +68,7 @@
       stickynotes.Sidebar.addSticky(new stickynotes.Sticky(s));
     });
   });
+  addon.port.on('search', function() {
+    stickynotes.Sidebar.focusSearchBox();
+  });
 })();

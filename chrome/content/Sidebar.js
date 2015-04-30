@@ -243,6 +243,11 @@ stickynotes.Sidebar = {
     var tree = sidebarDoc.getElementById('sticky');
     tree.focus();
   },
+  focusSearchBox: function() {
+    var sidebarDoc = this.getSidebarDoc();
+    var searchBox = sidebarDoc.getElementById('search-sticky-box');
+    searchBox.focus();
+  },
   toggleVisibilityAllStickies: function() {
     var doc = window.content.document;
     var URL = doc.location.href;

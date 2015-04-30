@@ -19,7 +19,7 @@
             style="width: 500px; height: 100px;">
     <tree id="stickynotes-preference-tree"
           editable="true"
-          rows="5"
+          rows="6"
           seltype="cell"
           selstyle="primary"
           hidecolumnpicker="true">

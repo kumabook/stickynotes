@@ -1,6 +1,7 @@
 var sidebarMenu,
     toggleMenu,
     createMenu,
+    searchMenu,
     preferenceMenu,
     importMenu,
     exportMenu;
@@ -40,6 +41,10 @@ window.onload = function() {
   createMenu = document.getElementById('create-menu');
   createMenu.addEventListener('click', function() {
     self.port.emit('create-menu');
+  }, true);
+  searchMenu = document.getElementById('search-menu');
+  searchMenu.addEventListener('click', function() {
+    self.port.emit('search-menu');
   }, true);
   importMenu = document.getElementById('import-menu');
   importMenu.addEventListener('click', function() {
@@ -89,6 +94,7 @@ var updateMenuLabel = function() {
     strings['stickyToggleMenu.label'];
   createMenu.textContent = (createMenu.enabled ? checkChar : '') +
     strings['stickyMenu.label'];
+  searchMenu.textContent = strings['stickySearchMenu.label'];
   preferenceMenu.textContent = (preferenceMenu.enabled ? checkChar : '') +
     strings['preferenceMenu.label'];
 }

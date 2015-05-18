@@ -15,17 +15,19 @@ And sidebar displays the list of stickies, you can jump a selected sticky.
 - Create a sticky
   - context-menu -> "Generate Sticky" or Ctrl + Shift + C
 - Delete a sticky
-  - Click "x" on sticky or Ctrl + Shift + D (default)
+  - Click "x" on sticky or Ctrl + Shift + D
 - Toggle Visible/Invisible
-  - context-menu -> "Display/Hide this sticky" or Ctrl + q (default)
+  - context-menu -> "Display/Hide this sticky" or Ctrl + q
 - Change the position of a sticky
   - Drag the upper part of a sticky
 - Change the size of a sticky
   - Drag the lower right a sticky
 - Display sticky list on Sidebar
-  - icon-menu -> "Sticky List" or Ctrl(Command) + Shift + S (default)
+  - icon-menu -> "Sticky List" or Ctrl + Shift + S
 - Focus to Sidebar
-  - Ctrl + Shift + F (default)
+  - Ctrl + Shift + F
+- Search stickies from Sidebar
+  - Ctrl + Shift + l
 
 ### Sidebar
 
@@ -34,6 +36,10 @@ And sidebar displays the list of stickies, you can jump a selected sticky.
   - Right click menu "Jump to this sticky" or type "j" on selection state
 - Delete a sticky
   - Right click menu "Delete this sticky" or type "Enter" on selection state or double click a sticky
+- Search stickies on Sidebar
+  - Focus on search box or Ctrl + Shift + l
+- Select sidebar display option
+  - Click "Display on " combobox or Ctrl + Shift + o
 
 ### Tag
 You can add tag to sticky with the upper textbox.

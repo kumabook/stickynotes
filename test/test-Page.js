@@ -2,6 +2,7 @@ var stickynotes = require('../lib/stickynotes');
 var setup = function() {
   stickynotes.DBHelper.dropTables();
   stickynotes.DBHelper.createTables();
+  stickynotes.DBHelper.migrate();
 };
 
 var teardown = function() {

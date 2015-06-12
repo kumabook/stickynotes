@@ -4,6 +4,7 @@ var test = require("sdk/test");
 var setup = function() {
   stickynotes.DBHelper.dropTables();
   stickynotes.DBHelper.createTables();
+  stickynotes.DBHelper.migrate();
 };
 
 var teardown = function() {

@@ -5,6 +5,7 @@ var testUrl = 'http://test.stickynotes.co.jp';
 var setup = function() {
   stickynotes.DBHelper.dropTables();
   stickynotes.DBHelper.createTables();
+  stickynotes.DBHelper.migrate();
   testStickyParam = {
     left: 0, top: 0,
     width: 150, height: 100,

@@ -30,6 +30,7 @@ var contentWorkers = [];
 var sidebarWorkers = [];
 
 stickynotes.DBHelper.createTables();
+stickynotes.DBHelper.migrate();
 
 timers.setTimeout(function() {
   logger.trace('attach curent active tab: ' + tabs.activeTab.url);

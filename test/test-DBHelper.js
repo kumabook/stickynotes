@@ -29,15 +29,4 @@ exports['test stickynotes.DBHelper.uuid'] = function(assert) {
   assert.notEqual(uuid1, uuid2);
 };
 
-exports['test stickynotes.DBHelper.getDateStr'] = function(assert) {
-  var date = new Date(1985, 3, 7, 0, 0, 0, 0);
-  var str = stickynotes.DBHelper.getDateStr(date);
-  assert.equal('1985-04-07 00:00:00', str);
-};
-
-exports['test stickynotes.DBHelper.getCurrentDateStr'] = function(assert) {
-  var str = stickynotes.DBHelper.getCurrentDateStr();
-  assert.notEqual(null, str);
-};
-
 require("sdk/test").run(exports);

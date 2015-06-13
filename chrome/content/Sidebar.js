@@ -27,7 +27,7 @@ stickynotes.Sidebar = {
     var elements = [];
     var i = 0;
     while (true) {
-      var _id = 'sticky_' + sticky.id + '_' + i;
+      var _id = 'sticky_' + sticky.uuid + '_' + i;
       elem = sidebarDoc.getElementById(_id);
       i++;
       if (!elem) {
@@ -71,7 +71,7 @@ stickynotes.Sidebar = {
     var elem, id;
     var i = 0;
     while (true) {
-      var _id = 'sticky_' + sticky.id + '_' + i;
+      var _id = 'sticky_' + sticky.uuid + '_' + i;
       i++;
       elem = sidebarDoc.getElementById(_id);
       if (!elem) {
@@ -94,7 +94,7 @@ stickynotes.Sidebar = {
     t.treecell_color.id  = 'treecell_color_' + id;
 
     t.treecell_text.setAttribute('label', sticky.content);
-    t.treecell_id.setAttribute('label', sticky.id);
+    t.treecell_id.setAttribute('label', sticky.uuid);
     t.treecell_type.setAttribute('label', 'sticky');
     t.treecell_title.setAttribute('label', sticky.title);
     t.treecell_x.setAttribute('label', sticky.left);
@@ -195,13 +195,15 @@ stickynotes.Sidebar = {
     var stickies = [];
     switch (type)  {
       case 'page':
-        stickies = stickynotes.Sticky.fetchByPage({ id: id});
+        stickies = stickynotes.Sticky.fetchByPage({ id: id})
+                                     .filter((s) => !s.is_deleted);
         break;
       case 'tag':
-        stickies = stickynotes.Sticky.fetchByTag( { id: id});
+        stickies = stickynotes.Sticky.fetchByTag( { id: id})
+                                     .filter((s) => !s.is_deleted);
         break;
       case 'sticky':
-        stickies = [stickynotes.Sticky.fetchById(id)];
+        stickies = [stickynotes.Sticky.fetchByUUID(id)];
         break;
       default:
         break;
@@ -213,7 +215,7 @@ stickynotes.Sidebar = {
       this.close();
       return;
     }
-    var sticky = stickynotes.Sticky.fetchById(this.getSelectedItemId());
+    var sticky = stickynotes.Sticky.fetchByUUID(this.getSelectedItemId());
     if (sticky == null) {
       return;
     }
@@ -224,7 +226,7 @@ stickynotes.Sidebar = {
       this.close();
       return;
     }
-    var sticky = stickynotes.Sticky.fetchById(this.getSelectedItemId());
+    var sticky = stickynotes.Sticky.fetchByUUID(this.getSelectedItemId());
     if (sticky == null) {
       return;
     }
@@ -376,7 +378,7 @@ stickynotes.Sidebar = {
       var id = items[i].id;
       var t = items[i];
       t.treecell_text.setAttribute('label', sticky.content);
-      t.treecell_id.setAttribute('label', sticky.id);
+      t.treecell_id.setAttribute('label', sticky.uuid);
       t.treecell_title.setAttribute('label', sticky.title);
       t.treecell_x.setAttribute('label', sticky.left);
       t.treecell_y.setAttribute('label', sticky.top);
@@ -420,13 +422,15 @@ stickynotes.Sidebar = {
     this.createSidebarTree();
     var tags = stickynotes.Tag.fetchAll();
     var pages = stickynotes.Page.fetchAll();
-    var allStickies = stickynotes.Sticky.fetchAll(key);
+    var allStickies = stickynotes.Sticky.fetchAll(key)
+                                        .filter((s) => !s.is_deleted);
     var stickies;
     var pageItem;
     var i, j, k;
     var tagItem;
     for (i = 0; i < tags.length; i++) {
-      stickies = stickynotes.Sticky.fetchByTag(tags[i], key);
+      stickies = stickynotes.Sticky.fetchByTag(tags[i], key)
+                                   .filter((s) => !s.is_deleted);
       if (stickies.length > 0) {
         tagItem = this.createSidebarTagItem(
           {id: tags[i].id, name: tags[i].name});
@@ -476,7 +480,8 @@ stickynotes.Sidebar = {
     var pages = stickynotes.Page.fetchAll();
     var urlItem, stickies, i;
     for (i = 0; i < pages.length; i++) {
-      stickies = stickynotes.Sticky.fetchByPage(pages[i], key);
+      stickies = stickynotes.Sticky.fetchByPage(pages[i], key)
+                                   .filter((s) => !s.is_deleted);
       if (stickies.length > 0) {
         urlItem = this.createSidebarPageItem(pages[i]);
         for (var j = 0; j < stickies.length; j++) {
@@ -491,12 +496,14 @@ stickynotes.Sidebar = {
     this.createSidebarTree();
     var tags = stickynotes.Tag.fetchAll();
     var pages = stickynotes.Page.fetchAll();
-    var allStickies = stickynotes.Sticky.fetchAll(key);
+    var allStickies = stickynotes.Sticky.fetchAll(key)
+                                        .filter((s) => !s.is_deleted);
     var stickies;
     var tagItem;
     var i, j, k;
     for (i = 0; i < tags.length; i++) {
-      stickies = stickynotes.Sticky.fetchByTag(tags[i], key);
+      stickies = stickynotes.Sticky.fetchByTag(tags[i], key)
+                                   .filter((s) => !s.is_deleted);
       if (stickies.length > 0) {
         tagItem = this.createSidebarTagItem(tags[i]);
         for (j = 0; j < stickies.length; j++) {

@@ -37,11 +37,12 @@ exports['test stickynotes.Sticky.create()'] = function(assert) {
   teardown();
 };
 
-exports['test stickynotes.Sticky.fetchById()'] = function(assert) {
+exports['test stickynotes.Sticky.fetchByUUID()'] = function(assert) {
   setup();
   var sticky = stickynotes.Sticky.create(testStickyParam);
-  var result = stickynotes.Sticky.fetchById(sticky.id);
-  assert.equal(sticky.id, result.id, 'test for stickynotes.Sticky.getStickyId');
+  var result = stickynotes.Sticky.fetchByUUID(sticky.uuid);
+  assert.equal(sticky.uuid, result.uuid,
+               'test for stickynotes.Sticky.getStickyUUID');
 };
 
 exports['test stickynotes.Sticky.fetchByUrl()'] = function(assert) {
@@ -100,7 +101,7 @@ exports['test stickynotes.Sticky.prototype.save()'] = function(assert) {
   sticky.content = 'aaaa';
   sticky.color = 'red';
   sticky.save();
-  var newSticky = stickynotes.Sticky.fetchById(sticky.id);
+  var newSticky = stickynotes.Sticky.fetchByUUID(sticky.uuid);
   assert.equal(newSticky.top, 200);
   assert.equal(newSticky.left, 200);
   assert.equal(newSticky.width, 200);

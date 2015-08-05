@@ -154,5 +154,42 @@ exports['test stickynotes.Sticky.prototype.setTags() and getTags()'] = function(
   assert.equal(tags[0].name, 'tag3');
 };
 
+exports['test stickynotes.Sticky.prototype.fetchUpdatedStickiesSince()'] = function(assert) {
+  setup();
+  var now = new Date();
+  var yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+  var tomorrow = new Date();
+  tomorrow.setDate(now.getDate() + 1);
+
+  var prepareStickyParam = function(stickyParam, date) {
+    testStickyParam.id = null;
+    testStickyParam.created_at = date.toISOString();
+    testStickyParam.updated_at = date.toISOString();
+  };
+
+  prepareStickyParam(testStickyParam, now);
+  stickynotes.Sticky.create(testStickyParam);
+
+  prepareStickyParam(testStickyParam, yesterday);
+  stickynotes.Sticky.create(testStickyParam);
+  stickynotes.Sticky.create(testStickyParam);
+
+  prepareStickyParam(testStickyParam, tomorrow);
+  stickynotes.Sticky.create(testStickyParam);
+  stickynotes.Sticky.create(testStickyParam);
+  stickynotes.Sticky.create(testStickyParam);
+
+  var stickies = stickynotes.Sticky.fetchUpdatedStickiesSince(now);
+  assert.equal(4, stickies.length, 'fetch only since now');
+
+  stickies = stickynotes.Sticky.fetchUpdatedStickiesSince(yesterday);
+  assert.equal(6, stickies.length, 'fetch only since yesterday');
+
+  stickies = stickynotes.Sticky.fetchUpdatedStickiesSince(tomorrow);
+  assert.equal(3, stickies.length, 'fetch only since tomrrow');
+
+  teardown();
+};
 
 require("sdk/test").run(exports);

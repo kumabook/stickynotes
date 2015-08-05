@@ -15,13 +15,15 @@ const windowUtils    = require('sdk/window/utils');
 const side           = require('sdk/ui/sidebar');
 const timers         = require('sdk/timers');
 const unload         = require('sdk/system/unload');
+const config         = require('./lib/config');
+const ApiClient      = stickynotes.ApiClient;
 const logger         = {
   fatal: function(msg) {},
   error: function(msg) {},
   warn:  function(msg) {},
   info:  function(msg) {},
   debug: function(msg) {},
-  trace: function(msg) {}
+  trace: function(msg) { console.log(msg);}
 };
 
 var jumpingSticky    = null;
@@ -163,8 +165,7 @@ var exportFromSidebar = function(stickies, name) {
   exportStickies(stickies, name);
 };
 
-
-var exportStickies = function(stickies, name) {
+var resolveStickies = function(stickies) {
   var pages = stickynotes.Page.fetchAll();
   stickies.forEach(function(s) {
     var _pages = pages.filter(function(p) {
@@ -184,8 +185,13 @@ var exportStickies = function(stickies, name) {
     }
     delete s.page_id;
     delete s.id;
+    s.is_deleted = Boolean(s.is_deleted);
   });
+  return stickies;
+};
 
+var exportStickies = function(stickies, name) {
+  resolveStickies(stickies);
   panel.port.emit('export', stickies, name);
 };
 
@@ -204,7 +210,12 @@ var deleteSticky = function(sticky) {
   }
 
   var _sticky = new stickynotes.Sticky(sticky);
-  _sticky.remove();
+  if (ApiClient.isLoggedIn()) {
+    _sticky.is_deleted = true;
+    _sticky.save();
+  } else {
+    _sticky.remove();
+  }
   emitAll(contentWorkers, 'delete-sticky', sticky);
   emitAll(sidebarWorkers,        'delete', sticky);
 };
@@ -221,10 +232,12 @@ var createStickyWithMessage = function (message) {
     title: title,
     content: '',
     color: 'yellow',
-    tags: ''
+    tags: '',
+    is_deleted: false
   });
   emitAll(contentWorkers,'create-sticky', sticky, message.url);
   emitAll(sidebarWorkers,          'add', sticky);
+
 };
 
 
@@ -273,6 +286,7 @@ var showSidebar = function() {
   sidebar.visible = true;
   sidebar.show();
 };
+
 var hideSidebar = function() {
   sidebar.visible = false;
   sidebar.hide();
@@ -424,46 +438,129 @@ var panel = panels.Panel({
     toggleMenu.hide();
   }
 });
-panel.port.on('import-menu', function(stickies) {
-  logger.trace('imported ' + stickies.length + ' stickies.');
-  var importedStickies = stickies.map(function(s) {
-    var sticky = stickynotes.Sticky.create(s);
-    sticky._url = s.url;
-    return sticky;
-  });
 
-  contentWorkers.forEach(function(w) {
-    var _stickies = importedStickies.filter(function(s) {
-      return w.url == s._url;
-    });
-    try {
-      w.port.emit('import', _stickies);
-    } catch (e) {
-      logger.trace('error:' + e);
+var importStickies = function(stickies) {
+  logger.trace('import ' + stickies.length + ' stickies.');
+  var createdStickies = [];
+  var updatedStickies = [];
+  stickies.forEach(function(s) {
+    var sticky = stickynotes.Sticky.fetchByUUID(s.uuid);
+    if (sticky) {
+      if (!s.is_deleted) {
+        sticky.update(s);
+        sticky.save();
+        sticky.setTags(s.tags);
+        logger.trace('updated ' + sticky.uuid);
+      } else {
+        sticky.remove();
+        logger.trace('removed ' + sticky.uuid);
+      }
+      updatedStickies.push(sticky);
+    } else {
+      if (!s.is_deleted) {
+        sticky = stickynotes.Sticky.create(s);
+        createdStickies.push(sticky);
+        logger.trace('created ' + sticky.uuid);
+      } else {
+        logger.trace('already removed ' + s.uuid);
+      }
     }
   });
 
-  sidebarWorkers.forEach(function(w) {
-    w.port.emit('import', importedStickies);
+  contentWorkers.forEach(function(w) {
+    w.port.emit('import',
+                createdStickies.filter((s) => w.url == s.getPage().url),
+                updatedStickies.filter((s) => w.url == s.getPage().url));
   });
-});
+
+  sidebarWorkers.forEach(function(w) {
+    w.port.emit('import', createdStickies, updatedStickies);
+  });
+};
+
+var syncTimer = null;
+var sync = function() {
+  // push new stickies
+  logger.trace('----------new stickies -----------');
+  var lastSynced = stickynotes.lastSynced;
+  var stickies = stickynotes.Sticky.fetchUpdatedStickiesSince(lastSynced);
+  resolveStickies(stickies);
+  ApiClient.createStickies(stickies)
+    .then(function() {
+      return ApiClient.fetchStickies(lastSynced);
+    })
+    .then(function(stickies) {
+      logger.trace('----------- fetch stickies --------');
+      if (stickies) {
+        importStickies(stickies.map(function(s) {
+          s.id = null;
+          return s;
+        }));
+      }
+      stickynotes.lastSynced = new Date();
+      startSyncTimer();
+    }, function(error) {
+      startSyncTimer();
+    });
+};
+
+var startSyncTimer = function() {
+  if (syncTimer !== null) {
+    timers.clearTimeout(syncTimer);
+  }
+  syncTimer = timers.setTimeout(sync, config.syncInterval);
+};
+
+var login = function(name, password) {
+  ApiClient.login(name, password).then(function(user) {
+    updatePanel();
+    sync();
+  }, function(error) {
+    updatePanel();
+  });
+};
+
+var logout = function() {
+  ApiClient.logout();
+  stickynotes.lastSynced = null;
+  updatePanel();
+};
+
+panel.port.on('import-menu', importStickies);
 panel.port.on('export-menu', exportFromMenu);
 panel.port.on('sidebar-menu', toggleSidebar);
 panel.port.on('toggle-menu', toggleVisibility);
 panel.port.on('create-menu', createStikcy);
 panel.port.on('search-menu', search);
 panel.port.on('display-option-menu', displayOption);
+panel.port.on('sync-menu', sync);
+panel.port.on('login-menu', login);
+panel.port.on('logout-menu', logout);
 panel.port.on('preference-menu', showPreference);
-panel.port.emit('strings', {
-  'stickyImportMenu.label': _('stickyImportMenu.label'),
-  'stickyExportMenu.label': _('stickyExportMenu.label'),
-  'stickyMenu.label': _('stickyMenu.label'),
-  'stickyToggleMenu.label': _('stickyToggleMenu.label'),
-  'show_sticky_list.label': _('show_sticky_list.label'),
-  'stickySearchMenu.label': _('stickySearchMenu.label'),
-  'stickyDisplayOptionMenu.label': _('stickyDisplayOptionMenu.label'),
-  'preferenceMenu.label': _('preferenceMenu.label')
+panel.port.on('signup', function() {
+  tabs.open(ApiClient.signUpUrl);
 });
+panel.port.on('reset-password', function() {
+  tabs.open(ApiClient.resetPasswordUrl);
+});
+
+var updatePanel = function() {
+  panel.port.emit('update', {
+  strings: {
+    'stickyImportMenu.label': _('stickyImportMenu.label'),
+    'stickyExportMenu.label': _('stickyExportMenu.label'),
+    'stickyMenu.label': _('stickyMenu.label'),
+    'stickyToggleMenu.label': _('stickyToggleMenu.label'),
+    'show_sticky_list.label': _('show_sticky_list.label'),
+    'stickySearchMenu.label': _('stickySearchMenu.label'),
+    'stickyDisplayOptionMenu.label': _('stickyDisplayOptionMenu.label'),
+    'preferenceMenu.label': _('preferenceMenu.label')
+  },
+    isLoggedIn: ApiClient.isLoggedIn()
+  });
+};
+
+updatePanel();
 
 var toggleMenu = new ToggleMenu({
   panel: panel,
@@ -513,4 +610,8 @@ var sidebar = side.Sidebar({
     detachWorker(worker, sidebarWorkers);
   }
 });
-sidebar.visible      = false;
+sidebar.visible = false;
+
+if (ApiClient.isLoggedIn()) {
+  sync();
+}

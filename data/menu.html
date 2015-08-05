@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="menu.css" type="text/css" />
   </head>
   <body>
-    <ul>
+    <ul id="menu">
       <li><a id="import-menu" href="#">Import</a><li>
       <li><a id="export-menu" href="#">Export</a><li>
       <li><a id="sidebar-menu" href="#">Show/Hide sidebar</a></li>
@@ -13,8 +13,24 @@
       <li><a id="create-menu" href="#">Create sticky</a></li>
       <li><a id="search-menu" href="#">Search stickies</a></li>
       <li><a id="display-option-menu" href="#">Sidebar display option</a></li>
+      <li><a id="sync-menu" href="#">Sync</a></li>
+      <li><a id="login-menu" href="#">Login</a></li>
+      <li><a id="logout-menu" href="#">Logout</a></li>
       <li><a id="preference-menu" href="#">Preference</a></li>
       <input id="file-picker" type="file" style="display: none;"/>
     </ul>
+    <div id="login" style="display: none;">
+      <div><a id="back-to-menu" href="#">Back</a></div>
+      <label>user name
+        <input id="user-input" type="text" name="username" size="20">
+      </label>
+      <label>password
+        <input id="password-input" type="password" name="password" size="20">
+      </label>
+      <input id="login-button" type="button" value="login">
+
+      <div><a id="signup" href="#">Sign up</a></div>
+      <div><a id="reset-password" href="#">Reset password</a></div>
+    </div>
   </body>
 </html>

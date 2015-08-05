@@ -63,9 +63,16 @@
   addon.port.on('save', function(sticky) {
     stickynotes.Sidebar.updateSticky(new stickynotes.Sticky(sticky));
   });
-  addon.port.on('import', function(stickies) {
-    stickies.forEach(function(s) {
+  addon.port.on('import', function(createdStickies, updatedStickies) {
+    createdStickies.forEach(function(s) {
       stickynotes.Sidebar.addSticky(new stickynotes.Sticky(s));
+    });
+    updatedStickies.forEach(function(s) {
+      if (s.is_deleted) {
+        stickynotes.Sidebar.deleteSticky(new stickynotes.Sticky(s));
+      } else {
+        stickynotes.Sidebar.updateSticky(new stickynotes.Sticky(s));
+      }
     });
   });
   addon.port.on('search', function() {

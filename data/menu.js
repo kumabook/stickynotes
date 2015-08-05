@@ -1,13 +1,25 @@
-var sidebarMenu,
+var menu,
+    login,
+    sidebarMenu,
     toggleMenu,
     createMenu,
     searchMenu,
     displayOptionMenu,
     preferenceMenu,
     importMenu,
-    exportMenu;
+    exportMenu,
+    syncMenu,
+    loginMenu,
+    logoutMenu,
+    back,
+    loginButton,
+    userInput,
+    passwordInput,
+    signup,
+    resetPassword;
 var filePicker;
 var strings;
+var isLoggedIn = false;
 const checkChar = '✔';
 const logger         = {
   fatal: function(msg) {},
@@ -31,6 +43,7 @@ function getExtention(fileName) {
 }
 
 window.onload = function() {
+  menu = document.getElementById('menu');
   sidebarMenu = document.getElementById('sidebar-menu');
   sidebarMenu.addEventListener('click', function() {
     self.port.emit('sidebar-menu');
@@ -84,10 +97,62 @@ window.onload = function() {
   exportMenu.addEventListener('click', function() {
     self.port.emit('export-menu');
   }, true);
+  syncMenu = document.getElementById('sync-menu');
+  syncMenu.addEventListener('click', function() {
+    self.port.emit('sync-menu');
+  }, true);
+  loginMenu = document.getElementById('login-menu');
+  loginMenu.addEventListener('click', function() {
+    showLogin();
+  }, true);
+  logoutMenu = document.getElementById('logout-menu');
+  logoutMenu.addEventListener('click', function() {
+    self.port.emit('logout-menu');
+  }, true);
   preferenceMenu = document.getElementById('preference-menu');
   preferenceMenu.addEventListener('click', function() {
     self.port.emit('preference-menu');
   }, true);
+
+  login = document.getElementById('login');
+  loginButton = document.getElementById('login-button');
+  loginButton.addEventListener('click', function() {
+    self.port.emit('login-menu', userInput.value, passwordInput.value);
+  });
+  back = document.getElementById('back-to-menu');
+  back.addEventListener('click', function() {
+    showMenu();
+  });
+  userInput = document.getElementById('user-input');
+  userInput.addEventListener('keypress', function(e) {
+    if (e.keyCode === 13 /* enter */) {
+      passwordInput.focus();
+    }
+  });
+  passwordInput = document.getElementById('password-input');
+  passwordInput.addEventListener('keypress', function(e) {
+    if (e.keyCode === 13 /* enter */) {
+      self.port.emit('login-menu', userInput.value, passwordInput.value);
+    }
+  });
+  signup = document.getElementById('signup');
+  signup.addEventListener('click', function() {
+    self.port.emit('signup');
+  });
+  resetPassword = document.getElementById('reset-password');
+  resetPassword.addEventListener('click', function() {
+    self.port.emit('reset-password');
+  });
+};
+
+var showMenu = function() {
+  menu.style.display = '';
+  login.style.display = 'none';
+};
+
+var showLogin = function() {
+  menu.style.display = 'none';
+  login.style.display = '';
 };
 
 var updateMenuLabel = function() {
@@ -103,6 +168,17 @@ var updateMenuLabel = function() {
   displayOptionMenu.textContent = strings['stickyDisplayOptionMenu.label'];
   preferenceMenu.textContent = (preferenceMenu.enabled ? checkChar : '') +
     strings['preferenceMenu.label'];
+
+  if (isLoggedIn) {
+    loginMenu.style.display = 'none';
+    logoutMenu.style.display = '';
+    syncMenu.style.display = '';
+  } else {
+    loginMenu.style.display = '';
+    logoutMenu.style.display = 'none';
+    syncMenu.style.display = 'none';
+  }
+  showMenu();
 }
 
 var downloadAsFile = function(fileName, content) {
@@ -120,8 +196,9 @@ var downloadAsFile = function(fileName, content) {
   a.dispatchEvent(event);
 };
 
-self.port.on('strings', function(_strings) {
-  strings = _strings;
+self.port.on('update', function(data) {
+  strings = data.strings;
+  isLoggedIn = data.isLoggedIn;
   updateMenuLabel();
 });
 

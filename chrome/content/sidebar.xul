@@ -81,13 +81,13 @@
   </tree>
   <script type="application/x-javascript" src="chrome://stickynotes/content/stickynotes.js" />
   <script type="application/x-javascript"
-          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/DBHelper.js"/>
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/DBHelper.js"/>
   <script type="application/x-javascript"
-          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/Sticky.js"/>
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/Sticky.js"/>
   <script type="application/x-javascript"
-          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/Page.js"/>
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/Page.js"/>
   <script type="application/x-javascript"
-          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/Tag.js"/>
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/Tag.js"/>
   <script type="application/x-javascript"
           src="chrome://stickynotes/content/Sidebar.js" />
   <script type="application/x-javascript"

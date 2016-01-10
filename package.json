@@ -1,9 +1,16 @@
 {
-  "name": "stickynotes",
-  "title": "Sticky Notes",
   "id": "sticky@filenamezero.dip.jp",
+  "title": "Sticky Notes",
+  "name": "stickynotes",
+  "version": "0.8.2",
   "description": "Put sticky notes on the web page",
+  "main": "index.js",
   "author": "Hiroki Kumamoto",
-  "license": "MPL 2.0",
-  "version": "0.8.1"
+  "engines": {
+    "firefox": ">=38.0a1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jetpack"
+  ]
 }

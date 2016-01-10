@@ -1,7 +1,7 @@
 const {Cc,Ci}        = require('chrome');
 const prompts        = Cc["@mozilla.org/embedcomp/prompt-service;1"].
                          getService(Ci.nsIPromptService);
-const ToggleMenu     = require('./toggle-menu');
+const ToggleMenu     = require('./lib/toggle-menu');
 const panels         = require("sdk/panel");
 const tabs           = require('sdk/tabs');
 const self           = require('sdk/self');
@@ -9,7 +9,7 @@ const contextMenu    = require('sdk/context-menu');
 const _              = require('sdk/l10n').get;
 const { Hotkey }     = require('sdk/hotkeys');
 const pageMod        = require('sdk/page-mod');
-const stickynotes    = require('./stickynotes');
+const stickynotes    = require('./lib/stickynotes');
 const checkChar      = '✔';
 const windowUtils    = require('sdk/window/utils');
 const side           = require('sdk/ui/sidebar');

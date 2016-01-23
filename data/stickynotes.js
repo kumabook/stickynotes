@@ -9,26 +9,34 @@ stickynotes.createStickyView = function(sticky) {
   var stickyView = new stickynotes.StickyView({
     sticky: sticky,
     onClickDeleteButton: function(e) {
-        stickynotes.deleteSticky(this.sticky);
+        stickynotes.deleteSticky(sticky);
     },
     onTextareaChange: function(e) {
-      this.sticky.content = this.textarea.value;
-      stickynotes.saveSticky(this.sticky);
+      sticky.content = this.textarea.value;
+      stickynotes.saveSticky(sticky, {
+        content: this.textarea.value
+      });
     },
     onTagTextareaChange: function(e) {
-      var tagStrs = stickynotes.StickyView.str2Tags(this.tagBox.value);
+      var tagStrs = stickynotes.StickyView.str2Tags(stickyView.tagBox.value);
       stickynotes.setTags(sticky, tagStrs);
-      this.tagBox.value = tagStrs.join(',');
+      stickyView.tagBox.value = tagStrs.join(',');
     },
     onMoveEnd: function(e) {
-      this.sticky.left = parseInt(this.dom.style.left);
-      this.sticky.top = parseInt(this.dom.style.top);
-      stickynotes.saveSticky(this.sticky);
+      sticky.left = parseInt(stickyView.dom.style.left);
+      sticky.top = parseInt(stickyView.dom.style.top);
+      stickynotes.saveSticky(sticky, {
+        left: sticky.left,
+        top: sticky.top
+      });
     },
     onResizeEnd: function(e) {
-      this.sticky.width = parseInt(this.textarea.style.width);
-      this.sticky.height = parseInt(this.textarea.style.height) + 7;
-      stickynotes.saveSticky(this.sticky);
+      sticky.width = parseInt(stickyView.textarea.style.width);
+      sticky.height = parseInt(stickyView.textarea.style.height) + 7;
+      stickynotes.saveSticky(sticky, {
+        width: sticky.width,
+        height: sticky.height
+      });
     }
   });
   return stickyView;

@@ -56,7 +56,7 @@ stickynotes.StickyView.prototype.deleteDom = function() {
  */
 stickynotes.StickyView.prototype.createDom = function() {
   var that = this;
-  var id = 'sticky' + this.sticky.id;
+  var id = 'sticky' + this.sticky.uuid;
   this.dom = stickynotes.doc.createElement('div');
   this.dom.id = id;
   this.dom.__stickyView = this;
@@ -145,7 +145,7 @@ stickynotes.StickyView.prototype.updateTextarea = function() {
   textarea.style.height = this.sticky.height - 7 + 'px';
   textarea.value = this.sticky.content;
   textarea.style.backgroundColor = 'transparent';
-  textarea.id = 'sticky_id_' + this.sticky.id;
+  textarea.id = 'sticky_id_' + this.sticky.uuid;
   textarea.style.border = 'none';
   textarea.style.margin = '0px';
   textarea.style.overflow = 'auto';
@@ -314,7 +314,7 @@ stickynotes.StickyView.str2Tags = function(str) {
  * @return {String} string.
  */
 stickynotes.StickyView.prototype.toString = function() {
-  return 'sticky:' + this.sticky.id;
+  return 'sticky:' + this.sticky.uuid;
 };
 
 stickynotes.StickyView.search = function(key) {
@@ -333,7 +333,7 @@ stickynotes.StickyView.search = function(key) {
 };
 stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
   for (var i = 0; i < stickies.length; i++) {
-    var stickyDom = stickynotes.doc.getElementById('sticky' + stickies[i].id);
+    var stickyDom = stickynotes.doc.getElementById('sticky' + stickies[i].uuid);
     if (stickynotes.StickyView.StickiesVisibility)
       stickyDom.style.visibility = 'hidden';
     else
@@ -345,7 +345,7 @@ stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
 };
 
 stickynotes.StickyView.deleteDom = function(sticky) {
-  var dom = stickynotes.doc.getElementById('sticky' + sticky.id);
+  var dom = stickynotes.doc.getElementById('sticky' + sticky.uuid);
   if (dom && dom.__stickyView) {
     dom.__stickyView.sticky = sticky;
     dom.__stickyView.deleteDom();
@@ -353,7 +353,7 @@ stickynotes.StickyView.deleteDom = function(sticky) {
 };
 
 stickynotes.StickyView.updateDom = function(sticky) {
-  var dom = stickynotes.doc.getElementById('sticky' + sticky.id);
+  var dom = stickynotes.doc.getElementById('sticky' + sticky.uuid);
   if (dom && dom.__stickyView) {
     dom.__stickyView.sticky = sticky;
     dom.__stickyView.updateDom();

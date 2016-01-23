@@ -46,7 +46,7 @@ var onCreateSticky = function(sticky, url) {
 };
 
 var onDeleteSticky = function(sticky) {
-  logger.trace('page-mod: delete-sticky ' + sticky.id);
+  logger.trace('page-mod: delete-sticky ' + sticky.uuid);
   stickynotes.StickyView.deleteDom(sticky);
 };
 
@@ -56,7 +56,7 @@ var onJumpSticky = function(message) {
 
 var onFocusSticky = function(sticky) {
   setTimeout(function() {
-    document.getElementById('sticky_id_' + sticky.id).focus();
+    document.getElementById('sticky_id_' + sticky.uuid).focus();
   }, 500);
 };
 
@@ -92,9 +92,16 @@ var onToggleVisibility = function(stickies) {
   self.port.emit('toggle-menu', enabled);
 };
 
-var onImport = function(stickies) {
-  logger.trace('page-mod: imported ' + stickies.length + ' stickies.');
-  load(stickies);
+var onImport = function(createdStickies, updatedStickies) {
+  logger.trace('page-mod: import stickies.');
+  load(createdStickies);
+  updatedStickies.forEach(function(sticky) {
+    if (sticky.is_deleted) {
+      stickynotes.StickyView.deleteDom(sticky);
+    } else {
+      stickynotes.StickyView.updateDom(sticky);
+    }
+  });
 };
 
 var watchClickPosition = function(event) {

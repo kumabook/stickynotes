@@ -1,4 +1,4 @@
-var stickynotes = require('./stickynotes');
+var stickynotes = require('../lib/stickynotes');
 var test = require("sdk/test");
 
 var setup = function() {

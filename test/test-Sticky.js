@@ -1,4 +1,4 @@
-var stickynotes = require('./stickynotes');
+var stickynotes = require('../lib/stickynotes');
 
 var testStickyParam;
 var testUrl = 'http://test.stickynotes.co.jp';

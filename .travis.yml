@@ -1,14 +1,14 @@
+sudo: false
 language: node_js
-
+addons:
+  firefox: latest
+env:
+  global:
+    - DISPLAY=:99.0
+    - JPM_FIREFOX_BINARY=/usr/local/bin/firefox
 before_install:
-  - "export DISPLAY=:99.0"
-  - "Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &"
-  - sleep 5
-
+  - sh -e /etc/init.d/xvfb start
 before_script:
-  - cd addon-sdk
-  - . bin/activate
-  - cd ../
-
+  - npm install -g jpm
 script:
- - "cfx test"
+  - jpm test

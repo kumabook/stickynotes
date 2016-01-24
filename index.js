@@ -44,7 +44,7 @@ timers.setTimeout(function() {
       logger.trace(error.fileName+":"+error.lineNumber+": "+error);
     }
   });
-}, 10);
+}, 1000);
 
 tabs.on('activate', function (tab) {
   logger.trace('active: ' + tab.url);

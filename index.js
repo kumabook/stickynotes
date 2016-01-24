@@ -78,11 +78,11 @@ var detachWorker = function(worker, workers) {
   }
 };
 
-var emitAll = function(workers, type, data) {
+var emitAll = function(workers, type, data, url) {
   var invalidWorkers = [];
   workers.forEach(function(w) {
     try {
-      w.port.emit(type, data, w.url);
+      w.port.emit(type, data, url || w.url);
     } catch (e) {
       logger.trace('error:' + e);
       invalidWorkers.push(w);
@@ -222,8 +222,7 @@ var createStickyWithMessage = function (message) {
     color: 'yellow',
     tags: ''
   });
-  var workers = contentWorkers.filter((w) => { return w.url == message.url; });
-  emitAll(       workers,'create-sticky', sticky);
+  emitAll(contentWorkers,'create-sticky', sticky, message.url);
   emitAll(sidebarWorkers,          'add', sticky);
 };
 

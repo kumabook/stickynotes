@@ -28,11 +28,11 @@ var onStrings = function(_strings) {
 };
 
 var isChildWindow = function() {
-  return window != window.parent;
+  return window !== window.parent;
 };
 
 var onCreateSticky = function(sticky, url) {
-  if (url == window.location.href && isChildWindow()) {
+  if (url !== window.location.href || isChildWindow()) {
     return;
   }
   logger.trace('create-sticky');

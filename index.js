@@ -82,7 +82,7 @@ var emitAll = function(workers, type, data) {
   var invalidWorkers = [];
   workers.forEach(function(w) {
     try {
-      w.port.emit(type, data);
+      w.port.emit(type, data, w.url);
     } catch (e) {
       logger.trace('error:' + e);
       invalidWorkers.push(w);
@@ -132,7 +132,9 @@ var setupContentWorker = function(worker) {
   worker.port.emit('strings', {
     'sticky.placeholderText': _('sticky.placeholderText')
   });
-  worker.port.emit('load-stickies', stickynotes.Sticky.fetchByUrl(worker.url));
+  worker.port.emit('load-stickies',
+                   stickynotes.Sticky.fetchByUrl(worker.url),
+                   worker.url);
   if (jumpingSticky) {
     worker.port.emit('focus-sticky', jumpingSticky);
     jumpingSticky = null;

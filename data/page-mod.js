@@ -27,7 +27,14 @@ var onStrings = function(_strings) {
   stickynotes.strings = _strings;
 };
 
-var onCreateSticky = function(sticky) {
+var isChildWindow = function() {
+  return window != window.parent;
+};
+
+var onCreateSticky = function(sticky, url) {
+  if (url == window.location.href && isChildWindow()) {
+    return;
+  }
   logger.trace('create-sticky');
   sticky.left = stickynotes.x;
   sticky.top = stickynotes.y;
@@ -60,7 +67,10 @@ var load = function(stickies) {
   });
 };
 
-var onLoadStickies = function(stickies) {
+var onLoadStickies = function(stickies, url) {
+  if (url == window.location.href && isChildWindow()) {
+    return;
+  }
   stickynotes.StickyView.deleteAll();
   load(stickies);
   logger.trace('page-mod: load-stickies: count=' + stickies.length);

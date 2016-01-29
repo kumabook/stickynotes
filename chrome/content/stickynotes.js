@@ -1,14 +1,17 @@
 /**
   @const namespace for stickynotes addon.
  */
-const stickynotes = {
+const __stickynotes = {
     x: 0,
     y: 0,
     loaded: 0
 };
-const Cc = Components.classes;
-const Ci = Components.interfaces;
+__stickynotes.Cc = Components.classes;
+__stickynotes.Ci = Components.interfaces;
 var require = function(path) {
+  if (path === './stickynotes') {
+    return __stickynotes;
+  }
   return {};
 };
 var module = {};

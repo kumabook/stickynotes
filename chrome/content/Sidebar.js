@@ -232,6 +232,8 @@ stickynotes.Sidebar = {
     addon.port.emit('jump', sticky, page.url);
     document.getElementById('sticky').blur();
     if (window.content.document.location.href != page.url) {
+      let Cc = stickynotes.Cc;
+      let Ci = stickynotes.Ci;
       Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer).initWithCallback(
         function() { window.content.document.location.href = page.url;  },
         200,
@@ -268,6 +270,7 @@ stickynotes.Sidebar = {
     }
   },
   resizeSidebarHeight: function() {
+    var Ci = stickynotes.Ci;
     var mainWindow = window.
       QueryInterface(Ci.nsIInterfaceRequestor)
       .getInterface(Ci.nsIWebNavigation)

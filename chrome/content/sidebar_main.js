@@ -1,4 +1,4 @@
-(function() {
+(function(Cc, Ci) {
   var Sidebar = stickynotes.Sidebar;
   var resizeSidebarHeight = Sidebar.resizeSidebarHeight.bind(Sidebar);
   var filterContextMenu   = Sidebar.filterContextMenu.bind(Sidebar);
@@ -74,4 +74,4 @@
   addon.port.on('display-option', function() {
     stickynotes.Sidebar.openDisplayOptionMenu();
   });
-})();
+})(stickynotes.Cc, stickynotes.Ci);

@@ -32,7 +32,7 @@ var isChildWindow = function() {
 };
 
 var onCreateSticky = function(sticky, url) {
-  if (url !== window.location.href || isChildWindow()) {
+  if ((window.location && url !== window.location.href) || isChildWindow()) {
     return;
   }
   logger.trace('create-sticky');
@@ -68,7 +68,7 @@ var load = function(stickies) {
 };
 
 var onLoadStickies = function(stickies, url) {
-  if (url == window.location.href && isChildWindow()) {
+  if ((window.location && url !== window.location.href) || isChildWindow()) {
     return;
   }
   stickynotes.StickyView.deleteAll();

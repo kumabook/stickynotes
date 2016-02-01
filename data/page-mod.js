@@ -32,7 +32,7 @@ var isChildWindow = function() {
 };
 
 var onCreateSticky = function(sticky, url) {
-  if (url !== window.location.href || isChildWindow()) {
+  if ((window.location && url !== window.location.href) || isChildWindow()) {
     return;
   }
   logger.trace('create-sticky');

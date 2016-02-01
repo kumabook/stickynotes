@@ -79,7 +79,10 @@
       </treeitem>
     </treechildren>
   </tree>
-  <script type="application/x-javascript" src="chrome://stickynotes/content/stickynotes.js" />
+  <script type="application/x-javascript"
+          src="chrome://stickynotes/content/stickynotes.js" />
+  <script type="application/x-javascript"
+          src="resource://stickynotes-at-outlook-dot-jp/lib/Logger.js"/>
   <script type="application/x-javascript"
           src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/DBHelper.js"/>
   <script type="application/x-javascript"

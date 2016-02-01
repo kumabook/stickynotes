@@ -17,14 +17,7 @@ const timers         = require('sdk/timers');
 const unload         = require('sdk/system/unload');
 const config         = require('./lib/config');
 const ApiClient      = stickynotes.ApiClient;
-const logger         = {
-  fatal: function(msg) {},
-  error: function(msg) {},
-  warn:  function(msg) {},
-  info:  function(msg) {},
-  debug: function(msg) {},
-  trace: function(msg) { console.log(msg);}
-};
+const logger         = stickynotes.Logger;
 
 var jumpingSticky    = null;
 var preferenceWindow = null;

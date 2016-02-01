@@ -2,9 +2,9 @@
   @const namespace for stickynotes addon.
  */
 const __stickynotes = {
-    x: 0,
-    y: 0,
-    loaded: 0
+  x: 0,
+  y: 0,
+  loaded: 0
 };
 __stickynotes.Cc = Components.classes;
 __stickynotes.Ci = Components.interfaces;

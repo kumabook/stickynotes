@@ -34,7 +34,7 @@
   <script type="application/x-javascript"
           src="chrome://stickynotes/content/stickynotes.js" />
   <script type="application/x-javascript"
-          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/stickynotes/lib/Shortcut.js"/>
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/Shortcut.js"/>
   <script type="application/x-javascript"
           src="chrome://stickynotes/content/preference.js" />
 </prefwindow>

@@ -289,6 +289,12 @@ stickynotes.StickyView.prototype.resize = function(elem, e) {
 stickynotes.StickyView.prototype.focus = function() {
   this.textarea.focus();
 };
+
+stickynotes.StickyView.prototype.isEditing = function() {
+  return document.activeElement === this.textarea ||
+         document.activeElement === this.tagBox;
+};
+
 stickynotes.StickyView.str2Tags = function(str) {
   var tags_str = (str + ',').replace(/^[\s　]+|[\s　]+$/g, '');
   var tags = [];
@@ -353,8 +359,12 @@ stickynotes.StickyView.deleteDom = function(sticky) {
 };
 
 stickynotes.StickyView.updateDom = function(sticky) {
-  var dom = stickynotes.doc.getElementById('sticky' + sticky.uuid);
+  let dom = stickynotes.doc.getElementById('sticky' + sticky.uuid);
   if (dom && dom.__stickyView) {
+    let str = 'Current editing sticky is updated. Do you update the sticky?';
+    if (dom.__stickyView.isEditing() && !confirm(str)) {
+      return;
+    }
     dom.__stickyView.sticky = sticky;
     dom.__stickyView.updateDom();
   }

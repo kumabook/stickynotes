@@ -170,16 +170,16 @@ var updateMenuLabel = function() {
     strings['preferenceMenu.label'];
 
   if (isLoggedIn) {
-    loginMenu.style.display = 'none';
-    logoutMenu.style.display = '';
-    syncMenu.style.display = '';
+    loginMenu.parentNode.style.display = 'none';
+    logoutMenu.parentNode.style.display = '';
+    syncMenu.parentNode.style.display = '';
   } else {
-    loginMenu.style.display = '';
-    logoutMenu.style.display = 'none';
-    syncMenu.style.display = 'none';
+    loginMenu.parentNode.style.display = '';
+    logoutMenu.parentNode.style.display = 'none';
+    syncMenu.parentNode.style.display = 'none';
   }
   showMenu();
-}
+};
 
 var downloadAsFile = function(fileName, content) {
   logger.trace(fileName);

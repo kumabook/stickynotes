@@ -424,7 +424,7 @@ var shortcuts = [
 
 var panel = panels.Panel({
   width: 170,
-  height: 274,
+  height: 304,
   contentURL: self.data.url('menu.html'),
   contentScriptFile: self.data.url('menu.js'),
   onHide: function () {

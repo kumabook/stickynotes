@@ -19,6 +19,10 @@ const config         = require('./lib/config');
 const ApiClient      = stickynotes.ApiClient;
 const logger         = stickynotes.Logger;
 
+if (config.logLevel) {
+  logger.setLevel(config.logLevel);
+}
+
 var jumpingSticky    = null;
 var preferenceWindow = null;
 var contentWorkers = [];

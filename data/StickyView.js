@@ -1,4 +1,9 @@
-var CONTAINER_CLASS_NAME = 'stickynotes-sticky-container';
+var CONTAINER     = 'stickynotes-sticky-container';
+var DELETE_BUTTON = 'stickynotes-delete-button';
+var TEXTAREA      = 'stickynotes-textarea';
+var DRAG_BAR      = 'stickynotes-drag-bar';
+var TAG_BOX       = 'stickynotes-tag-box';
+
 stickynotes.StickyView = function(param) {
   this.sticky = param.sticky;
   this.onClickDeleteButton = param.onClickDeleteButton;
@@ -20,7 +25,7 @@ stickynotes.StickyView = function(param) {
 stickynotes.StickyView.changeElemSize = 35;
 
 stickynotes.StickyView.deleteAll = function() {
-  var elements = stickynotes.doc.getElementsByClassName(CONTAINER_CLASS_NAME);
+  var elements = stickynotes.doc.getElementsByClassName(CONTAINER);
   for (var i = elements.length - 1; i >= 0; i--) {
     stickynotes.doc.body.removeChild(elements[i]);
   }
@@ -34,11 +39,7 @@ stickynotes.StickyView.prototype.updateDom = function() {
   this.dom.style.left = this.sticky.left + 'px';
   this.dom.style.top = this.sticky.top + 'px';
   this.dom.style.background = '#f1c40f';
-  this.dom.style.opacity = 0.85;
-  this.dom.style.borderRadius = '10px';
-  this.dom.style.zIndex = '10000';
-  this.dom.className = CONTAINER_CLASS_NAME;
-
+  this.dom.className = CONTAINER;
   this.updateTextarea();
   this.updateDeleteButton();
   this.updateDragBar();
@@ -142,57 +143,23 @@ stickynotes.StickyView.prototype.updateTextarea = function() {
   var textarea = this.textarea;
   textarea.style.position = 'relative';
   textarea.style.width = this.sticky.width + 'px';
-  textarea.style.height = this.sticky.height - 7 + 'px';
+  textarea.style.height = (this.sticky.height - 7 - 26) + 'px';
   textarea.value = this.sticky.content;
   textarea.style.backgroundColor = 'transparent';
   textarea.id = 'sticky_id_' + this.sticky.uuid;
-  textarea.style.border = 'none';
-  textarea.style.margin = '0px';
-  textarea.style.overflow = 'auto';
-  textarea.style.fontSize = '13px';
-  textarea.style.fontWeight = 'normal';
-  textarea.style.lineHeight = '14px';
-  textarea.style.fontFamily = 'trebuchet ms';
-  textarea.style.paddingTop = '4px';
-  textarea.style.paddingLeft = '4px';
-  textarea.className = 'textArea';
+  textarea.className = TEXTAREA;
   textarea.placeholder = stickynotes.strings['sticky.placeholderText'];
   textarea.sticky = this;
 };
 stickynotes.StickyView.prototype.updateDeleteButton = function() {
   var deleteButton = this.deleteButton;
-  deleteButton.style.position = 'absolute';
-  deleteButton.style.width = '20px';
-  deleteButton.style.cursor = 'pointer';
-  deleteButton.style.borderRadius = '20px';
-  deleteButton.style.border = '1px solid #AEAEAE';
-  deleteButton.style.color = '#FFFFFF';
-  deleteButton.style.backgroundColor = '#605F61';
-
-  deleteButton.style.fontFamily = 'fantasy';
-  deleteButton.style.fontWeight = 'bold';
-  deleteButton.style.fontSize = '20px';
-  deleteButton.style.lineHeight = '0px';
-  deleteButton.style.height = '20px';
-  deleteButton.style.right = '0px';
-  deleteButton.style.top = '0px';
-  deleteButton.className = 'deleteButton';
-  deleteButton.style.margin = '3px 3px 0px 0px';
-  deleteButton.style.padding = '1% 0 0 1%';
-  deleteButton.style.display = 'inline-block';
-  deleteButton.style.textAlign = 'center';
-
+  deleteButton.className = DELETE_BUTTON;
   deleteButton.innerHTML = '✖';
 };
 stickynotes.StickyView.prototype.updateDragBar = function() {
   var dragBar = this.dragBar;
-  dragBar.style.position = 'relative';
   dragBar.style.width = this.sticky.width - 10 + 'px';
-  dragBar.style.height = '26px';
-  dragBar.style.borderBottom = 'solid 1px yellow';
-  dragBar.style.margin = '0px';
-  dragBar.style.cursor = 'move';
-  dragBar.className = 'dragBar';
+  dragBar.className = DRAG_BAR;
 //  dragBar.style.backgroundColor = this.sticky.color;
 };
 stickynotes.StickyView.prototype.updateTagBox = function() {
@@ -203,22 +170,8 @@ stickynotes.StickyView.prototype.updateTagBox = function() {
     str += tags[i].name;
   }
   tagBox.value = str;
-  tagBox.style.position = 'absolute';
-  tagBox.style.backgroundColor = 'white';
-  tagBox.style.height = '20px';
-  tagBox.style.width = '50px';
-  tagBox.style.right = '26px';
-  tagBox.style.top = '2px';
-  tagBox.style.margin = '0px';
-  tagBox.style.padding = '0px';
-  tagBox.style.borderRadius = '3px';
-  tagBox.style.border = 'solid 1px #ccc';
+  tagBox.className = TAG_BOX;
   tagBox.placeholder = 'tag, ...';
-
-  tagBox.style.fontSize = '13px';
-  tagBox.style.fontWeight = 'normal';
-  tagBox.style.lineHeight = '14px';
-  tagBox.style.fontFamily = 'trebuchet ms';
 };
 
 /**

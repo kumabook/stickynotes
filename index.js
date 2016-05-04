@@ -112,8 +112,7 @@ var setupContentWorker = function(worker) {
       _('stickyToggleMenu.label');
   });
   worker.port.on('reload-stickies', function(url) {
-    worker.port.emit('load-stickies',
-                     stickynotes.Sticky.fetchByUrl(url));
+    worker.port.emit('load-stickies', stickynotes.Sticky.fetchByUrl(url), url);
     if (jumpingSticky) {
       worker.port.emit('focus-sticky', jumpingSticky);
       jumpingSticky = null;

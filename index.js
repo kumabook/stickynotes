@@ -148,6 +148,7 @@ pageMod.PageMod({
                       self.data.url('StickyView.js'),
                       self.data.url('page-mod.js')],
   contentScriptWhen: 'end',
+  contentStyleFile: self.data.url("./sticky-view.css"),
   onAttach: setupContentWorker
 });
 

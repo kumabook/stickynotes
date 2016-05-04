@@ -1,0 +1,68 @@
+.stickynotes-sticky-container {
+    position      : absolute;
+    opacity       : 0.85;
+    border-radius : 10px;
+    z-index       : 10000;
+}
+
+.stickynotes-delete-button {
+    position         : absolute;
+    width            : 20px;
+    cursor           : pointer;
+    border-radius    : 20px;
+    border           : 1px solid #AEAEAE;
+    color            : #FFFFFF;
+    background-color : #605F61;
+    font-family      : fantasy;
+    font-weight      : bold;
+    font-size        : 20px;
+    line-height      : 0px;
+    height           : 20px;
+    right            : 0px;
+    top              : 0px;
+    margin           : 3px 3px 0px 0px;
+    padding          : 1% 0 0 1%;
+    display          : inline-block;
+    text-align       : center;
+}
+
+.stickynotes-textarea:focus,
+.stickynotes-textarea {
+    position         : absolute;
+    background-color : transparent;
+    border           : none;
+    margin           : 0px;
+    overflow         : auto;
+    font-size        : 13px;
+    font-weight      : normal;
+    line-height      : 14px;
+    font-family      : trebuchet ms;
+    top              : 27px;
+    padding-top      : 4px;
+    padding-left     : 4px;
+}
+
+.stickynotes-drag-bar {
+    position      : absolute;
+    height        : 26px;
+    border-bottom : solid 1px yellow;
+    margin        : 0px;
+    cursor        : move;
+}
+
+.stickynotes-tag-box {
+    position         : absolute;
+    background-color : white;
+    height           : 20px;
+    width            : 50px;
+    right            : 26px;
+    top              : 2px;
+    margin           : 0px;
+    padding          : 0px;
+    border-radius    : 3px;
+    border           : solid 1px #ccc;
+    font-size        : 13px;
+    font-weight      : normal;
+    line-height      : 14px;
+    font-family      : trebuchet ms;
+}

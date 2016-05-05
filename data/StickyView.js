@@ -11,7 +11,7 @@ var TOOLBAR         = 'stickynotes-toolbar';
 var BAND            = 'stickynotes-band';
 var RESIZE_SIZE     = 35;
 var MIN_WIDTH       = 150;
-var MIN_HEIGHT      = 30;
+var MIN_HEIGHT      = 52;
 
 stickynotes.StickyView = function(param) {
   this.sticky                = param.sticky;
@@ -231,10 +231,9 @@ stickynotes.StickyView.prototype.resize = function(elem, e) {
   function moveHandler(e) {
     var width  = e.clientX - deltaWidth;
     var height = e.clientY - deltaHeight;
-    if (width < MIN_WIDTH || height < MIN_HEIGHT) return;
 
-    that.dom.style.width  = width  + 'px';
-    that.dom.style.height = height + 'px';
+    that.dom.style.width  = Math.max(width, MIN_WIDTH)   + 'px';
+    that.dom.style.height = Math.max(height, MIN_HEIGHT) + 'px';
     e.preventDefault();
     e.stopPropagation();
   }

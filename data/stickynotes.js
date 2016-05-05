@@ -9,7 +9,16 @@ stickynotes.createStickyView = function(sticky) {
   var stickyView = new stickynotes.StickyView({
     sticky: sticky,
     onClickDeleteButton: function(e) {
-        stickynotes.deleteSticky(sticky);
+      stickynotes.deleteSticky(sticky);
+    },
+    onClickMinimizeButton: function(e) {
+      stickyView.minimize();
+    },
+    onClickEditTagButton: function(e) {
+      stickyView.editTag();
+    },
+    onClickMenuButton: function(e) {
+      stickyView.showMenu();
     },
     onTextareaChange: function(e) {
       sticky.content = this.textarea.value;
@@ -31,12 +40,14 @@ stickynotes.createStickyView = function(sticky) {
       });
     },
     onResizeEnd: function(e) {
-      sticky.width = parseInt(stickyView.textarea.style.width);
-      sticky.height = parseInt(stickyView.textarea.style.height) + 7;
-      stickynotes.saveSticky(sticky, {
-        width: sticky.width,
-        height: sticky.height
-      });
+      if (stickyView.status !== 'minimized') {
+        sticky.width = parseInt(stickyView.textarea.style.width);
+        sticky.height = parseInt(stickyView.textarea.style.height) + 7;
+        stickynotes.saveSticky(sticky, {
+          width: sticky.width,
+          height: sticky.height
+        });
+      }
     }
   });
   return stickyView;

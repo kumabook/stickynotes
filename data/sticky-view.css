@@ -1,4 +1,4 @@
-.stickynotes-sticky-container {
+.stickynotes-sticky {
     all           : unset;
     position      : absolute;
     display       : block;
@@ -9,8 +9,20 @@
     cursor        : pointer;
 }
 
-.stickynotes-sticky-container-dragging {
+.stickynotes-sticky-minimized {
+    border-radius : 2px;
+    box-shadow    : 15px 0px 32px -12px rgba(128,128,128,0.75);
+    width         : 40px;
+    height        : 20px;
+}
+
+.stickynotes-sticky-dragging {
     cursor : grab;
+}
+
+.stickynotes-band {
+    width            : 6px;
+    height           : 100%;
 }
 
 .stickynotes-toolbar {

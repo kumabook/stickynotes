@@ -1,5 +1,6 @@
-var CONTAINER       = 'stickynotes-sticky-container';
-var DRAGGING        = 'stickynotes-sticky-container-dragging';
+var CLASS           = 'stickynotes-sticky';
+var MINIMIZED       = 'stickynotes-sticky-minimized';
+var DRAGGING        = 'stickynotes-sticky-dragging';
 var BUTTON          = 'stickynotes-toolbar-button';
 var DELETE_BUTTON   = 'stickynotes-delete-button';
 var EDIT_TAG_BUTTON = 'stickynotes-edit-tag-button';
@@ -7,30 +8,34 @@ var MINIMIZE_BUTTON = 'stickynotes-minimize-button';
 var MENU_BUTTON     = 'stickynotes-menu-button';
 var TEXTAREA        = 'stickynotes-textarea';
 var TOOLBAR         = 'stickynotes-toolbar';
-var RESIZE_AREA     = 'stickynotes-resize-area';
+var BAND            = 'stickynotes-band';
 var RESIZE_SIZE     = 35;
 var MIN_WIDTH       = 150;
 var MIN_HEIGHT      = 30;
 
 stickynotes.StickyView = function(param) {
-  this.sticky              = param.sticky;
-  this.onClickDeleteButton = param.onClickDeleteButton;
-  this.onTextareaChange    = param.onTextareaChange;
-  this.onTagTextareaChange = param.onTagTextareaChange;
-  this.onMoveEnd           = param.onMoveEnd;
-  this.onResizeEnd         = param.onResizeEnd;
-  this.drag                =  this.drag.bind(this);
-  this.onContentChange     = this.onContentChange.bind(this);
-  this.onTextareaMouseDown = this.onTextareaMouseDown.bind(this);
-  this.onTextareaKeyDown   = this.onTextareaKeyDown.bind(this);
+  this.sticky                = param.sticky;
+  this.onClickDeleteButton   = param.onClickDeleteButton;
+  this.onClickMinimizeButton = param.onClickMinimizeButton;
+  this.onClickEditTagButton  = param.onClickEditTagButton;
+  this.onClickMenuButton     = param.onClickMenuButton;
+  this.onTextareaChange      = param.onTextareaChange;
+  this.onTagTextareaChange   = param.onTagTextareaChange;
+  this.onMoveEnd             = param.onMoveEnd;
+  this.onResizeEnd           = param.onResizeEnd;
+  this.drag                  = this.drag.bind(this);
+  this.onContentChange       = this.onContentChange.bind(this);
+  this.onTextareaMouseDown   = this.onTextareaMouseDown.bind(this);
+  this.onTextareaKeyDown     = this.onTextareaKeyDown.bind(this);
 
   this.createDom();
   this.updateDom();
   this.bind();
+  this.isDragging = false;
 };
 
 stickynotes.StickyView.deleteAll = function() {
-  var elements = stickynotes.doc.getElementsByClassName(CONTAINER);
+  var elements = stickynotes.doc.getElementsByClassName(CLASS);
   for (var i = elements.length - 1; i >= 0; i--) {
     stickynotes.doc.body.removeChild(elements[i]);
   }
@@ -44,15 +49,39 @@ stickynotes.StickyView.prototype.updateDom = function() {
   this.dom.style.top        = this.sticky.top    + 'px';
   this.dom.style.width      = this.sticky.width  + 'px';
   this.dom.style.height     = this.sticky.height + 'px';
-  this.dom.style.background = '#f1c40f';
-  this.dom.className        = CONTAINER;
-
+  this.updateClassName();
+  this.statusUpdated();
   var textarea              = this.textarea;
   textarea.value            = this.sticky.content;
   textarea.id               = 'sticky_id_' + this.sticky.uuid;
   textarea.placeholder      = stickynotes.strings['sticky.placeholderText'];
   textarea.sticky           = this;
 };
+
+stickynotes.StickyView.prototype.updateClassName = function() {
+  var classNames = [CLASS];
+  if (this.sticky.status === 'minimized') {
+    classNames.push(MINIMIZED);
+  }
+  if (this.isDragging) {
+    classNames.push(DRAGGING);
+  }
+  this.dom.className = classNames.join(' ');
+};
+
+stickynotes.StickyView.prototype.statusUpdated = function() {
+  if (this.sticky.status === 'minimized') {
+    let c = '#f1c40f';
+    let colors = ['rgb(200,200,200)', 'rgb(222,222,222)'];
+    this.dom.style.background = 'linear-gradient(to right,' + colors.join(',') + ')';
+    this.band.style.display = '';
+    this.band.style.background = c;
+  } else {
+    this.dom.style.background = '#f1c40f';
+    this.band.style.display = 'none';
+  }
+};
+
 /**
  * remove dom element.
  */
@@ -84,6 +113,9 @@ stickynotes.StickyView.prototype.createDom = function() {
   this.menuButton               = doc.createElement('div');
   this.menuButton.className     = BUTTON + ' ' + MENU_BUTTON;
 
+  this.band                     = doc.createElement('div');
+  this.band.className           = BAND;
+
   this.toolbar.appendChild(this.deleteButton);
   this.toolbar.appendChild(this.minimizeButton);
   this.toolbar.appendChild(this.menuButton);
@@ -91,20 +123,30 @@ stickynotes.StickyView.prototype.createDom = function() {
 
   this.dom.appendChild(this.toolbar);
   this.dom.appendChild(this.textarea);
+  this.dom.appendChild(this.band);
+
+  this.maximize = this.maximize.bind(this);
 };
 
 stickynotes.StickyView.prototype.bind = function() {
-  this.toolbar.addEventListener('mousedown',  this.drag, true);
-  this.deleteButton.addEventListener('click', this.onClickDeleteButton, true);
-  this.textarea.addEventListener('change',    this.onContentChange, true);
-  this.textarea.addEventListener('mousedown', this.onTextareaMouseDown);
-  this.textarea.addEventListener('keydown',   this.onTextareaKeyDown, false);
+  this.dom.addEventListener('mousedown', this.drag    , false);
+  this.dom.addEventListener( 'dblclick', this.maximize, false);
+
+  this.deleteButton.addEventListener(  'click', this.onClickDeleteButton  , true);
+  this.minimizeButton.addEventListener('click', this.onClickMinimizeButton, true);
+  this.editTagButton.addEventListener( 'click', this.onClickEditTagButton , true);
+  this.menuButton.addEventListener(    'click', this.onClickMenuButton    , true);
+
+  this.textarea.addEventListener('change'   , this.onContentChange    , true);
+  this.textarea.addEventListener('mousedown', this.onTextareaMouseDown, false);
+  this.textarea.addEventListener('keydown'  , this.onTextareaKeyDown  , false);
 };
 
 stickynotes.StickyView.prototype.unbind = function() {
-  this.toolbar.removeEventListener('mousedown',  this.drag, true);
+  this.dom.removeEventListener(     'mousedown', this.drag               , true);
+  this.dom.removeEventListener(      'dblclick', this.maximize           , false);
   this.deleteButton.removeEventListener('click', this.onClickDeleteButton, true);
-  this.textarea.removeEventListener('change',    this.onContentChange, true);
+  this.textarea.removeEventListener('change',    this.onContentChange    , true);
   this.textarea.removeEventListener('mousedown', this.onTextareaMouseDown);
 };
 
@@ -151,7 +193,8 @@ stickynotes.StickyView.prototype.drag = function(e) {
   var startX = e.clientX      , startY = e.clientY;
   var origX  = elem.offsetLeft, origY  = elem.offsetTop;
   var deltaX = startX - origX , deltaY = startY - origY;
-  elem.className = CONTAINER + ' ' + DRAGGING;
+  this.isDragging = true;
+  this.updateClassName();
   stickynotes.doc.addEventListener('mousemove', moveHandler, true);
   stickynotes.doc.addEventListener('mouseup'  , upHandler  , true);
   e.stopPropagation();
@@ -163,7 +206,8 @@ stickynotes.StickyView.prototype.drag = function(e) {
     e.preventDefault();
   }
   function upHandler(e) {
-    elem.className = CONTAINER;
+    that.isDragging = false;
+    that.updateClassName();
     stickynotes.doc.removeEventListener('mouseup'  , upHandler  , true);
     stickynotes.doc.removeEventListener('mousemove', moveHandler, true);
     that.onMoveEnd();
@@ -215,6 +259,32 @@ stickynotes.StickyView.prototype.focus = function() {
 
 stickynotes.StickyView.prototype.isEditing = function() {
   return document.activeElement === this.textarea;
+};
+
+stickynotes.StickyView.prototype.minimize = function() {
+  this.dom.style.width        = null;
+  this.dom.style.height       = null;
+  this.toolbar.style.display  = 'none';
+  this.textarea.style.display = 'none';
+  this.sticky.status          = 'minimized';
+  this.updateClassName();
+  this.statusUpdated();
+};
+
+stickynotes.StickyView.prototype.maximize = function() {
+  this.dom.style.width        = this.sticky.width + 'px';
+  this.dom.style.height       = this.sticky.height + 'px';
+  this.toolbar.style.display  = null;
+  this.textarea.style.display = null;
+  this.sticky.status          = 'normal';
+  this.updateClassName();
+  this.statusUpdated();
+};
+
+stickynotes.StickyView.prototype.showMenu = function() {
+};
+
+stickynotes.StickyView.prototype.editTag = function() {
 };
 
 stickynotes.StickyView.str2Tags = function(str) {

@@ -91,7 +91,7 @@
 
 .stickynotes-textarea:focus,
 .stickynotes-textarea {
-    all              : unset;
+    display          : block;
     background-color : transparent;
     border           : none;
     margin           : 0px;

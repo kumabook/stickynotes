@@ -25,7 +25,6 @@ stickynotes.StickyView = function(param) {
   this.onResizeEnd           = param.onResizeEnd;
   this.drag                  = this.drag.bind(this);
   this.onContentChange       = this.onContentChange.bind(this);
-  this.onTextareaMouseDown   = this.onTextareaMouseDown.bind(this);
   this.onTextareaKeyDown     = this.onTextareaKeyDown.bind(this);
 
   this.createDom();
@@ -129,17 +128,16 @@ stickynotes.StickyView.prototype.createDom = function() {
 };
 
 stickynotes.StickyView.prototype.bind = function() {
-  this.dom.addEventListener('mousedown', this.drag    , false);
-  this.dom.addEventListener( 'dblclick', this.maximize, false);
-
   this.deleteButton.addEventListener(  'click', this.onClickDeleteButton  , true);
   this.minimizeButton.addEventListener('click', this.onClickMinimizeButton, true);
   this.editTagButton.addEventListener( 'click', this.onClickEditTagButton , true);
   this.menuButton.addEventListener(    'click', this.onClickMenuButton    , true);
 
   this.textarea.addEventListener('change'   , this.onContentChange    , true);
-  this.textarea.addEventListener('mousedown', this.onTextareaMouseDown, false);
   this.textarea.addEventListener('keydown'  , this.onTextareaKeyDown  , false);
+
+  this.dom.addEventListener('mousedown', this.drag    , false);
+  this.dom.addEventListener( 'dblclick', this.maximize, false);
 };
 
 stickynotes.StickyView.prototype.unbind = function() {
@@ -147,7 +145,7 @@ stickynotes.StickyView.prototype.unbind = function() {
   this.dom.removeEventListener(      'dblclick', this.maximize           , false);
   this.deleteButton.removeEventListener('click', this.onClickDeleteButton, true);
   this.textarea.removeEventListener('change',    this.onContentChange    , true);
-  this.textarea.removeEventListener('mousedown', this.onTextareaMouseDown);
+  this.textarea.removeEventListener('keydown'  , this.onTextareaKeyDown  , false);
 };
 
 stickynotes.StickyView.prototype.onContentChange = function() {
@@ -170,16 +168,6 @@ stickynotes.StickyView.prototype.getElementPosition = function(elem) {
   };
 };
 
-stickynotes.StickyView.prototype.onTextareaMouseDown = function(e) {
-  var pos    = this.getElementPosition(this.dom);
-  var right  = pos.left + parseInt(this.dom.style.width);
-  var bottom = pos.top  + parseInt(this.dom.style.height);
-
-  if ((right - RESIZE_SIZE < e.clientX  && e.clientX < right + RESIZE_SIZE) &&
-      (bottom - RESIZE_SIZE < e.clientY && e.clientY < bottom + RESIZE_SIZE)) {
-    this.resize(this.dom, e);
-  }
-};
 
 /**
  * enable drag.
@@ -187,6 +175,16 @@ stickynotes.StickyView.prototype.onTextareaMouseDown = function(e) {
  * @param {e} e event.
  */
 stickynotes.StickyView.prototype.drag = function(e) {
+  var pos    = this.getElementPosition(this.dom);
+  var right  = pos.left + parseInt(this.dom.style.width);
+  var bottom = pos.top  + parseInt(this.dom.style.height);
+
+  if ((right - RESIZE_SIZE < e.clientX  && e.clientX < right + RESIZE_SIZE) &&
+      (bottom - RESIZE_SIZE < e.clientY && e.clientY < bottom + RESIZE_SIZE)) {
+    this.resize(this.dom, e);
+    return;
+  }
+
   var elem   = this.dom;
   var that   = this;
   var URL    = stickynotes.doc.location.href;
@@ -198,7 +196,6 @@ stickynotes.StickyView.prototype.drag = function(e) {
   stickynotes.doc.addEventListener('mousemove', moveHandler, true);
   stickynotes.doc.addEventListener('mouseup'  , upHandler  , true);
   e.stopPropagation();
-  e.preventDefault();
   function moveHandler(e) {
     elem.style.left = (e.clientX - deltaX) + 'px';
     elem.style.top  = (e.clientY - deltaY) + 'px';
@@ -238,7 +235,7 @@ stickynotes.StickyView.prototype.resize = function(elem, e) {
 
     that.dom.style.width  = width  + 'px';
     that.dom.style.height = height + 'px';
-
+    e.preventDefault();
     e.stopPropagation();
   }
   function upHandler(e) {
@@ -247,6 +244,7 @@ stickynotes.StickyView.prototype.resize = function(elem, e) {
     that.width  = parseInt(that.dom.style.width);
     that.height = parseInt(that.dom.style.height) + 7;
     that.onResizeEnd();
+    e.preventDefault();
     e.stopPropagation();
   }
 };

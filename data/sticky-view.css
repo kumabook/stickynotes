@@ -1,37 +1,85 @@
 .stickynotes-sticky-container {
     all           : unset;
     position      : absolute;
+    display       : block;
     opacity       : 0.85;
-    border-radius : 10px;
+    border-radius : 2px;
     z-index       : 10000;
+    box-shadow    : 2px 2px 8px 2px rgba(128,128,128,0.75);
+    cursor        : pointer;
 }
 
-.stickynotes-delete-button {
+.stickynotes-sticky-container-dragging {
+    cursor : grab;
+}
+
+.stickynotes-toolbar {
+    all           : unset;
+    position      : relative;
+    display       : block;
+    width         : 100%;
+    height        : 26px;
+    border-bottom : solid 1px yellow;
+    margin        : 0px;
+    padding       : 2px;
+    box-sizing    : border-box;
+}
+
+.stickynotes-toolbar-button {
     all              : unset;
-    position         : absolute;
-    width            : 20px;
-    cursor           : pointer;
-    border-radius    : 20px;
-    border           : 1px solid #AEAEAE;
     color            : #FFFFFF;
-    background-color : #605F61;
+    background-size  : contain;
     font-family      : fantasy;
     font-weight      : bold;
     font-size        : 20px;
     line-height      : 0px;
-    height           : 20px;
-    right            : 0px;
+    width            : 22px;
+    height           : 22px;
     top              : 0px;
-    margin           : 3px 3px 0px 0px;
-    padding          : 1% 0 0 1%;
     display          : inline-block;
     text-align       : center;
+    border-radius    : 2px;
+}
+
+.stickynotes-toolbar-button:hover {
+    background-color: rgba(192, 192, 192, 0.8);
+}
+
+.stickynotes-delete-button {
+    float            : left;
+    background-image : url('delete.png');
+}
+.stickynotes-delete-button:hover {
+    background-image : url('delete-hover.png');
+}
+
+.stickynotes-menu-button {
+    float            : right;
+    background-image : url('menu.png');
+}
+.stickynotes-menu-button:hover {
+    background-image : url('menu-hover.png');
+}
+
+.stickynotes-edit-tag-button {
+    float            : right;
+    background-image : url('edit-tag.png');
+}
+.stickynotes-edit-tag-button:hover {
+    background-image : url('edit-tag-hover.png');
+}
+
+.stickynotes-minimize-button {
+    float            : left;
+    background-image : url('minimize.png');
+}
+.stickynotes-minimize-button:hover {
+    background-image : url('minimize-hover.png');
 }
 
 .stickynotes-textarea:focus,
 .stickynotes-textarea {
     all              : unset;
-    position         : absolute;
     background-color : transparent;
     border           : none;
     margin           : 0px;
@@ -40,34 +88,11 @@
     font-weight      : normal;
     line-height      : 14px;
     font-family      : trebuchet ms;
-    top              : 27px;
+    box-sizing       : border-box;
+    width            : 100%;
+    height           : calc(100% - 26px);
+    margin           : auto;
     padding-top      : 4px;
     padding-left     : 4px;
-}
-
-.stickynotes-drag-bar {
-    all           : unset;
-    position      : absolute;
-    height        : 26px;
-    border-bottom : solid 1px yellow;
-    margin        : 0px;
-    cursor        : move;
-}
-
-.stickynotes-tag-box {
-    all              : unset;
-    position         : absolute;
-    background-color : white;
-    height           : 20px;
-    width            : 50px;
-    right            : 26px;
-    top              : 2px;
-    margin           : 0px;
-    padding          : 0px;
-    border-radius    : 3px;
-    border           : solid 1px #ccc;
-    font-size        : 13px;
-    font-weight      : normal;
-    line-height      : 14px;
-    font-family      : trebuchet ms;
+    cursor           : default;
 }

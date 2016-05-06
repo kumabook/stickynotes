@@ -128,24 +128,29 @@ stickynotes.StickyView.prototype.createDom = function() {
 };
 
 stickynotes.StickyView.prototype.bind = function() {
-  this.deleteButton.addEventListener(  'click', this.onClickDeleteButton  , true);
-  this.minimizeButton.addEventListener('click', this.onClickMinimizeButton, true);
-  this.editTagButton.addEventListener( 'click', this.onClickEditTagButton , true);
-  this.menuButton.addEventListener(    'click', this.onClickMenuButton    , true);
+  this.deleteButton.addEventListener(  'click', this.onClickDeleteButton);
+  this.minimizeButton.addEventListener('click', this.onClickMinimizeButton);
+  this.editTagButton.addEventListener( 'click', this.onClickEditTagButton);
+  this.menuButton.addEventListener(    'click', this.onClickMenuButton);
 
-  this.textarea.addEventListener('change'   , this.onContentChange    , true);
-  this.textarea.addEventListener('keydown'  , this.onTextareaKeyDown  , false);
+  this.textarea.addEventListener('change'   , this.onContentChange);
+  this.textarea.addEventListener('keydown'  , this.onTextareaKeyDown);
 
-  this.dom.addEventListener('mousedown', this.drag    , false);
-  this.dom.addEventListener( 'dblclick', this.maximize, false);
+  this.dom.addEventListener('mousedown', this.drag);
+  this.dom.addEventListener( 'dblclick', this.maximize);
 };
 
 stickynotes.StickyView.prototype.unbind = function() {
-  this.dom.removeEventListener(     'mousedown', this.drag               , true);
-  this.dom.removeEventListener(      'dblclick', this.maximize           , false);
-  this.deleteButton.removeEventListener('click', this.onClickDeleteButton, true);
-  this.textarea.removeEventListener('change',    this.onContentChange    , true);
-  this.textarea.removeEventListener('keydown'  , this.onTextareaKeyDown  , false);
+  this.dom.removeEventListener(     'mousedown', this.drag);
+  this.dom.removeEventListener(      'dblclick', this.maximize);
+
+  this.deleteButton.removeEventListener(  'click', this.onClickDeleteButton);
+  this.minimizeButton.removeEventListener('click', this.onClickMinimizeButton);
+  this.editTagButton.removeEventListener( 'click', this.onClickEditTagButton);
+  this.menuButton.removeEventListener(    'click', this.onClickMenuButton);
+
+  this.textarea.removeEventListener('change'   , this.onContentChange);
+  this.textarea.removeEventListener('keydown'  , this.onTextareaKeyDown);
 };
 
 stickynotes.StickyView.prototype.onContentChange = function() {

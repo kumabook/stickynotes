@@ -41,8 +41,8 @@ stickynotes.createStickyView = function(sticky) {
     },
     onResizeEnd: function(e) {
       if (stickyView.status !== 'minimized') {
-        sticky.width = parseInt(stickyView.textarea.style.width);
-        sticky.height = parseInt(stickyView.textarea.style.height) + 7;
+        sticky.width = parseInt(stickyView.dom.style.width);
+        sticky.height = parseInt(stickyView.dom.style.height) + 7;
         stickynotes.saveSticky(sticky, {
           width: sticky.width,
           height: sticky.height

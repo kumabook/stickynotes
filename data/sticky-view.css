@@ -31,7 +31,6 @@
     display       : block;
     width         : 100%;
     height        : 26px;
-    border-bottom : solid 1px yellow;
     margin        : 0px;
     padding       : 2px;
     box-sizing    : border-box;
@@ -161,4 +160,20 @@
 }
 
 .stickynotes-dialog-content {
+}
+
+.stickynotes-color-picker {
+}
+
+.stickynotes-color-picker-item {
+    float         : left;
+    width         : 40px;
+    height        : 40px;
+    margin        : 5px;
+    border-radius : 4px;
+}
+
+.stickynotes-color-picker-item:hover {
+    cursor: pointer;
+    opacity: .8;
 }

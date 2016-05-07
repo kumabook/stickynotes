@@ -36,7 +36,10 @@ timers.setTimeout(function() {
   tabs.activeTab.attach({
     contentScriptFile: [self.data.url('stickynotes.js'),
                         self.data.url('StickyView.js'),
+                        self.data.url('StickyMenu.js'),
+                        self.data.url('Dialog.js'),
                         self.data.url('page-mod.js')],
+    contentStyleFile: self.data.url("sticky-view.css"),
     onAttach: function(window) {
       setupContentWorker(this);
     },
@@ -51,7 +54,10 @@ tabs.on('activate', function (tab) {
   var worker = tab.attach({
     contentScriptFile: [self.data.url('stickynotes.js'),
                         self.data.url('StickyView.js'),
+                        self.data.url('StickyMenu.js'),
+                        self.data.url('Dialog.js'),
                         self.data.url('page-mod.js')],
+    contentStyleFile: self.data.url("sticky-view.css"),
     contentScriptWhen: 'end',
     onAttach: function(window) {
       setupContentWorker(this);
@@ -145,9 +151,11 @@ pageMod.PageMod({
   include: ['*', 'file://*', 'about:*', 'resource://*'],
   contentScriptFile: [self.data.url('stickynotes.js'),
                       self.data.url('StickyView.js'),
+                      self.data.url('StickyMenu.js'),
+                      self.data.url('Dialog.js'),
                       self.data.url('page-mod.js')],
   contentScriptWhen: 'end',
-  contentStyleFile: self.data.url("./sticky-view.css"),
+  contentStyleFile: self.data.url("sticky-view.css"),
   onAttach: setupContentWorker
 });
 

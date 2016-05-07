@@ -2,6 +2,7 @@ var CLASS           = 'stickynotes-sticky';
 var MINIMIZED       = 'stickynotes-sticky-minimized';
 var DRAGGING        = 'stickynotes-sticky-dragging';
 var BUTTON          = 'stickynotes-toolbar-button';
+var BUTTON_ACTIVE   = 'stickynotes-toolbar-button-active';
 var DELETE_BUTTON   = 'stickynotes-delete-button';
 var EDIT_TAG_BUTTON = 'stickynotes-edit-tag-button';
 var MINIMIZE_BUTTON = 'stickynotes-minimize-button';
@@ -78,6 +79,35 @@ stickynotes.StickyView.prototype.statusUpdated = function() {
   } else {
     this.dom.style.background = '#f1c40f';
     this.band.style.display = 'none';
+  }
+};
+
+stickynotes.StickyView.prototype.showMenu = function() {
+  var self = this;
+  this.hideMenu();
+  this.menuDialog = new stickynotes.Dialog();
+  this.menuDialog.pushContent(new stickynotes.StickyMenu({
+    onSelectMenu: function(item) {
+      switch (item.id) {
+      case stickynotes.StickyMenu.EditColor:
+        break;
+      case stickynotes.StickyMenu.PageOption:
+        break;
+      }
+    }
+  }));
+  this.dom.appendChild(this.menuDialog.dom);
+  this.menuDialog.dom.style.left = (this.sticky.width - 22) + 'px';
+  this.menuDialog.dom.style.top = '32px';
+  this.menuButton.className = [BUTTON, BUTTON_ACTIVE, MENU_BUTTON].join(' ');
+};
+
+stickynotes.StickyView.prototype.hideMenu = function() {
+  if (this.menuDialog) {
+    this.dom.removeChild(this.menuDialog.dom);
+    this.menuDialog = null;
+    this.menuButton.className = [BUTTON, MENU_BUTTON].join(' ');
+    return;
   }
 };
 
@@ -186,6 +216,7 @@ stickynotes.StickyView.prototype.drag = function(e) {
 
   if ((right - RESIZE_SIZE < e.clientX  && e.clientX < right + RESIZE_SIZE) &&
       (bottom - RESIZE_SIZE < e.clientY && e.clientY < bottom + RESIZE_SIZE)) {
+    this.hideMenu();
     this.resize(this.dom, e);
     return;
   }
@@ -271,6 +302,7 @@ stickynotes.StickyView.prototype.minimize = function() {
   this.sticky.status          = 'minimized';
   this.updateClassName();
   this.statusUpdated();
+  this.hideMenu();
 };
 
 stickynotes.StickyView.prototype.maximize = function() {
@@ -283,7 +315,12 @@ stickynotes.StickyView.prototype.maximize = function() {
   this.statusUpdated();
 };
 
-stickynotes.StickyView.prototype.showMenu = function() {
+stickynotes.StickyView.prototype.toggleMenu = function() {
+  if (this.menuDialog) {
+    this.hideMenu();
+    return;
+  }
+  this.showMenu();
 };
 
 stickynotes.StickyView.prototype.editTag = function() {

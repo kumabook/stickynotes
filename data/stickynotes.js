@@ -18,7 +18,7 @@ stickynotes.createStickyView = function(sticky) {
       stickyView.editTag();
     },
     onClickMenuButton: function(e) {
-      stickyView.showMenu();
+      stickyView.toggleMenu();
     },
     onTextareaChange: function(e) {
       sticky.content = this.textarea.value;

@@ -77,24 +77,39 @@ stickynotes.StickyView.prototype.statusUpdated = function() {
     this.band.style.display = '';
     this.band.style.background = c;
   } else {
-    this.dom.style.background = '#f1c40f';
+    var color = stickynotes.ColorPicker.getColorById(this.sticky.color);
+    if (color) {
+      this.dom.style.background = color.value;
+    } else {
+      this.dom.style.background = this.sticky.color;
+    }
     this.band.style.display = 'none';
   }
 };
 
 stickynotes.StickyView.prototype.showMenu = function() {
-  var self = this;
   this.hideMenu();
   this.menuDialog = new stickynotes.Dialog();
-  this.menuDialog.pushContent(new stickynotes.StickyMenu({
-    onSelectMenu: function(item) {
+  this.menuDialog.push(new stickynotes.StickyMenu({
+    onSelectMenu: (item) => {
       switch (item.id) {
-      case stickynotes.StickyMenu.EditColor:
+      case stickynotes.StickyMenu.Type.EditColor:
+        var colorPicker = new stickynotes.ColorPicker({
+          leftBarButtonClicked: () => {
+            this.menuDialog.pop();
+          },
+          itemClicked: (item) => {
+            this.sticky.color = item.value;
+            this.statusUpdated();
+          }
+        });
+        this.menuDialog.push(colorPicker);
         break;
-      case stickynotes.StickyMenu.PageOption:
+      case stickynotes.StickyMenu.Type.PageOption:
         break;
       }
-    }
+    },
+    leftBarButtonClicked: () => { this.hideMenu(); }
   }));
   this.dom.appendChild(this.menuDialog.dom);
   this.menuDialog.dom.style.left = (this.sticky.width - 22) + 'px';

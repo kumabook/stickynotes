@@ -1,6 +1,7 @@
 var MENU      = 'stickynotes-menu';
 var MENU_ITEM = 'stickynotes-menu-item';
 var MENU_ICON = 'stickynotes-menu-icon';
+var ICON      = 'stickynotes-icon';
 stickynotes.StickyMenu = function(param) {
   this.title = 'Sticky Menu';
   this.items = [{
@@ -12,8 +13,9 @@ stickynotes.StickyMenu = function(param) {
     label: 'Page Option',
      icon: 'page-option'
   }];
-  this.onSelectMenu = param.onSelectMenu;
-  this._onSelectMenu = this._onSelectMenu.bind(this);
+  this.onSelectMenu         = param.onSelectMenu;
+  this._onSelectMenu        = this._onSelectMenu.bind(this);
+  this.leftBarButtonClicked = param.leftBarButtonClicked;
   this.createDom();
   this.bind();
 };
@@ -41,7 +43,7 @@ stickynotes.StickyMenu.prototype.createMenuItem = function(item) {
   dom.id           = item.id;
   dom.className    = MENU_ITEM;
   link.textContent = item.label;
-  icon.className   = MENU_ICON + ' ' + MENU_ICON + '-' + item.id;
+  icon.className   = MENU_ICON + ' ' + ICON + '-' + item.id;
   dom.appendChild(icon);
   dom.appendChild(link);
   return dom;

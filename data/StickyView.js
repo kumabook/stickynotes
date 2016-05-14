@@ -73,14 +73,14 @@ stickynotes.StickyView.prototype.updateClassName = function() {
 };
 
 stickynotes.StickyView.prototype.statusUpdated = function() {
+  var color = stickynotes.ColorPicker.getColorById(this.sticky.color);
   if (this.sticky.status === 'minimized') {
-    let c = '#f1c40f';
+    let c = color.background;
     let colors = ['rgb(200,200,200)', 'rgb(222,222,222)'];
     this.dom.style.background = 'linear-gradient(to right,' + colors.join(',') + ')';
     this.band.style.display = '';
     this.band.style.background = c;
   } else {
-    var color = stickynotes.ColorPicker.getColorById(this.sticky.color);
     if (color) {
       this.dom.style.color      = color.font;
       this.dom.style.background = color.background;

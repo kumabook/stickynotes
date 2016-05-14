@@ -113,6 +113,22 @@ var watchClickPosition = function(event) {
   }
 };
 
+var loadCSS = function(href) {
+  logger.trace('loadCSS: ' + href);
+  var head = document.getElementsByTagName('head')[0];
+  var link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.href = href;
+
+  var links = head.getElementsByTagName('link');
+  for(var i = 0; i < links.length; i++) {
+    if(links[i].href == link.href) return false;
+  }
+  head.appendChild(link);
+  return true;
+};
+
 if (!stickynotes.isAlreadyLoaded()) {
   stickynotes.markAsLoaded();
   self.port.on('strings',           onStrings);
@@ -123,6 +139,7 @@ if (!stickynotes.isAlreadyLoaded()) {
   self.port.on('load-stickies',     onLoadStickies);
   self.port.on('toggle-visibility', onToggleVisibility);
   self.port.on('import',            onImport);
+  self.port.on('load-css',          loadCSS);
 
   document.addEventListener('mousedown', watchClickPosition, false);
   window.addEventListener('hashchange',  onHashChange);

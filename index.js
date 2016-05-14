@@ -41,7 +41,6 @@ timers.setTimeout(function() {
                         self.data.url('ColorPicker.js'),
                         self.data.url('TagEditor.js'),
                         self.data.url('page-mod.js')],
-    contentStyleFile: self.data.url("sticky-view.css"),
     onAttach: function(window) {
       setupContentWorker(this);
     },
@@ -61,7 +60,6 @@ tabs.on('activate', function (tab) {
                         self.data.url('ColorPicker.js'),
                         self.data.url('TagEditor.js'),
                         self.data.url('page-mod.js')],
-    contentStyleFile: self.data.url("sticky-view.css"),
     contentScriptWhen: 'end',
     onAttach: function(window) {
       setupContentWorker(this);
@@ -144,6 +142,7 @@ var setupContentWorker = function(worker) {
   worker.port.emit('load-stickies',
                    stickynotes.Sticky.fetchByUrl(worker.url),
                    worker.url);
+  worker.port.emit('load-css', self.data.url("sticky-view.css"));
   if (jumpingSticky) {
     worker.port.emit('focus-sticky', jumpingSticky);
     jumpingSticky = null;
@@ -161,7 +160,6 @@ pageMod.PageMod({
                       self.data.url('TagEditor.js'),
                       self.data.url('page-mod.js')],
   contentScriptWhen: 'end',
-  contentStyleFile: self.data.url("sticky-view.css"),
   onAttach: setupContentWorker
 });
 

@@ -79,9 +79,10 @@ stickynotes.StickyView.prototype.statusUpdated = function() {
   } else {
     var color = stickynotes.ColorPicker.getColorById(this.sticky.color);
     if (color) {
-      this.dom.style.background = color.value;
+      this.dom.style.color      = color.font;
+      this.dom.style.background = color.background;
     } else {
-      this.dom.style.background = this.sticky.color;
+      this.dom.style.background = this.sticky.background;
     }
     this.band.style.display = 'none';
   }
@@ -99,7 +100,7 @@ stickynotes.StickyView.prototype.showMenu = function() {
             this.menuDialog.pop();
           },
           itemClicked: (item) => {
-            this.sticky.color = item.value;
+            this.sticky.color = item.id;
             this.statusUpdated();
           }
         });

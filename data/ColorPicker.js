@@ -11,15 +11,22 @@ stickynotes.ColorPicker = function(param) {
 };
 
 stickynotes.ColorPicker.colors = [
-  { id: 'blue',       value: '#0079BF'},
-  { id: 'yellow',     value: '#D29034'},
-  { id: 'green',      value: '#519839'},
-  { id: 'brown',      value: '#B04632'},
-  { id: 'purple',     value: '#89609E'},
-  { id: 'pink',       value: '#CD5A91'},
-  { id: 'lightgreen', value: '#4BBF6B'},
-  { id: 'skyblue',    value: '#00AECC'},
-  { id: 'gray',       value: '#838C91'}
+  { id: 'navy',    background: '#001f3f', font: '#ffffff'},
+  { id: 'blue',    background: '#0074d9', font: '#ffffff'},
+  { id: 'aqua',    background: '#7fdbff', font: '#000000'},
+  { id: 'teal',    background: '#39cccc', font: '#000000'},
+  { id: 'olive',   background: '#3d9970', font: '#ffffff'},
+  { id: 'green',   background: '#2ecc40', font: '#ffffff'},
+  { id: 'lime',    background: '#01ff70', font: '#000000'},
+  { id: 'yellow',  background: '#ffdc00', font: '#000000'},
+  { id: 'orange',  background: '#ff851b', font: '#000000'},
+  { id: 'red',     background: '#ff4136', font: '#000000'},
+  { id: 'maroon',  background: '#85144b', font: '#ffffff'},
+  { id: 'fuchsia', background: '#f012be', font: '#ffffff'},
+  { id: 'purple',  background: '#b10dc9', font: '#ffffff'},
+  { id: 'black',   background: '#111111', font: '#ffffff'},
+  { id: 'gray',    background: '#aaaaaa', font: '#000000'},
+  { id: 'silver',  background: '#dddddd', font: '#000000'}
 ];
 
 stickynotes.ColorPicker.getColorById = function(id) {
@@ -37,7 +44,7 @@ stickynotes.ColorPicker.prototype.createDom = function() {
   this.items.forEach((item) => {
     const d = doc.createElement('div');
     d.className             = ITEM;
-    d.style.backgroundColor = item.value;
+    d.style.backgroundColor = item.background;
     item.dom                = d;
     this.dom.appendChild(d);
   });

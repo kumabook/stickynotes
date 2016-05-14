@@ -10,6 +10,8 @@ var MENU_BUTTON     = 'stickynotes-menu-button';
 var TEXTAREA        = 'stickynotes-textarea';
 var TOOLBAR         = 'stickynotes-toolbar';
 var BAND            = 'stickynotes-band';
+var MENU_DIALOG     = 'stickynotes-menu-dialog';
+var TAGS_DIALOG     = 'stickynotes-tags-dialog';
 var RESIZE_SIZE     = 35;
 var MIN_WIDTH       = 150;
 var MIN_HEIGHT      = 52;
@@ -21,7 +23,7 @@ stickynotes.StickyView = function(param) {
   this.onClickEditTagButton  = param.onClickEditTagButton;
   this.onClickMenuButton     = param.onClickMenuButton;
   this.onTextareaChange      = param.onTextareaChange;
-  this.onTagTextareaChange   = param.onTagTextareaChange;
+  this.onTagsChange          = param.onTagsChange;
   this.onMoveEnd             = param.onMoveEnd;
   this.onResizeEnd           = param.onResizeEnd;
   this.drag                  = this.drag.bind(this);
@@ -89,40 +91,63 @@ stickynotes.StickyView.prototype.statusUpdated = function() {
 };
 
 stickynotes.StickyView.prototype.showMenu = function() {
-  this.hideMenu();
-  this.menuDialog = new stickynotes.Dialog();
-  this.menuDialog.push(new stickynotes.StickyMenu({
+  this.hideDialog();
+  this.dialog = new stickynotes.Dialog({ className: MENU_DIALOG});
+  this.dialog.push(new stickynotes.StickyMenu({
     onSelectMenu: (item) => {
       switch (item.id) {
       case stickynotes.StickyMenu.Type.EditColor:
         var colorPicker = new stickynotes.ColorPicker({
           leftBarButtonClicked: () => {
-            this.menuDialog.pop();
+            this.dialog.pop();
           },
           itemClicked: (item) => {
             this.sticky.color = item.id;
             this.statusUpdated();
           }
         });
-        this.menuDialog.push(colorPicker);
+        this.dialog.push(colorPicker);
         break;
       case stickynotes.StickyMenu.Type.PageOption:
         break;
       }
     },
-    leftBarButtonClicked: () => { this.hideMenu(); }
+    leftBarButtonClicked: () => { this.hideDialog(); }
   }));
-  this.dom.appendChild(this.menuDialog.dom);
-  this.menuDialog.dom.style.left = (this.sticky.width - 22) + 'px';
-  this.menuDialog.dom.style.top = '32px';
+  this.dom.appendChild(this.dialog.dom);
+  this.dialog.dom.style.left = (this.sticky.width - 22) + 'px';
+  this.dialog.dom.style.top = '32px';
   this.menuButton.className = [BUTTON, BUTTON_ACTIVE, MENU_BUTTON].join(' ');
 };
 
-stickynotes.StickyView.prototype.hideMenu = function() {
-  if (this.menuDialog) {
-    this.dom.removeChild(this.menuDialog.dom);
-    this.menuDialog = null;
-    this.menuButton.className = [BUTTON, MENU_BUTTON].join(' ');
+stickynotes.StickyView.prototype.showTagDialog = function() {
+  this.hideDialog();
+  this.dialog = new stickynotes.Dialog({ className: TAGS_DIALOG});
+  const changed = (names) => {
+    this.onTagsChange(names);
+    this.hideDialog();
+  };
+  var tagEditor = new stickynotes.TagEditor({
+    items: this.sticky.tags.map((tag) => { return tag.name; }),
+    changed: changed,
+    leftBarButtonClicked: () => { this.hideDialog(); }
+  });
+  this.dialog.push(tagEditor);
+  this.dialog.dom.style.height = '120px';
+  this.dom.insertBefore(this.dialog.dom, this.toolbar.nextSibling);
+  this.dialog.dom.style.left = (this.sticky.width - 44) + 'px';
+  this.dialog.dom.style.top = '32px';
+  this.editTagButton.className = [BUTTON, BUTTON_ACTIVE, EDIT_TAG_BUTTON].join(' ');
+  tagEditor.focus();
+};
+
+
+stickynotes.StickyView.prototype.hideDialog = function() {
+  if (this.dialog) {
+    this.dom.removeChild(this.dialog.dom);
+    this.dialog = null;
+    this.menuButton.className    = [BUTTON, MENU_BUTTON].join(' ');
+    this.editTagButton.className = [BUTTON, EDIT_TAG_BUTTON].join(' ');
     return;
   }
 };
@@ -153,7 +178,7 @@ stickynotes.StickyView.prototype.createDom = function() {
   this.deleteButton.className   = BUTTON + ' ' + DELETE_BUTTON;
   this.minimizeButton           = doc.createElement('div');
   this.minimizeButton.className = BUTTON + ' ' + MINIMIZE_BUTTON;
-  this.editTagButton            = doc.createElement('div');
+  this.editTagButton            = doc.createElement('button');
   this.editTagButton.className  = BUTTON + ' ' + EDIT_TAG_BUTTON;
   this.menuButton               = doc.createElement('div');
   this.menuButton.className     = BUTTON + ' ' + MENU_BUTTON;
@@ -177,6 +202,7 @@ stickynotes.StickyView.prototype.bind = function() {
   this.deleteButton.addEventListener(  'click', this.onClickDeleteButton);
   this.minimizeButton.addEventListener('click', this.onClickMinimizeButton);
   this.editTagButton.addEventListener( 'click', this.onClickEditTagButton);
+  this.editTagButton.addEventListener( 'focus', this.onClickEditTagButton);
   this.menuButton.addEventListener(    'click', this.onClickMenuButton);
 
   this.textarea.addEventListener('change'   , this.onContentChange);
@@ -229,10 +255,9 @@ stickynotes.StickyView.prototype.drag = function(e) {
   var pos    = this.getElementPosition(this.dom);
   var right  = pos.left + parseInt(this.dom.style.width);
   var bottom = pos.top  + parseInt(this.dom.style.height);
-
   if ((right - RESIZE_SIZE < e.clientX  && e.clientX < right + RESIZE_SIZE) &&
       (bottom - RESIZE_SIZE < e.clientY && e.clientY < bottom + RESIZE_SIZE)) {
-    this.hideMenu();
+    this.hideDialog();
     this.resize(this.dom, e);
     return;
   }
@@ -331,37 +356,20 @@ stickynotes.StickyView.prototype.maximize = function() {
   this.statusUpdated();
 };
 
-stickynotes.StickyView.prototype.toggleMenu = function() {
-  if (this.menuDialog) {
-    this.hideMenu();
-    return;
+stickynotes.StickyView.prototype.toggleMenuDialog = function() {
+  this.hideDialog();
+  if (!this.dialog || this.dialog.className !== MENU_DIALOG) {
+    this.showMenu();
   }
-  this.showMenu();
 };
 
-stickynotes.StickyView.prototype.editTag = function() {
+stickynotes.StickyView.prototype.toggleTagDialog = function() {
+  this.hideDialog();
+  if (!this.dialog || this.dialog.className !== TAGS_DIALOG) {
+    this.showTagDialog();
+  }
 };
 
-stickynotes.StickyView.str2Tags = function(str) {
-  var tags_str = (str + ',').replace(/^[\s　]+|[\s　]+$/g, '');
-  var tags     = [];
-  var _tags    = (tags_str).split(',');
-  _tags = _tags.slice(0, _tags.length - 1);
-  for (var i = 0; i < _tags.length; i++) {
-    _tags[i] = _tags[i].replace(/^[\s　]+|[\s　]+$/g, '');
-    if (!_tags[i] == '') {//remove blank str
-      var isUnique = true;
-      for (var j = 0; j < tags.length; j++) {//remove duplicated str
-        if (tags[j] == _tags[i]) {
-          isUnique = false;
-        }
-      }
-      if (isUnique)
-        tags.push(_tags[i]);
-    }
-  }
-  return tags;
-};
 /**
  * toString
  * @return {String} string.

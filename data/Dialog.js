@@ -5,6 +5,7 @@ var BAR_BUTTON = 'stickynotes-navbar-bar-button';
 var CONTENT    = 'stickynotes-dialog-content';
 var ICON       = 'stickynotes-icon';
 stickynotes.Dialog = function(param) {
+  this.className = param.className;
   this.createDom();
   this.views = [];
   this.bind();
@@ -17,7 +18,7 @@ stickynotes.Dialog.prototype.createDom = function() {
   this.content           = doc.createElement('div');
   this.title             = doc.createElement('div');
   this.leftBarButton     = doc.createElement('div');
-  this.dom.className     = DIALOG;
+  this.dom.className     = [DIALOG, this.className].join(' ');
   this.navbar.className  = NAVBAR;
   this.content.className = CONTENT;
   this.navbar.appendChild(this.leftBarButton);

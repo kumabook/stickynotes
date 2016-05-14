@@ -15,10 +15,10 @@ stickynotes.createStickyView = function(sticky) {
       stickyView.minimize();
     },
     onClickEditTagButton: function(e) {
-      stickyView.editTag();
+      stickyView.toggleTagDialog();
     },
     onClickMenuButton: function(e) {
-      stickyView.toggleMenu();
+      stickyView.toggleMenuDialog();
     },
     onTextareaChange: function(e) {
       sticky.content = this.textarea.value;
@@ -26,10 +26,8 @@ stickynotes.createStickyView = function(sticky) {
         content: this.textarea.value
       });
     },
-    onTagTextareaChange: function(e) {
-      var tagStrs = stickynotes.StickyView.str2Tags(stickyView.tagBox.value);
-      stickynotes.setTags(sticky, tagStrs);
-      stickyView.tagBox.value = tagStrs.join(',');
+    onTagsChange: function(tags) {
+      stickynotes.setTags(sticky, tags);
     },
     onMoveEnd: function(e) {
       sticky.left = parseInt(stickyView.dom.style.left);
@@ -58,6 +56,7 @@ stickynotes.deleteSticky = function(sticky) {
 stickynotes.saveSticky = function(sticky) {
   self.port.emit('save', sticky);
 };
-stickynotes.setTags = function(sticky, tagStrs) {
-  self.port.emit('set_tags', sticky, tagStrs);
+stickynotes.setTags = function(sticky, names) {
+  self.port.emit('set_tags', sticky, names);
+  sticky.tags = names.map((tag) => { return { id: null, name: tag}; });
 };

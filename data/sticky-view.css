@@ -53,6 +53,7 @@
 }
 
 .stickynotes-toolbar-button-active,
+.stickynotes-toolbar-button:focus,
 .stickynotes-toolbar-button:hover {
     background-color: rgba(192, 192, 192, 0.8);
 }
@@ -126,6 +127,7 @@
     background-color : rgb(200, 200, 200);
     color            : black;
 }
+
 .stickynotes-menu-item:hover {
     background-color : rgb(160, 160, 160);
 }
@@ -152,12 +154,27 @@
     background-image : url('close.png');
 }
 
+.stickynotes-button {
+    font-weight: bold;
+    padding: 4px 16px;
+    background-color: #248;
+    color: #fff;
+    border-style: none;
+}
+
 .stickynotes-dialog {
     position         : absolute;
     width            : 200px;
-    height           : 250px;
     background-color : rgb(200, 200, 200);
     border-radius    : 4px;
+}
+
+.stickynotes-menu-dialog {
+    height: 250px;
+}
+
+.stickynotes-tags-dialog {
+    height: 120px;
 }
 
 .stickynotes-navbar {
@@ -198,4 +215,17 @@
 .stickynotes-color-picker-item:hover {
     cursor: pointer;
     opacity: .8;
+}
+
+.stickynotes-tag-editor {
+}
+
+.stickynotes-tag-editor-input {
+    margin     : 10px;
+    width      : calc(100% - 20px);
+    box-sizing : border-box;
+}
+
+.stickynotes-tag-editor-button {
+    margin : 4px 12px;
 }

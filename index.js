@@ -39,6 +39,7 @@ timers.setTimeout(function() {
                         self.data.url('StickyMenu.js'),
                         self.data.url('Dialog.js'),
                         self.data.url('ColorPicker.js'),
+                        self.data.url('TagEditor.js'),
                         self.data.url('page-mod.js')],
     contentStyleFile: self.data.url("sticky-view.css"),
     onAttach: function(window) {
@@ -58,6 +59,7 @@ tabs.on('activate', function (tab) {
                         self.data.url('StickyMenu.js'),
                         self.data.url('Dialog.js'),
                         self.data.url('ColorPicker.js'),
+                        self.data.url('TagEditor.js'),
                         self.data.url('page-mod.js')],
     contentStyleFile: self.data.url("sticky-view.css"),
     contentScriptWhen: 'end',
@@ -156,6 +158,7 @@ pageMod.PageMod({
                       self.data.url('StickyMenu.js'),
                       self.data.url('Dialog.js'),
                       self.data.url('ColorPicker.js'),
+                      self.data.url('TagEditor.js'),
                       self.data.url('page-mod.js')],
   contentScriptWhen: 'end',
   contentStyleFile: self.data.url("sticky-view.css"),

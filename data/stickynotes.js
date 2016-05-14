@@ -26,6 +26,12 @@ stickynotes.createStickyView = function(sticky) {
         content: this.textarea.value
       });
     },
+    onColorChange: function(colorItem) {
+      sticky.color = colorItem.id;
+      stickynotes.saveSticky(sticky, {
+        color: colorItem.id
+      });
+    },
     onTagsChange: function(tags) {
       stickynotes.setTags(sticky, tags);
     },

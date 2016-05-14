@@ -24,6 +24,7 @@ stickynotes.StickyView = function(param) {
   this.onClickMenuButton     = param.onClickMenuButton;
   this.onTextareaChange      = param.onTextareaChange;
   this.onTagsChange          = param.onTagsChange;
+  this.onColorChange         = param.onColorChange;
   this.onMoveEnd             = param.onMoveEnd;
   this.onResizeEnd           = param.onResizeEnd;
   this.drag                  = this.drag.bind(this);
@@ -102,7 +103,7 @@ stickynotes.StickyView.prototype.showMenu = function() {
             this.dialog.pop();
           },
           itemClicked: (item) => {
-            this.sticky.color = item.id;
+            this.onColorChange(item);
             this.statusUpdated();
           }
         });

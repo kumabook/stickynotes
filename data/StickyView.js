@@ -344,7 +344,7 @@ stickynotes.StickyView.prototype.minimize = function() {
   this.sticky.status          = 'minimized';
   this.updateClassName();
   this.statusUpdated();
-  this.hideMenu();
+  this.hideDialog();
 };
 
 stickynotes.StickyView.prototype.maximize = function() {

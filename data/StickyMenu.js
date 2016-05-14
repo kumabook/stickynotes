@@ -8,11 +8,11 @@ stickynotes.StickyMenu = function(param) {
        id: stickynotes.StickyMenu.Type.EditColor,
     label: 'Edit Color',
      icon: 'color'
-  }, {
+  }/*, {
        id: stickynotes.StickyMenu.Type.PageOption,
     label: 'Page Option',
      icon: 'page-option'
-  }];
+  }*/];
   this.onSelectMenu         = param.onSelectMenu;
   this._onSelectMenu        = this._onSelectMenu.bind(this);
   this.leftBarButtonClicked = param.leftBarButtonClicked;

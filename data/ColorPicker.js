@@ -18,7 +18,7 @@ stickynotes.ColorPicker.colors = [
   { id: 'olive',   background: '#3d9970', font: '#ffffff'},
   { id: 'green',   background: '#2ecc40', font: '#ffffff'},
   { id: 'lime',    background: '#01ff70', font: '#000000'},
-  { id: 'yellow',  background: '#ffdc00', font: '#000000'},
+  { id: 'yellow',  background: '#f1c40f', font: '#000000'},
   { id: 'orange',  background: '#ff851b', font: '#000000'},
   { id: 'red',     background: '#ff4136', font: '#000000'},
   { id: 'maroon',  background: '#85144b', font: '#ffffff'},

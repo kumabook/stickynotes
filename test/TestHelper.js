@@ -12,11 +12,14 @@ module.exports = {
   teardownDB: function(c) {
     return stickynotes.DBHelper.dropTables(c).then(() => c.close());
   },
-  runDBTest: function(testFunction) {
+  runDBTest: function(assert, testFunction) {
     let c;
     return this.setupDB().then((_c) => {
       c = _c;
       return testFunction(c);
-    }).then(() => this.teardownDB(c), () => this.teardownDB(c));
+    }).then(() => this.teardownDB(c), (e) => {
+      this.teardownDB(c);
+      assert.fail(e);
+    });
   }
 };

@@ -9,7 +9,7 @@ exports['test get database connection'] = function(assert) {
 };
 
 exports['test stickynotes.DBHelper.migrate'] = function(assert) {
-  TestHelper.runDBTest(function(c) {
+  TestHelper.runDBTest(assert, function(c) {
     return stickynotes.DBHelper.getVersion(c).then((version) => {
       assert.equal(0, version);
       return stickynotes.DBHelper.migrate(c);

@@ -1,62 +1,65 @@
-var stickynotes = require('../lib/stickynotes');
-var test = require("sdk/test");
+const stickynotes = require('../lib/stickynotes');
+const test = require("sdk/test");
+const TestHelper  = require('./TestHelper');
 
-var setup = function() {
-  stickynotes.DBHelper.dropTables();
-  stickynotes.DBHelper.createTables();
-  stickynotes.DBHelper.migrate();
+const params = { id: 100, name: 'test'};
+
+exports['test stickynotes.Tag.create()'] = function(assert, done) {
+  TestHelper.runDBTest(assert, done, function() {
+    return stickynotes.Tag.create(params).then((tag) => {
+      assert.ok(tag != null);
+      return stickynotes.Tag.create({ id: 100, name: 'test1'});
+    }).then(() => assert.fail('Cannot create tag that has duplicated id'),
+            () => assert.pass('Cannot create tag that has duplicated id'))
+      .then(() => stickynotes.Tag.create({ id: 101, name: 'test'}))
+      .then(() => assert.fail('Cannot create tag that has duplicated name'),
+            () => assert.pass('Cannot create tag that has duplicated name'));
+  });
 };
 
-var teardown = function() {
-  stickynotes.DBHelper.dropTables();
+exports['test stickynotes.Tag.fetchById'] = function(assert, done) {
+  TestHelper.runDBTest(assert, done, function() {
+    return stickynotes.Tag.create(params)
+      .then((tag) => {
+        assert.equal(tag.id, 100);
+        assert.equal(tag.name, 'test');
+      });
+  });
 };
 
-exports['test stickynotes.Tag.create()'] = function(assert) {
-  setup();
-  var tag = stickynotes.Tag.create({ id: 100, name: 'test'});
-  assert.ok(tag != null);
-  assert.throws(function() {
-    stickynotes.Tag.create({ id: 100, name: 'test1'});
-  }, stickynotes.DBHelper.DBAccessError);
-  assert.throws(function() {
-    stickynotes.Tag.create({ id: 101, name: 'test'});
-  }, stickynotes.DBHelper.DBAccessError);
+exports['test stickynotes.Tag.fetchByName'] = function(assert, done) {
+  TestHelper.runDBTest(assert, done, function() {
+    return stickynotes.Tag.create(params)
+      .then((tag) => stickynotes.Tag.fetchByName('test'))
+      .then((tag) => {
+        assert.equal(tag.id, 100);
+        assert.equal(tag.name, 'test');
+      });
+  });
 };
 
-exports['test stickynotes.Tag.fetchById'] = function(assert) {
-  setup();
-  stickynotes.Tag.create({ id: 100, name: 'test'});
-  var tag = stickynotes.Tag.fetchById(100);
-  assert.equal(tag.id, 100);
-  assert.equal(tag.name, 'test');
+exports['test stickynotes.Tag.fetchAll'] = function(assert, done) {
+  TestHelper.runDBTest(assert, done, function() {
+    const promises = [stickynotes.Tag.create({ id: 100, name: 'test'}),
+                      stickynotes.Tag.create({ id: 101, name: 'test1'}),
+                      stickynotes.Tag.create({ id: 102, name: 'test2'})];
+    return Promise.all(promises)
+      .then(    () => stickynotes.Tag.fetchAll())
+      .then((tags) => assert.equal(tags.length, 3));
+  });
 };
 
-exports['test stickynotes.Tag.fetchByName'] = function(assert) {
-  setup();
-  stickynotes.Tag.create({ id: 100, name: 'test'});
-  var tag = stickynotes.Tag.fetchByName('test');
-  assert.equal(tag.id, 100);
-  assert.equal(tag.name, 'test');
-};
-
-exports['test stickynotes.Tag.fetchAll'] = function(assert) {
-  setup();
-  stickynotes.Tag.create({ id: 100, name: 'test'});
-  stickynotes.Tag.create({ id: 101, name: 'test1'});
-  stickynotes.Tag.create({ id: 102, name: 'test2'});
-  var tags = stickynotes.Tag.fetchAll();
-  assert.equal(tags.length, 3);
-};
-
-exports['test stickynotes.Tag.remove'] = function(assert) {
-  setup();
-  stickynotes.Tag.create({ id: 100, name: 'test'});
-  stickynotes.Tag.create({ id: 101, name: 'test1'});
-  stickynotes.Tag.create({ id: 102, name: 'test2'});
-  var tags = stickynotes.Tag.fetchAll();
-  tags[0].remove();
-  var tagsAfter = stickynotes.Tag.fetchAll();
-  assert.equal(tagsAfter.length, 2);
+exports['test stickynotes.Tag.remove'] = function(assert, done) {
+  TestHelper.runDBTest(assert, done, function() {
+    const promises = [stickynotes.Tag.create({ id: 100, name: 'test'}),
+                      stickynotes.Tag.create({ id: 101, name: 'test1'}),
+                      stickynotes.Tag.create({ id: 102, name: 'test2'})];
+    return Promise.all(promises)
+      .then(() => stickynotes.Tag.fetchAll())
+      .then((tags) => tags[0].remove())
+      .then(() => stickynotes.Tag.fetchAll())
+      .then((tagsAfter) => assert.equal(tagsAfter.length, 2));
+  });
 };
 
 test.run(exports);

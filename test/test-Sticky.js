@@ -1,195 +1,262 @@
-var stickynotes = require('../lib/stickynotes');
+const stickynotes = require('../lib/stickynotes');
+const TestHelper  = require('./TestHelper');
 
-var testStickyParam;
-var testUrl = 'http://test.stickynotes.co.jp';
-var setup = function() {
-  stickynotes.DBHelper.dropTables();
-  stickynotes.DBHelper.createTables();
-  stickynotes.DBHelper.migrate();
-  testStickyParam = {
+const testUrl = 'http://test.stickynotes.co.jp';
+const testStickyParam = (options) => {
+  return Object.assign({}, {
     left: 0, top: 0,
     width: 150, height: 100,
     url: testUrl,
     title: 'title',
     content: 'This is test content',
     color: 'yellow',
-    tags: 'tag'
-  };
+    tags: ['tag']
+  }, options);
 };
 
-var teardown = function() {
-  stickynotes.DBHelper.dropTables();
+exports['test stickynotes.Sticky.create()'] = function(assert, done) {
+  TestHelper.runDBTest(assert, done, function() {
+    return stickynotes.Sticky.create(testStickyParam()).then((sticky) => {
+      assert.pass(sticky, 'test for DBHelper.insertSticky');
+      return stickynotes.Sticky.fetchAll().then((stickies) => {
+        assert.equal(stickies.length, 1, 'test for stickynotes.Page.create');
+        return stickynotes.Sticky.create(testStickyParam({id: sticky.id})).then(
+          () => {
+            assert.fail('sould not create sticky that have duplicated id');
+          },
+          (e) => {
+            assert.pass('shoud not create sticky that have duplicated id');
+          });
+      });
+    });
+  });
 };
 
-exports['test stickynotes.Sticky.create()'] = function(assert) {
-  setup();
-  var sticky = stickynotes.Sticky.create(testStickyParam);
-  assert.ok(sticky, 'test for DBHelper.insertSticky');
-  var stickies = stickynotes.Sticky.fetchAll();
-  assert.equal(stickies.length, 1, 'test for stickynotes.Page.create');
-  assert.throws(
-    function() {
-      testStickyParam.id = sticky.id;
-      stickynotes.Sticky.create(testStickyParam);
-    },
-    stickynotes.DBHelper.DBAccessError,
-    'Cannot add sticky that have duplicated id');
-  teardown();
+exports['test stickynotes.Sticky.fetchByUUID()'] = function(assert, done) {
+  TestHelper.runDBTest(assert, done, function() {
+    return stickynotes.Sticky.create(testStickyParam()).then((sticky) => {
+      return stickynotes.Sticky.fetchByUUID(sticky.uuid).then(
+        (result) => {
+          assert.equal(sticky.uuid, result.uuid,
+                       'test for stickynotes.Sticky.getStickyUUID');
+        });
+      });
+  });
 };
 
-exports['test stickynotes.Sticky.fetchByUUID()'] = function(assert) {
-  setup();
-  var sticky = stickynotes.Sticky.create(testStickyParam);
-  var result = stickynotes.Sticky.fetchByUUID(sticky.uuid);
-  assert.equal(sticky.uuid, result.uuid,
-               'test for stickynotes.Sticky.getStickyUUID');
-};
-
-exports['test stickynotes.Sticky.fetchByUrl()'] = function(assert) {
-  setup();
-  var url1 = 'http://test1.stickynotes.co.jp';
-  var url2 = 'http://test2.stickynotes.co.jp';
-  var url3 = 'http://test3.stickynotes.co.jp';
-  var url4 = 'http://test4.stickynotes.co.jp';
-  var prepareStickyParam = function(stickyParam, url) {
+exports['test stickynotes.Sticky.fetchByUrl()'] = function(assert, done) {
+  const url1 = 'http://test1.stickynotes.co.jp';
+  const url2 = 'http://test2.stickynotes.co.jp';
+  const url3 = 'http://test3.stickynotes.co.jp';
+  const url4 = 'http://test4.stickynotes.co.jp';
+  function prepareStickyParam(url) {
     testStickyParam.id = null;
     testStickyParam.url = url;
   };
-
-  prepareStickyParam(testStickyParam, url1);
-  stickynotes.Sticky.create(testStickyParam);
-
-  prepareStickyParam(testStickyParam, url2);
-  stickynotes.Sticky.create(testStickyParam);
-
-  prepareStickyParam(testStickyParam, url3);
-  stickynotes.Sticky.create(testStickyParam);
-
-  assert.equal(1, stickynotes.Sticky.fetchByUrl(url1).length);
-  assert.equal(1, stickynotes.Sticky.fetchByUrl(url2).length);
-  assert.equal(1, stickynotes.Sticky.fetchByUrl(url3).length);
-  assert.equal(0, stickynotes.Sticky.fetchByUrl(url4).length);
-  assert.equal(0, stickynotes.Sticky.fetchByUrl(null).length);
-};
-
-exports['test stickynotes.Sticky.fetchByPage()'] = function(assert) {
-  setup();
-  var page = stickynotes.Page.create({
-    id: 110, url: testUrl, title: 'testTitle'
+  TestHelper.runDBTest(assert, done, function() {
+    return Promise.resolve().then(() => {
+      return stickynotes.Sticky.create(testStickyParam({url: url1}));
+    }).then(() => {
+      prepareStickyParam(url2);
+      return stickynotes.Sticky.create(testStickyParam({url: url2}));
+    }).then(() => {
+      prepareStickyParam(url3);
+      return stickynotes.Sticky.create(testStickyParam({url: url3}));
+    }).then(() => {
+      return stickynotes.Sticky.fetchByUrl(url1);
+    }).then((stickies) => {
+      assert.ok(stickies.length > 0, 'should find sticky by url');
+      return stickynotes.Sticky.fetchByUrl(url2);
+    }).then((stickies) => {
+      assert.ok(stickies.length > 0, 'should find sticky by url');
+      return stickynotes.Sticky.fetchByUrl(url3);
+    }).then((stickies) => {
+      assert.ok(stickies.length > 0, 'should find sticky by url');
+      return stickynotes.Sticky.fetchByUrl(url4);
+    }).then((stickies) => {
+      assert.ok(stickies.length === 0, 'should find sticky by url');
+      return stickynotes.Sticky.fetchByUrl(null);
+    }).then((stickies) => {
+      assert.ok(stickies.length === 0, 'should find sticky by url');
+    });
   });
-  var sticky = stickynotes.Sticky.create(testStickyParam);
-  var stickies = stickynotes.Sticky.fetchByPage(page);
-  assert.equal(stickies.length, 1, 'test for stickynotes.Page.fetchByPage');
 };
 
-exports['test stickynotes.Sticky.fetchAll()'] = function(assert) {
-  setup();
-  var sticky = stickynotes.Sticky.create(testStickyParam);
-  testStickyParam.id = null;
-  var sticky2 = stickynotes.Sticky.create(testStickyParam);
-  var stickies = stickynotes.Sticky.fetchAll();
-  assert.equal(stickies.length, 2, 'test for stickynotes.Page.fetchAll');
-};
-
-exports['test stickynotes.Sticky.prototype.save()'] = function(assert) {
-  setup();
-  var sticky = new stickynotes.Sticky.create(testStickyParam);
-  sticky.top = 200;
-  sticky.left = 200;
-  sticky.width = 200;
-  sticky.height = 200;
-  sticky.content = 'aaaa';
-  sticky.color = 'red';
-  sticky.save();
-  var newSticky = stickynotes.Sticky.fetchByUUID(sticky.uuid);
-  assert.equal(newSticky.top, 200);
-  assert.equal(newSticky.left, 200);
-  assert.equal(newSticky.width, 200);
-  assert.equal(newSticky.height, 200);
-  assert.equal(newSticky.content, 'aaaa');
-  assert.equal(newSticky.color, 'red');
-};
-
-exports['test stickynotes.Sticky.prototype.remove()'] = function(assert) {
-  setup();
-  var sticky = new stickynotes.Sticky.create(testStickyParam);
-  assert.ok(sticky.remove(), '消せるとTrue');
-  var stickies = stickynotes.Sticky.fetchAll();
-  assert.equal(0, stickies.length);
-  assert.ok(!sticky.remove(), 'ないもの消そうとするとFalse');
-};
-
-exports['test stickynotes.Sticky.prototype.getPage()'] = function(assert) {
-  setup();
-  var page = stickynotes.Page.create({
-    id: 110, url: testUrl, title: 'testTitle'
+exports['test stickynotes.Sticky.fetchByPage()'] = function(assert, done) {
+  let page;
+  TestHelper.runDBTest(assert, done, function() {
+    return Promise.resolve().then(() => {
+      return stickynotes.Page.create({
+        id: 110, url: testUrl, title: 'testTitle'
+      });
+    }).then((_page) => {
+      page = _page;
+      return stickynotes.Sticky.create(testStickyParam());
+    }).then((_sticky) => {
+      return stickynotes.Sticky.fetchByPage(page);
+    }).then((stickies) => {
+      assert.equal(stickies.length, 1, 'test for stickynotes.Page.fetchByPage');
+    });
   });
-  var sticky = stickynotes.Sticky.create(testStickyParam);
-  var page1 = sticky.getPage();
-  assert.equal(page1.id, page.id);
-  assert.equal(page1.url, page.url);
-  assert.equal(page1.title, page.title);
 };
 
-exports['test stickynotes.Sticky.prototype.setTags() and getTags()'] = function(assert) {
-  setup();
-  var sticky = stickynotes.Sticky.create(testStickyParam);
-  var tag1 = stickynotes.Tag.create({name: 'tag1'});
-  var tag2 = stickynotes.Tag.create({name: 'tag2'});
-  var tag3 = stickynotes.Tag.create({name: 'tag3'});
-  sticky.setTags(['tag1']);
-
-  var tags = sticky.getTags();
-  assert.equal(tags.length, 1);
-  assert.equal(tags[0].name, 'tag1');
-
-  sticky.setTags(['tag1', 'tag2']);
-  tags = sticky.getTags();
-  assert.equal(tags.length, 2);
-
-  sticky.setTags(['tag3']);
-
-  tags = sticky.getTags();
-  assert.equal(tags.length, 1);
-  assert.equal(tags[0].name, 'tag3');
+exports['test stickynotes.Sticky.fetchAll()'] = function(assert, done) {
+  let sticky, sticky2;
+  TestHelper.runDBTest(assert, done, function() {
+    return Promise.resolve().then(() => {
+      return stickynotes.Sticky.create(testStickyParam());
+    }).then((sticky) => {
+      return stickynotes.Sticky.create(testStickyParam());
+    }).then((sticky2) => {
+      return stickynotes.Sticky.fetchAll();
+    }).then((stickies) => {
+      assert.equal(stickies.length, 2, 'test for stickynotes.Page.fetchAll');
+    });
+  });
 };
 
-exports['test stickynotes.Sticky.prototype.fetchUpdatedStickiesSince()'] = function(assert) {
-  setup();
-  var now = new Date();
-  var yesterday = new Date();
+exports['test stickynotes.Sticky.prototype.save()'] = function(assert, done) {
+  let sticky;
+  TestHelper.runDBTest(assert, done, function() {
+    return Promise.resolve().then(() => {
+      return stickynotes.Sticky.create(testStickyParam());
+    }).then((_sticky) => {
+      sticky         = _sticky;
+      sticky.top     = 200;
+      sticky.left    = 200;
+      sticky.width   = 200;
+      sticky.height  = 200;
+      sticky.content = 'aaaa';
+      sticky.color   = 'red';
+      return sticky.save();
+    }).then(() => {
+      return stickynotes.Sticky.fetchByUUID(sticky.uuid);
+    }).then((newSticky) => {
+      assert.equal(newSticky.top    , 200);
+      assert.equal(newSticky.left   , 200);
+      assert.equal(newSticky.width  , 200);
+      assert.equal(newSticky.height , 200);
+      assert.equal(newSticky.content, 'aaaa');
+      assert.equal(newSticky.color  , 'red');
+    });
+  });
+};
+
+exports['test stickynotes.Sticky.prototype.remove()'] = function(assert, done) {
+  let sticky;
+  TestHelper.runDBTest(assert, done, function() {
+    return Promise.resolve().then(() => {
+      return stickynotes.Sticky.create(testStickyParam());
+    }).then((_sticky) => {
+      sticky = _sticky;
+      return sticky.remove();
+    }).then(() => {
+      assert.pass('Remove successfully');
+      return stickynotes.Sticky.fetchAll();
+    }).then((stickies) => {
+      assert.equal(0, stickies.length);
+      return sticky.remove();
+    }).then((result) => {
+      assert.fail('Canoot remove unexist sticky');
+    }).catch((e) => {
+      assert.pass('Canoot remove unexist sticky');
+    });
+  });
+};
+
+exports['test stickynotes.Sticky.prototype.getPage()'] = function(assert, done) {
+  let sticky;
+  let page;
+  TestHelper.runDBTest(assert, done, function() {
+    return Promise.resolve().then(() => {
+      return stickynotes.Page.create({
+        id: 110, url: testUrl, title: 'testTitle'
+      });
+    }).then((_page) => {
+      page = _page;
+      return stickynotes.Sticky.create(testStickyParam());
+    }).then((sticky) => {
+      return sticky.getPage();
+    }).then((page1) => {
+      assert.equal(page1.id   , page.id);
+      assert.equal(page1.url  , page.url);
+      assert.equal(page1.title, page.title);
+      return true;
+    });
+  });
+};
+
+exports['test stickynotes.Sticky.prototype.setTags() and getTags()'] = function(assert, done) {
+  let sticky;
+  let page;
+  TestHelper.runDBTest(assert, done, function() {
+    return Promise.resolve().then(() => {
+      return stickynotes.Sticky.create(testStickyParam);
+    }).then((_sticky) => {
+      sticky = _sticky;
+      return Promise.all([stickynotes.Tag.create({name: 'tag1'}),
+                          stickynotes.Tag.create({name: 'tag2'}),
+                          stickynotes.Tag.create({name: 'tag3'})]);
+    }).then(() => {
+      return sticky.setTags(['tag1']);
+    }).then(() => {
+      return sticky.getTags();
+    }).then((tags) => {
+      assert.equal(tags.length, 1, 'Can set a tag');
+      assert.equal(tags[0].name, 'tag1', 'Can set a tag');
+      return true;
+    }).then(() => {
+      return sticky.setTags(['tag1', 'tag2']);
+    }).then(() => {
+      return sticky.getTags();
+    }).then((tags) => {
+      assert.equal(tags.length, 2, 'Change tags');
+      return sticky.setTags(['tag3']);
+    }).then(() => {
+      return sticky.getTags();
+    }).then((tags) => {
+      assert.equal(tags.length, 1, 'Change tags');
+      assert.equal(tags[0].name, 'tag3', 'Change tags');
+      return true;
+    });
+  });
+};
+
+exports['test stickynotes.Sticky.prototype.fetchUpdatedStickiesSince()'] = function(assert, done) {
+  let sticky;
+  let page;
+  const now = new Date();
+  const yesterday = new Date();
   yesterday.setDate(now.getDate() - 1);
-  var tomorrow = new Date();
+  const tomorrow = new Date();
   tomorrow.setDate(now.getDate() + 1);
-
-  var prepareStickyParam = function(stickyParam, date) {
-    testStickyParam.id = null;
-    testStickyParam.created_at = date.toISOString();
-    testStickyParam.updated_at = date.toISOString();
+  const prepareStickyParam = function(date) {
+    return testStickyParam({
+      created_at: date.toISOString(),
+      updated_at: date.toISOString()
+    });
   };
-
-  prepareStickyParam(testStickyParam, now);
-  stickynotes.Sticky.create(testStickyParam);
-
-  prepareStickyParam(testStickyParam, yesterday);
-  stickynotes.Sticky.create(testStickyParam);
-  stickynotes.Sticky.create(testStickyParam);
-
-  prepareStickyParam(testStickyParam, tomorrow);
-  stickynotes.Sticky.create(testStickyParam);
-  stickynotes.Sticky.create(testStickyParam);
-  stickynotes.Sticky.create(testStickyParam);
-
-  var stickies = stickynotes.Sticky.fetchUpdatedStickiesSince(now);
-  assert.equal(4, stickies.length, 'fetch only since now');
-
-  stickies = stickynotes.Sticky.fetchUpdatedStickiesSince(yesterday);
-  assert.equal(6, stickies.length, 'fetch only since yesterday');
-
-  stickies = stickynotes.Sticky.fetchUpdatedStickiesSince(tomorrow);
-  assert.equal(3, stickies.length, 'fetch only since tomrrow');
-
-  teardown();
+  TestHelper.runDBTest(assert, done, function() {
+    return Promise.resolve()
+      .then(() => stickynotes.Sticky.create(prepareStickyParam(now)))
+      .then(() => stickynotes.Sticky.create(prepareStickyParam(yesterday)))
+      .then(() => stickynotes.Sticky.create(prepareStickyParam(yesterday)))
+      .then(() => stickynotes.Sticky.create(prepareStickyParam(tomorrow)))
+      .then(() => stickynotes.Sticky.create(prepareStickyParam(tomorrow)))
+      .then(() => {
+      return stickynotes.Sticky.create(prepareStickyParam(tomorrow));
+    }).then(() => {
+      return stickynotes.Sticky.fetchUpdatedStickiesSince(now);
+    }).then((stickies) => {
+      assert.equal(4, stickies.length, 'fetch only since now');
+      return stickynotes.Sticky.fetchUpdatedStickiesSince(yesterday);
+    }).then((stickies) => {
+      assert.equal(6, stickies.length, 'fetch only since yesterday');
+      return stickynotes.Sticky.fetchUpdatedStickiesSince(tomorrow);
+    }).then((stickies) => {
+      assert.equal(3, stickies.length, 'fetch only since tomrrow');
+    });
+  });
 };
 
 require("sdk/test").run(exports);

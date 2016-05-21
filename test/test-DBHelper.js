@@ -23,8 +23,8 @@ exports['test stickynotes.DBHelper.migrate'] = function(assert) {
 };
 
 exports['test stickynotes.DBHelper.uuid'] = function(assert) {
-  var uuid1 = stickynotes.DBHelper.uuid();
-  var uuid2 = stickynotes.DBHelper.uuid();
+  const uuid1 = stickynotes.DBHelper.uuid();
+  const uuid2 = stickynotes.DBHelper.uuid();
   assert.equal(36, uuid1.length);
   assert.notEqual(uuid1, uuid2);
 };

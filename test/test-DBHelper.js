@@ -1,17 +1,5 @@
-var stickynotes = require('../lib/stickynotes');
-var setup = function() {
-  let c;
-  return stickynotes.DBHelper.connection().then((_c) => {
-    c = _c;
-    return stickynotes.DBHelper.createTables(c);
-  }).then(() => {
-    return c;
-  });
-};
-
-var teardown = function(c) {
-  return stickynotes.DBHelper.dropTables(c).then(() => c.close());
-};
+const stickynotes = require('../lib/stickynotes');
+const TestHelper  = require('./TestHelper');
 
 exports['test get database connection'] = function(assert) {
   return  stickynotes.DBHelper.connection().then((c) => {
@@ -21,18 +9,16 @@ exports['test get database connection'] = function(assert) {
 };
 
 exports['test stickynotes.DBHelper.migrate'] = function(assert) {
-  let c;
-  setup().then((_c) => {
-    c = _c;
-    return stickynotes.DBHelper.getVersion(c);
-  }).then((version) => {
-    assert.equal(0, version);
-    return stickynotes.DBHelper.migrate(c);
-  }).then(() => {
-    return stickynotes.DBHelper.getVersion(c);
-  }).then((version) => {
-    assert.equal(1, version);
-    return teardown(c);
+  TestHelper.runDBTest(function(c) {
+    return stickynotes.DBHelper.getVersion(c).then((version) => {
+      assert.equal(0, version);
+      return stickynotes.DBHelper.migrate(c);
+    }).then(() => {
+      return stickynotes.DBHelper.getVersion(c);
+    }).then((version) => {
+      assert.equal(1, version);
+      return true;
+    });
   });
 };
 

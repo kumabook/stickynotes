@@ -380,14 +380,16 @@ stickynotes.StickyView.prototype.toString = function() {
 };
 
 stickynotes.StickyView.search = function(key) {
-  var URL      = stickynotes.doc.location.href;
-  var page     = stickynotes.Page.fetchByUrl(URL);
-  var stickies = stickynotes.Sticky.fetchByPage(page);
-  for (var i = 0; i < stickies.length; i++) {
-    var d = stickynotes.doc.getElementById('sticky' + stickies[i].iuud);
-    if (stickies[i].filter(key)) d.style.visibility = 'visible';
-    else                         d.style.visibility = 'hidden';
-  }
+  const URL      = stickynotes.doc.location.href;
+  stickynotes.Page.fetchByUrl(URL).then((page) => {
+    return stickynotes.Sticky.fetchByPage(page);
+  }).then((stickies) => {
+    for (var i = 0; i < stickies.length; i++) {
+      var d = stickynotes.doc.getElementById('sticky' + stickies[i].iuud);
+      if (stickies[i].filter(key)) d.style.visibility = 'visible';
+      else                         d.style.visibility = 'hidden';
+    }
+  });
 };
 stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
   var isVisible = stickynotes.StickyView.StickiesVisibility;

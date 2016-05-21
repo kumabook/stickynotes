@@ -192,55 +192,61 @@ stickynotes.Sidebar = {
     }
     var id   = this.getSelectedItemId();
     var type = this.getSelectedItemType();
-    var stickies = [];
+    let promise;
     switch (type)  {
-      case 'page':
-        stickies = stickynotes.Sticky.fetchByPage({ id: id})
-                                     .filter((s) => !s.is_deleted);
-        break;
+    case 'page':
+      promise = stickynotes.Sticky.fetchByPage({ id: id})
+        .then((ss) => ss.filter((s) => !s.is_deleted));
+      break;
       case 'tag':
-        stickies = stickynotes.Sticky.fetchByTag( { id: id})
-                                     .filter((s) => !s.is_deleted);
-        break;
-      case 'sticky':
-        stickies = [stickynotes.Sticky.fetchByUUID(id)];
-        break;
-      default:
-        break;
+      promise = stickynotes.Sticky.fetchByTag( { id: id})
+        .then((ss) => ss.filter((s) => !s.is_deleted));
+      break;
+    case 'sticky':
+      promise = Promise.resolve([stickynotes.Sticky.fetchByUUID(id)]);
+      break;
+    default:
+      promise = Promise.resolve([]);
+      break;
     }
-    addon.port.emit('export', stickies, type + '_' + id);
+    promise.then((stickies) => {
+      addon.port.emit('export', stickies, type + '_' + id);
+    });
   },
   remove: function() {
     if (!addon) {
       this.close();
       return;
     }
-    var sticky = stickynotes.Sticky.fetchByUUID(this.getSelectedItemId());
-    if (sticky == null) {
-      return;
-    }
-    addon.port.emit('delete', sticky);
+    stickynotes.Sticky.fetchByUUID(this.getSelectedItemId()).then((sticky) => {
+      if (sticky == null) {
+        return;
+      }
+      addon.port.emit('delete', sticky);
+    });
   },
   jump: function() {
     if (!addon) {
       this.close();
       return;
     }
-    var sticky = stickynotes.Sticky.fetchByUUID(this.getSelectedItemId());
-    if (sticky == null) {
-      return;
-    }
-    var page = sticky.getPage();
-    addon.port.emit('jump', sticky, page.url);
-    document.getElementById('sticky').blur();
-    if (window.content.document.location.href != page.url) {
-      let Cc = stickynotes.Cc;
-      let Ci = stickynotes.Ci;
-      Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer).initWithCallback(
-        function() { window.content.document.location.href = page.url;  },
-        200,
-        Ci.nsITimer.TYPE_ONE_SHOT);
-    }
+    stickynotes.Sticky.fetchByUUID(this.getSelectedItemId()).then((sticky) => {
+      if (sticky == null) {
+        return Promise.resolve(true);
+      }
+      return sticky.getPage().then((page) => {
+        addon.port.emit('jump', sticky, page.url);
+        document.getElementById('sticky').blur();
+        if (window.content.document.location.href != page.url) {
+          let Cc = stickynotes.Cc;
+          let Ci = stickynotes.Ci;
+          Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer).initWithCallback(
+            function() { window.content.document.location.href = page.url;  },
+            200,
+            Ci.nsITimer.TYPE_ONE_SHOT);
+        }
+      });
+    });
   },
   focusSidebar: function() {
     var sidebarDoc = this.getSidebarDoc();

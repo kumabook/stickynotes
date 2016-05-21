@@ -28,8 +28,17 @@ var preferenceWindow = null;
 var contentWorkers = [];
 var sidebarWorkers = [];
 
-stickynotes.DBHelper.createTables();
-stickynotes.DBHelper.migrate();
+stickynotes.DBHelper.connection().then((_c) => {
+  let c = _c;
+  return stickynotes.DBHelper.createTables(c).then(() => {
+    return stickynotes.DBHelper.migrate(c);
+  }).then(() => {
+    c.close();
+  }, () => {
+    logger.error('Migration error' + e);
+    c.close();
+  });
+});
 
 timers.setTimeout(function() {
   logger.trace('attach curent active tab: ' + tabs.activeTab.url);
@@ -105,14 +114,16 @@ var setupContentWorker = function(worker) {
   worker.port.on('delete', deleteSticky);
   worker.port.on('save', function(sticky) {
     var _sticky = new stickynotes.Sticky(sticky);
-    _sticky.save();
-    emitAll(sidebarWorkers, 'save', sticky);
+    _sticky.save().then(() => {
+      emitAll(sidebarWorkers, 'save', _sticky);
+    });
   });
   worker.port.on('set_tags', function(sticky, tagStrs) {
     var _sticky = new stickynotes.Sticky(sticky);
     emitAll(sidebarWorkers, 'delete', _sticky);
-    _sticky.setTags(tagStrs);
-    emitAll(sidebarWorkers,    'add', _sticky);
+    _sticky.setTags(tagStrs).then((sticky) => {
+      emitAll(sidebarWorkers, 'add', sticky);
+    });
   });
   worker.port.on('toggle-menu', function(enabled) {
     panel.port.emit('toggle-menu', enabled);
@@ -120,11 +131,13 @@ var setupContentWorker = function(worker) {
       _('stickyToggleMenu.label');
   });
   worker.port.on('reload-stickies', function(url) {
-    worker.port.emit('load-stickies', stickynotes.Sticky.fetchByUrl(url), url);
-    if (jumpingSticky) {
-      worker.port.emit('focus-sticky', jumpingSticky);
-      jumpingSticky = null;
-    }
+    stickynotes.Sticky.fetchByUrl(url).then((stickies) => {
+      worker.port.emit('load-stickies', stickies, url);
+      if (jumpingSticky) {
+        worker.port.emit('focus-sticky', jumpingSticky);
+        jumpingSticky = null;
+      }
+    });
   });
 
   worker.on('detach', function (w) {
@@ -139,14 +152,14 @@ var setupContentWorker = function(worker) {
   worker.port.emit('strings', {
     'sticky.placeholderText': _('sticky.placeholderText')
   });
-  worker.port.emit('load-stickies',
-                   stickynotes.Sticky.fetchByUrl(worker.url),
-                   worker.url);
+  stickynotes.Sticky.fetchByUrl(worker.url).then((stickies) => {
+    worker.port.emit('load-stickies', stickies, worker.url);
+    if (jumpingSticky) {
+      worker.port.emit('focus-sticky', jumpingSticky);
+      jumpingSticky = null;
+    }
+  });
   worker.port.emit('load-css', self.data.url("sticky-view.css"));
-  if (jumpingSticky) {
-    worker.port.emit('focus-sticky', jumpingSticky);
-    jumpingSticky = null;
-  }
   contentWorkers.push(worker);
 };
 
@@ -166,42 +179,45 @@ pageMod.PageMod({
 
 var exportFromMenu = function() {
   logger.trace('exported');
-  var stickies = stickynotes.Sticky.fetchAll();
-  exportStickies(stickies, 'all');
-}
+  stickynotes.Sticky.fetchAll().then((stickies) => {
+    exportStickies(stickies, 'all');
+  });
+};
 
 var exportFromSidebar = function(stickies, name) {
   exportStickies(stickies, name);
 };
 
 var resolveStickies = function(stickies) {
-  var pages = stickynotes.Page.fetchAll();
-  stickies.forEach(function(s) {
-    var _pages = pages.filter(function(p) {
-      logger.trace(p.id + ' ' + p.url);
-      return p.id == s.page_id;
-    });
-    if (_pages.length > 0) {
-      s.url = _pages[0].url;
-      s.title = _pages[0].title;
-    }
-    if (s.tags) {
-      s.tags = s.tags.map(function(t) {
-        return t.name;
+  return stickynotes.Page.fetchAll().then((pages) => {
+    stickies.forEach(function(s) {
+      var _pages = pages.filter(function(p) {
+        logger.trace(p.id + ' ' + p.url);
+        return p.id == s.page_id;
       });
-    } else {
-      s.tags = [];
-    }
-    delete s.page_id;
-    delete s.id;
-    s.is_deleted = Boolean(s.is_deleted);
+      if (_pages.length > 0) {
+        s.url = _pages[0].url;
+        s.title = _pages[0].title;
+      }
+      if (s.tags) {
+        s.tags = s.tags.map(function(t) {
+          return t.name;
+        });
+      } else {
+        s.tags = [];
+      }
+      delete s.page_id;
+      delete s.id;
+      s.is_deleted = Boolean(s.is_deleted);
+    });
+    return stickies;
   });
-  return stickies;
 };
 
 var exportStickies = function(stickies, name) {
-  resolveStickies(stickies);
-  panel.port.emit('export', stickies, name);
+  resolveStickies(stickies).then((stickies) => {
+    panel.port.emit('export', stickies, name);
+  });
 };
 
 var deleteSticky = function(sticky) {
@@ -221,12 +237,16 @@ var deleteSticky = function(sticky) {
   var _sticky = new stickynotes.Sticky(sticky);
   if (ApiClient.isLoggedIn()) {
     _sticky.is_deleted = true;
-    _sticky.save();
+    _sticky.save().then(() => {
+      emitAll(contentWorkers, 'delete-sticky', _sticky);
+      emitAll(sidebarWorkers,        'delete', _sticky);
+    });
   } else {
-    _sticky.remove();
+    _sticky.remove().then(() => {
+      emitAll(contentWorkers, 'delete-sticky', _sticky);
+      emitAll(sidebarWorkers,        'delete', _sticky);
+    });
   }
-  emitAll(contentWorkers, 'delete-sticky', sticky);
-  emitAll(sidebarWorkers,        'delete', sticky);
 };
 
 var createStickyWithMessage = function (message) {
@@ -234,7 +254,7 @@ var createStickyWithMessage = function (message) {
   if (title == '') {
     title = _('sticky.noTitle');
   }
-  var sticky = stickynotes.Sticky.create({
+  stickynotes.Sticky.create({
     left: 0, top: 0,
     width: 150, height: 100,
     url: message.url,
@@ -243,10 +263,10 @@ var createStickyWithMessage = function (message) {
     color: 'yellow',
     tags: '',
     is_deleted: false
+  }).then((sticky) => {
+    emitAll(contentWorkers,'create-sticky', sticky, message.url);
+    emitAll(sidebarWorkers,          'add', sticky);
   });
-  emitAll(contentWorkers,'create-sticky', sticky, message.url);
-  emitAll(sidebarWorkers,          'add', sticky);
-
 };
 
 
@@ -266,11 +286,15 @@ var jump2Sticky = function(sticky, dstUrl) {
 var toggleVisibilityWithMessage = function (message) {
   contentWorkers.forEach(function(w) {
     if (w.url == message.url) {
-      var page = stickynotes.Page.fetchByUrl(message.url);
-      if (page) {
-        var stickies = stickynotes.Sticky.fetchByPage(page);
+      stickynotes.Page.fetchByUrl(message.url).then((page) => {
+        if (page) {
+          return stickynotes.Sticky.fetchByPage(page);
+        } else {
+          return Promise.resolve([]);
+        }
+      }).then((stickies) => {
         w.port.emit('toggle-visibility', stickies);
-      }
+      });
     }
   });
 };
@@ -452,34 +476,43 @@ var importStickies = function(stickies) {
   logger.trace('import ' + stickies.length + ' stickies.');
   var createdStickies = [];
   var updatedStickies = [];
-  stickies.forEach(function(s) {
-    var sticky = stickynotes.Sticky.fetchByUUID(s.uuid);
-    if (sticky) {
-      if (!s.is_deleted) {
-        sticky.update(s);
-        sticky.save();
-        sticky.setTags(s.tags);
-        logger.trace('updated ' + sticky.uuid);
+  let sticky;
+  const promises = stickies.map(function(s) {
+    return stickynotes.Sticky.fetchByUUID(s.uuid).then((_sticky) => {
+      sticky = _sticky;
+      if (sticky) {
+        updatedStickies.push(sticky);
+        if (!s.is_deleted) {
+          return sticky.update(s)
+            .then(() => sticky.save())
+            .then(() => sticky.setTags(s.tags))
+            .then(() => {
+              logger.trace('updated ' + sticky.uuid);
+            });
+        } else {
+          return sticky.remove().then(() => {
+            logger.trace('removed ' + sticky.uuid);
+          });
+        }
       } else {
-        sticky.remove();
-        logger.trace('removed ' + sticky.uuid);
+        if (!s.is_deleted) {
+          return stickynotes.Sticky.create(s).then((sticky) => {
+            logger.trace('created ' + sticky.uuid);
+            return createdStickies.push(sticky);
+          });
+        } else {
+          logger.trace('already removed ' + s.uuid);
+          return Promise.resolve();
+        }
       }
-      updatedStickies.push(sticky);
-    } else {
-      if (!s.is_deleted) {
-        sticky = stickynotes.Sticky.create(s);
-        createdStickies.push(sticky);
-        logger.trace('created ' + sticky.uuid);
-      } else {
-        logger.trace('already removed ' + s.uuid);
-      }
-    }
+    });
   });
-
-  contentWorkers.forEach(function(w) {
-    w.port.emit('import',
-                createdStickies.filter((s) => w.url == s.getPage().url),
-                updatedStickies.filter((s) => w.url == s.getPage().url));
+  Promise.all(promises).then(() => {
+    contentWorkers.forEach(function(w) {
+      w.port.emit('import',
+                  createdStickies.filter((s) => w.url == s.getPage().url),
+                  updatedStickies.filter((s) => w.url == s.getPage().url));
+    });
   });
 
   sidebarWorkers.forEach(function(w) {
@@ -492,25 +525,25 @@ var sync = function() {
   // push new stickies
   logger.trace('----------new stickies -----------');
   var lastSynced = stickynotes.lastSynced;
-  var stickies = stickynotes.Sticky.fetchUpdatedStickiesSince(lastSynced);
-  resolveStickies(stickies);
-  ApiClient.createStickies(stickies)
-    .then(function() {
-      return ApiClient.fetchStickies(lastSynced);
-    })
-    .then(function(stickies) {
-      logger.trace('----------- fetch stickies --------');
-      if (stickies) {
-        importStickies(stickies.map(function(s) {
-          s.id = null;
-          return s;
-        }));
-      }
-      stickynotes.lastSynced = new Date();
-      startSyncTimer();
-    }, function(error) {
-      startSyncTimer();
-    });
+  stickynotes.Sticky.fetchUpdatedStickiesSince(lastSynced).then((stickies) => {
+    return resolveStickies(stickies);
+  }).then((stickies) => {
+    return ApiClient.createStickies(stickies);
+  }).then(function() {
+    return ApiClient.fetchStickies(lastSynced);
+  }).then(function(stickies) {
+    logger.trace('----------- fetch stickies --------');
+    if (stickies) {
+      importStickies(stickies.map(function(s) {
+        s.id = null;
+        return s;
+      }));
+    }
+    stickynotes.lastSynced = new Date();
+    startSyncTimer();
+  }, function(error) {
+    startSyncTimer();
+  });
 };
 
 var startSyncTimer = function() {

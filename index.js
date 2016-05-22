@@ -477,8 +477,10 @@ var importStickies = function(stickies) {
   var createdStickies = [];
   var updatedStickies = [];
   let sticky;
-  const promises = stickies.map(function(s) {
-    return stickynotes.Sticky.fetchByUUID(s.uuid).then((_sticky) => {
+  stickies.reduce((p, s) => {
+    return p.then(() => {
+      return stickynotes.Sticky.fetchByUUID(s.uuid);
+    }).then((_sticky) => {
       sticky = _sticky;
       if (sticky) {
         updatedStickies.push(sticky);
@@ -487,18 +489,20 @@ var importStickies = function(stickies) {
             .then(() => sticky.save())
             .then(() => sticky.setTags(s.tags))
             .then(() => {
-              logger.trace('updated ' + sticky.uuid);
+              logger.trace('Updated ' + sticky.uuid);
             });
         } else {
           return sticky.remove().then(() => {
-            logger.trace('removed ' + sticky.uuid);
+            logger.trace('Removed ' + sticky.uuid);
           });
-        }
+          }
       } else {
         if (!s.is_deleted) {
           return stickynotes.Sticky.create(s).then((sticky) => {
-            logger.trace('created ' + sticky.uuid);
-            return createdStickies.push(sticky);
+            logger.trace('Created ' + sticky.uuid);
+            createdStickies.push(sticky);
+          }).catch((e) => {
+            logger.trace('Failed to created ' + sticky.uuid);
           });
         } else {
           logger.trace('already removed ' + s.uuid);
@@ -506,8 +510,7 @@ var importStickies = function(stickies) {
         }
       }
     });
-  });
-  Promise.all(promises).then(() => {
+  }, Promise.resolve()).then(() => {
     contentWorkers.forEach(function(w) {
       w.port.emit('import',
                   createdStickies.filter((s) => w.url == s.getPage().url),

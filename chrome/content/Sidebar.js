@@ -281,7 +281,7 @@ stickynotes.Sidebar = {
   resizeSidebarHeight: function() {
     var Ci = stickynotes.Ci;
     var doc = this.getSidebarDoc();
-    doc.getElementById('sticky').height = window.innerHeight;
+    doc.getElementById('sticky').height = window.innerHeight - 32;
   },
   createSidebarTree: function() {
     var old_tree = document.getElementById('sticky_tree');

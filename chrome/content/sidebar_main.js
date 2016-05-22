@@ -18,14 +18,7 @@
         Sidebar.focusSidebar();
       }
     },true);
-    var mainWindow = window
-      .QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIWebNavigation)
-      .QueryInterface(Ci.nsIDocShellTreeItem)
-      .rootTreeItem
-      .QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindow);
-    mainWindow.addEventListener('click', resizeSidebarHeight, false);
+    window.addEventListener('resize', resizeSidebarHeight, false);
     stickynotes.Sidebar.groupBy();
     var contextMenu = document.getElementById('context-menu');
     contextMenu.addEventListener('popupshowing', filterContextMenu, false);

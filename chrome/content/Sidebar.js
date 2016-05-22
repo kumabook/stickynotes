@@ -52,7 +52,7 @@ stickynotes.Sidebar = {
     if (!parent) {
       parent = sidebarDoc.getElementById('tree_page_' + sticky.page_id);
       if (!parent)
-        parent = this.createSidebarPageItem(stickynotes.Page.fetchById(sticky.page_id));
+        parent = this.createSidebarPageItem(sticky.page);
     }
     var treeitem_sticky = document.createElement('treeitem');
     var t = treeitem_sticky;
@@ -234,7 +234,8 @@ stickynotes.Sidebar = {
       if (sticky == null) {
         return Promise.resolve(true);
       }
-      return sticky.getPage().then((page) => {
+      return sticky.fetchPage().then(() => {
+        const page = sticky.getPage();
         addon.port.emit('jump', sticky, page.url);
         document.getElementById('sticky').blur();
         if (window.content.document.location.href != page.url) {
@@ -308,53 +309,46 @@ stickynotes.Sidebar = {
     return selectedsort;
   },
   addSticky: function(sticky) {
-    var sidebarDoc = this.getSidebarDoc();
-    var selectedsort = this.getSelectedSort();
-    sidebarDoc.getElementById('by' + selectedsort)
-      .setAttribute('checked', true);
-    var parent;
+    const doc          = this.getSidebarDoc();
+    const selectedsort = this.getSelectedSort();
+    doc.getElementById('by' + selectedsort).setAttribute('checked', true);
+    const tags = sticky.tags.concat();
+    if (tags.length === 0) {
+      tags.push(new stickynotes.Tag({id: 0, name: 'No tag'}));
+    }
+    let parent;
     switch (selectedsort) {
      case 'tag+site':
-      var tags = sticky.getTags();
-      if (tags.length == 0) {
-        tags.push(new stickynotes.Tag({id: 0, name: 'No Tag'}));
-      }
-
-      for (var i = 0; i < tags.length; i++) {
-        var tag = tags[i];
-        parent = sidebarDoc.getElementById('tree_page_' + sticky.page_id +
-                                           '_tag_' + tag.id);
+      tags.forEach((tag) => {
+        const id = 'tree_page_' + sticky.page_id + '_tag_' + tag.id;
+        parent = doc.getElementById(id);
         if (!parent) {
-          var tagItem = sidebarDoc.getElementById('tree_tag_' + tag.id);
+          let tagItem = doc.getElementById('tree_tag_' + tag.id);
           if (!tagItem) {
             tagItem = this.createSidebarTagItem(tag).treechildren;
           }
-          parent = this.createSidebarPageItem(sticky.getPage(),
-                                              tagItem).treechildren;
+          let page = sticky.getPage();
+          parent = this.createSidebarPageItem(page, tagItem).treechildren;
         }
         this.createSidebarStickyItem(sticky, parent);
-      }
+      });
       break;
      case 'site':
-      var url_item = sidebarDoc.getElementById('tree_page_' + sticky.page_id);
+      var url_item = doc.getElementById('tree_page_' + sticky.page_id);
       parent = url_item;
       if (!url_item) {
         parent = this.createSidebarPageItem(sticky.getPage()).treechildren;
       }
       this.createSidebarStickyItem(sticky, parent);
       break;
-     case 'tag':
-      tags = sticky.getTags();
-      if (tags.length == 0)
-        tags.push(new stickynotes.Tag({id: 0, name: 'No Tag'}));
-      for (i = 0; i < tags.length; i++) {
-        var tag = tags[i];
-        parent = sidebarDoc.getElementById('tree_tag_' + tag.id);
+    case 'tag':
+      tags.forEach((tag) => {
+        parent = doc.getElementById('tree_tag_' + tag.id);
         if (!parent) {
           parent = this.createSidebarTagItem(tag).treechildren;
         }
         this.createSidebarStickyItem(sticky, parent);
-      }
+      });
       break;
      case 'time':
       break;
@@ -362,12 +356,12 @@ stickynotes.Sidebar = {
     this.updateContextMenuVisibility();
   },
   deleteSticky: function(sticky) {
-    var sidebarDoc = this.getSidebarDoc();
-    var sticky_tree = sidebarDoc.getElementById('sticky_tree');
-    var items = this.getStickyElements(sticky);
-    for (var i = 0; i < items.length; i++) {
-      var parent = items[i].parentNode;
-      parent.removeChild(items[i]);
+    const sidebarDoc = this.getSidebarDoc();
+    const sticky_tree = sidebarDoc.getElementById('sticky_tree');
+    const items = this.getStickyElements(sticky);
+    items.forEach((item) => {
+      var parent = item.parentNode;
+      parent.removeChild(item);
       while (parent.childNodes.length == 0 && parent.id != 'sticky_tree') {
         var _parent = parent.parentNode;
         var __parent = _parent.parentNode;
@@ -375,24 +369,24 @@ stickynotes.Sidebar = {
         __parent.removeChild(_parent);
         parent = __parent;
       }
-    }
+    });
     this.updateContextMenuVisibility();
   },
   updateSticky: function(sticky) {
-    var items = this.getStickyElements(sticky);
-    for (var i = 0; i < items.length; i++) {
-      var id = items[i].id;
-      var t = items[i];
-      t.treecell_text.setAttribute('label', sticky.content);
-      t.treecell_id.setAttribute('label', sticky.uuid);
-      t.treecell_title.setAttribute('label', sticky.title);
-      t.treecell_x.setAttribute('label', sticky.left);
-      t.treecell_y.setAttribute('label', sticky.top);
-      t.treecell_width.setAttribute('label', sticky.width);
+    const items = this.getStickyElements(sticky);
+    items.forEach((item) => {
+      const id = item.id;
+      const t  = item;
+      t.treecell_text.setAttribute(  'label', sticky.content);
+      t.treecell_id.setAttribute(    'label', sticky.uuid);
+      t.treecell_title.setAttribute( 'label', sticky.title);
+      t.treecell_x.setAttribute(     'label', sticky.left);
+      t.treecell_y.setAttribute(     'label', sticky.top);
+      t.treecell_width.setAttribute( 'label', sticky.width);
       t.treecell_height.setAttribute('label', sticky.height);
-      t.treecell_url.setAttribute('label', sticky.url);
-      t.treecell_color.setAttribute('label', sticky.color);
-    }
+      t.treecell_url.setAttribute(   'label', sticky.url);
+      t.treecell_color.setAttribute( 'label', sticky.color);
+    });
   },
   addTag: function(tag) {
     var doc = this.getSidebarDoc();
@@ -402,135 +396,124 @@ stickynotes.Sidebar = {
     }
   },
   groupBy: function(selectedsort, key) {
-      var doc = this.getSidebarDoc();
-      if (!selectedsort) {
-        selectedsort = this.getSelectedSort();
-      }
-      doc.getElementById('by' + selectedsort)
-        .setAttribute('checked', true);
-      switch (selectedsort) {
-       case 'tag+site':
-        this.groupByTagAndSite(key);
-        break;
-       case 'site':
-        this.groupBySite(key);
-        break;
-       case 'tag':
-        this.groupByTag(key);
-        break;
-       case 'time':
-        this.groupByTime(key);
-        break;
-      }
-    },
-  groupByTagAndSite: function(key) {
-    var sidebarDoc = this.getSidebarDoc();
-    this.createSidebarTree();
-    var tags = stickynotes.Tag.fetchAll();
-    var pages = stickynotes.Page.fetchAll();
-    var allStickies = stickynotes.Sticky.fetchAll(key)
-                                        .filter((s) => !s.is_deleted);
-    var stickies;
-    var pageItem;
-    var i, j, k;
-    var tagItem;
-    for (i = 0; i < tags.length; i++) {
-      stickies = stickynotes.Sticky.fetchByTag(tags[i], key)
-                                   .filter((s) => !s.is_deleted);
-      if (stickies.length > 0) {
-        tagItem = this.createSidebarTagItem(
-          {id: tags[i].id, name: tags[i].name});
-        for (j = 0; j < stickies.length; j++) {
-          pageItem = sidebarDoc
-            .getElementById('tree_page_' + stickies[j].page_id +
-                            '_tag_' + tags[i].id);
-          if (!pageItem) {
-            var page = stickynotes.Page.fetchById(stickies[j].page_id);
-            pageItem = this.createSidebarPageItem(
-              page,
-              tagItem.treechildren,
-              'tree_page_' + stickies[j].page_id + '_tag_' + tags[i].id);
-          }
-          var item = this.createSidebarStickyItem(stickies[j],
-                                                  pageItem.treechildren);
-          item.tag = tags[i].name;
-          for (k = 0; k < allStickies.length; k++) {
-            if (allStickies[k].id == stickies[j].id)
-              allStickies.splice(k, 1);
-          }
-        }
-      }
+    var doc = this.getSidebarDoc();
+    if (!selectedsort) {
+      selectedsort = this.getSelectedSort();
     }
-    if (allStickies.length > 0) {
-      var noTagItem = this.createSidebarTagItem({ id: 0, name: 'No tag'});
+    doc.getElementById('by' + selectedsort)
+      .setAttribute('checked', true);
+    switch (selectedsort) {
+    case 'tag+site':
+      this.groupByTagAndSite(key);
+      break;
+    case 'site':
+      this.groupBySite(key);
+      break;
+    case 'tag':
+      this.groupByTag(key);
+      break;
+    case 'time':
+      this.groupByTime(key);
+      break;
+    }
+  },
+  fetchAllItems: function(key) {
+    return Promise.all([
+      stickynotes.Tag.fetchAll(),
+      stickynotes.Page.fetchAll(),
+      stickynotes.Sticky.fetchAll(key).then((stickies) => {
+        return stickies.filter((s) => !s.is_deleted);
+      }).then((stickies) => {
+        return Promise.all(stickies.map((s) => s.fetchTags()));
+      })
+    ]);
+  },
+  groupByTagAndSite: function(key) {
+    const doc = this.getSidebarDoc();
+    this.fetchAllItems(key).then((items) => {
+      let [tags, pages, allStickies] = items;
+      this.createSidebarTree();
+      tags.forEach((t) => {
+        const stickies = allStickies.filter((sticky) => {
+          return !sticky.is_deleted && sticky.tags.some((tag) => t.id === tag.id);
+        });
+        if (stickies.length === 0) return;
+        let tagItem = this.createSidebarTagItem({id: t.id, name: t.name});
+        stickies.forEach((s) => {
+          const id = 'tree_page_' + s.page_id + '_tag_' + t.id;
+          let pageItem = doc.getElementById(id);
+          if (!pageItem) {
+            const page = pages.find((p) => p.id == s.page_id);
+            pageItem = this.createSidebarPageItem(page, tagItem.treechildren, id);
+          }
+          const item = this.createSidebarStickyItem(s, pageItem.treechildren);
+          item.tag = t.name;
+        });
+      });
+      const noTagStickies = allStickies.filter((sticky) => {
+        return sticky.tags.length === 0;
+      });
+      if (noTagStickies.length === 0) return;
+      const noTagItem = this.createSidebarTagItem({ id: 0, name: 'No tag'});
       noTagItem.setAttribute('open', 'true');
-      for (k = 0; k < allStickies.length; k++) {
-        pageItem = sidebarDoc
-          .getElementById('tree_page_' + allStickies[k].page_id +
-                          '_tag_' + '0');
+      allStickies.forEach((s) => {
+        const page = pages.find((page) => page.id === s.page_id);
+        const pageItem = doc.getElementById('tree_page_' + s.page_id + '_tag_' + '0');
         if (!pageItem) {
           pageItem = this.createSidebarPageItem(
-            stickynotes.Page.fetchById(allStickies[k].page_id),
+            page,
             noTagItem.treechildren,
-            'tree_page_' + allStickies[k].page_id + '_tag_' + '0'
+            'tree_page_' + s.page_id + '_tag_' + '0'
           );
         }
-        this.createSidebarStickyItem(allStickies[k],
-                                     pageItem.treechildren);
-      }
-    }
+        this.createSidebarStickyItem(s, pageItem.treechildren);
+      });
+    });
     this.updateContextMenuVisibility();
   },
   groupBySite: function(key) {
-    this.createSidebarTree();
-    var pages = stickynotes.Page.fetchAll();
-    var urlItem, stickies, i;
-    for (i = 0; i < pages.length; i++) {
-      stickies = stickynotes.Sticky.fetchByPage(pages[i], key)
-                                   .filter((s) => !s.is_deleted);
-      if (stickies.length > 0) {
-        urlItem = this.createSidebarPageItem(pages[i]);
-        for (var j = 0; j < stickies.length; j++) {
-          this.createSidebarStickyItem(stickies[j],
-                                       urlItem.treechildren);
-        }
-      }
-    }
+    this.fetchAllItems(key).then((items) => {
+      let [tags, pages, allStickies] = items;
+      this.createSidebarTree();
+      pages.forEach((page) => {
+        const stickies = allStickies
+                .filter((s) => s.page_id === page.id)
+                .filter((s) => !s.is_deleted);
+        if (stickies.length == 0) return;
+        const urlItem = this.createSidebarPageItem(page);
+        stickies.forEach((sticky) => {
+          this.createSidebarStickyItem(sticky, urlItem.treechildren);
+        });
+      });
+    });
     this.updateContextMenuVisibility();
   },
   groupByTag: function(key) {
-    this.createSidebarTree();
-    var tags = stickynotes.Tag.fetchAll();
-    var pages = stickynotes.Page.fetchAll();
-    var allStickies = stickynotes.Sticky.fetchAll(key)
-                                        .filter((s) => !s.is_deleted);
-    var stickies;
-    var tagItem;
-    var i, j, k;
-    for (i = 0; i < tags.length; i++) {
-      stickies = stickynotes.Sticky.fetchByTag(tags[i], key)
-                                   .filter((s) => !s.is_deleted);
-      if (stickies.length > 0) {
-        tagItem = this.createSidebarTagItem(tags[i]);
-        for (j = 0; j < stickies.length; j++) {
-          var item = this.createSidebarStickyItem(stickies[j],
-                                                  tagItem.treechildren);
-          item.tag = tags[i].name;
-          for (k = 0; k < allStickies.length; k++) {
-            if (allStickies[k].id == stickies[j].id)
-              allStickies.splice(k, 1);
-          }
-        }
-      }
-    }
-    if (allStickies.length > 0) {
-      var noTagItem = this.createSidebarTagItem({id: 0, name: 'No Tag'});
+    this.fetchAllItems(key).then((items) => {
+      let [tags, pages, allStickies] = items;
+      this.createSidebarTree();
+      var stickies;
+      var tagItem;
+
+      tags.forEach((t) => {
+        stickies = allStickies
+          .filter((s) => s.tags.some((tag) => tag.id === t.id))
+          .filter((s) => !s.is_deleted);
+        if (stickies.length === 0) return;
+        tagItem = this.createSidebarTagItem(t);
+        stickies.forEach((s) => {
+          const item = this.createSidebarStickyItem(s, tagItem.treechildren);
+          item.tag = t.name;
+        });
+      });
+      const noTagStickies = allStickies.filter((s) => s.tags.length === 0);
+      if (noTagStickies.length === 0) return;
+      const noTagItem = this.createSidebarTagItem({id: 0, name: 'No tag'});
       noTagItem.setAttribute('open', 'true');
-      for (k = 0; k < allStickies.length; k++) {
-        this.createSidebarStickyItem(allStickies[k],
-                                     noTagItem.treechildren);
-      }
-    }
+      noTagStickies.forEach((sticky) => {
+        this.createSidebarStickyItem(sticky, noTagItem.treechildren);
+      });
+    });
     this.updateContextMenuVisibility();
   },
   groupByTime: function(key) {
@@ -543,7 +526,7 @@ stickynotes.Sidebar = {
     var sidebarDoc = this.getSidebarDoc();
     var tree = sidebarDoc.getElementById('sticky');
     if (tree.currentIndex === -1) {
-      return null;
+      return;
     }
     var type = tree.view.getCellText(tree.currentIndex,
                                tree.columns.getNamedColumn('type'));
@@ -561,5 +544,6 @@ stickynotes.Sidebar = {
       deleteMenu.hidden = true;
       exportMenu.hidden = false;
     }
+    return;
   }
 };

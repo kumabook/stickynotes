@@ -43,7 +43,6 @@
     contextMenu.removeEventListener('popupshowing', filterContextMenu, false);
     mainWindow.removeEventListener('click', resizeSidebarHeight, false);
   };
-
   stickynotes.Sidebar.resizeSidebarHeight();
   window.addEventListener('load', init, false);
   window.addEventListener('unload', destroy, false);
@@ -55,7 +54,11 @@
     stickynotes.Sidebar.focusSidebar();
   });
   addon.port.on('add', function(sticky) {
-    stickynotes.Sidebar.addSticky(new stickynotes.Sticky(sticky));
+    stickynotes.Sticky.fetchByUUID(sticky.uuid).then((sticky) => {
+      return sticky.fetchPage();
+    }).then((sticky) => {
+      stickynotes.Sidebar.addSticky(sticky);
+    });
   });
   addon.port.on('delete', function(sticky) {
     stickynotes.Sidebar.deleteSticky(new stickynotes.Sticky(sticky));

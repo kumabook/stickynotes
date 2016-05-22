@@ -40,10 +40,10 @@ exports['test stickynotes.Tag.fetchByName'] = function(assert, done) {
 
 exports['test stickynotes.Tag.fetchAll'] = function(assert, done) {
   TestHelper.runDBTest(assert, done, function() {
-    const promises = [stickynotes.Tag.create({ id: 100, name: 'test'}),
-                      stickynotes.Tag.create({ id: 101, name: 'test1'}),
-                      stickynotes.Tag.create({ id: 102, name: 'test2'})];
-    return Promise.all(promises)
+    return Promise.resolve()
+      .then(    () => stickynotes.Tag.create({ id: 100, name: 'test'}))
+      .then(    () => stickynotes.Tag.create({ id: 101, name: 'test1'}))
+      .then(    () => stickynotes.Tag.create({ id: 102, name: 'test2'}))
       .then(    () => stickynotes.Tag.fetchAll())
       .then((tags) => assert.equal(tags.length, 3));
   });
@@ -51,10 +51,10 @@ exports['test stickynotes.Tag.fetchAll'] = function(assert, done) {
 
 exports['test stickynotes.Tag.remove'] = function(assert, done) {
   TestHelper.runDBTest(assert, done, function() {
-    const promises = [stickynotes.Tag.create({ id: 100, name: 'test'}),
-                      stickynotes.Tag.create({ id: 101, name: 'test1'}),
-                      stickynotes.Tag.create({ id: 102, name: 'test2'})];
-    return Promise.all(promises)
+    return Promise.resolve()
+      .then(() => stickynotes.Tag.create({ id: 100, name: 'test'}))
+      .then(() => stickynotes.Tag.create({ id: 101, name: 'test1'}))
+      .then(() => stickynotes.Tag.create({ id: 102, name: 'test2'}))
       .then(() => stickynotes.Tag.fetchAll())
       .then((tags) => tags[0].remove())
       .then(() => stickynotes.Tag.fetchAll())

@@ -31,9 +31,9 @@ exports['test stickynotes.Page.fetchById()'] = function(assert, done) {
 
 exports['test stickynotes.Page.fetchByUrl()'] = function(assert, done) {
   TestHelper.runDBTest(assert, done, function() {
-    const promises = [stickynotes.Page.create(params),
-                      stickynotes.Page.create(params2)];
-    return Promise.all(promises)
+    return Promise.resolve()
+      .then(() => stickynotes.Page.create(params))
+      .then(() => stickynotes.Page.create(params2))
       .then(() => stickynotes.Page.fetchByUrl('http://test.jp'))
       .then((page) => {
         assert.equal(100, page.id);

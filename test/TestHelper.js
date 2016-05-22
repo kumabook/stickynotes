@@ -1,4 +1,6 @@
-const stickynotes = require('../lib/stickynotes');
+const stickynotes  = require('../lib/stickynotes');
+const timers       = require('sdk/timers');
+const SQL_INTERVAL = 500;
 module.exports = {
   setupDB: function(needMigration) {
     let c;

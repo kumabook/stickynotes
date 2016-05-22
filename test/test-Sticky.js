@@ -195,9 +195,10 @@ exports['test stickynotes.Sticky.prototype.setTags() and getTags()'] = function(
       return stickynotes.Sticky.create(testStickyParam);
     }).then((_sticky) => {
       sticky = _sticky;
-      return Promise.all([stickynotes.Tag.create({name: 'tag1'}),
-                          stickynotes.Tag.create({name: 'tag2'}),
-                          stickynotes.Tag.create({name: 'tag3'})]);
+      return Promise.resolve()
+        .then(() => stickynotes.Tag.create({name: 'tag1'}))
+        .then(() => stickynotes.Tag.create({name: 'tag2'}))
+        .then(() => stickynotes.Tag.create({name: 'tag3'}));
     }).then(() => {
       return sticky.setTags(['tag1']);
     }).then(() => {

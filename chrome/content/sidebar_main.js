@@ -1,7 +1,11 @@
 (function(Cc, Ci) {
-  var Sidebar = stickynotes.Sidebar;
-  var resizeSidebarHeight = Sidebar.resizeSidebarHeight.bind(Sidebar);
-  var filterContextMenu   = Sidebar.filterContextMenu.bind(Sidebar);
+  const logger  = stickynotes.Logger;
+  const Sidebar = stickynotes.Sidebar;
+  const resizeSidebarHeight = Sidebar.resizeSidebarHeight.bind(Sidebar);
+  const filterContextMenu   = Sidebar.filterContextMenu.bind(Sidebar);
+  if (stickynotes.config.logLevel) {
+    logger.setLevel(stickynotes.config.logLevel);
+  }
   var init = function() {
     var root = document.getElementById('sticky');
     if (root == null) return;

@@ -82,6 +82,8 @@
   <script type="application/x-javascript"
           src="chrome://stickynotes/content/stickynotes.js" />
   <script type="application/x-javascript"
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/config.js"/>
+  <script type="application/x-javascript"
           src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/Logger.js"/>
   <script type="application/x-javascript"
           src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/DBHelper.js"/>

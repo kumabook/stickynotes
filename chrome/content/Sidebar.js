@@ -414,10 +414,10 @@ stickynotes.Sidebar = {
     return Promise.all([
       stickynotes.Tag.fetchAll(),
       stickynotes.Page.fetchAll(),
-      stickynotes.Sticky.fetchAll(key).then((stickies) => {
-        return stickies.filter((s) => !s.is_deleted);
-      }).then((stickies) => {
-        return Promise.all(stickies.map((s) => s.fetchTags()));
+      stickynotes.Sticky.fetchAll().then((stickies) => {
+        return stickies.filter((s) => {
+          return !s.is_deleted && s.filter(key);
+        });
       })
     ]);
   },

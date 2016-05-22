@@ -8,6 +8,7 @@ const __stickynotes = {
 };
 __stickynotes.Cc = Components.classes;
 __stickynotes.Ci = Components.interfaces;
+__stickynotes.Cu = Components.utils;
 var require = function(path) {
   if (path === './stickynotes') {
     return __stickynotes;

@@ -29,6 +29,7 @@ module.exports = {
     }).then(() => {
       return this.teardownDB();
     }, (e) => {
+      console.log(e);
       assert.fail(e);
       return this.teardownDB();
     }).then(() => done());
@@ -40,6 +41,7 @@ module.exports = {
     }).then(() => {
       return this.teardownDB();
     }, (e) => {
+      console.log(e);
       assert.fail(e);
       return this.teardownDB();
     }).then(() => done());

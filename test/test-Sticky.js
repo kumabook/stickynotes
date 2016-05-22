@@ -176,11 +176,12 @@ exports['test stickynotes.Sticky.prototype.getPage()'] = function(assert, done) 
       page = _page;
       return stickynotes.Sticky.create(testStickyParam());
     }).then((sticky) => {
-      return sticky.getPage();
-    }).then((page1) => {
-      assert.equal(page1.id   , page.id);
-      assert.equal(page1.url  , page.url);
-      assert.equal(page1.title, page.title);
+      return sticky.fetchPage();
+    }).then((sticky) => {
+      let p = sticky.getPage();
+      assert.equal(p.id   , page.id);
+      assert.equal(p.url  , page.url);
+      assert.equal(p.title, page.title);
       return true;
     });
   });

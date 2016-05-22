@@ -280,13 +280,6 @@ stickynotes.Sidebar = {
   },
   resizeSidebarHeight: function() {
     var Ci = stickynotes.Ci;
-    var mainWindow = window.
-      QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIWebNavigation)
-      .QueryInterface(Ci.nsIDocShellTreeItem)
-      .rootTreeItem
-      .QueryInterface(Ci.nsIInterfaceRequestor)
-      .getInterface(Ci.nsIDOMWindow);
     var doc = this.getSidebarDoc();
     doc.getElementById('sticky').height = window.innerHeight;
   },

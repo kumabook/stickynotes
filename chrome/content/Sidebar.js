@@ -195,15 +195,15 @@ stickynotes.Sidebar = {
     let promise;
     switch (type)  {
     case 'page':
-      promise = stickynotes.Sticky.fetchByPage({ id: id})
+      promise = stickynotes.Sticky.fetchByPage({ id: parseInt(id)})
         .then((ss) => ss.filter((s) => !s.is_deleted));
       break;
-      case 'tag':
-      promise = stickynotes.Sticky.fetchByTag( { id: id})
+    case 'tag':
+      promise = stickynotes.Sticky.fetchByTag( { id: parseInt(id)})
         .then((ss) => ss.filter((s) => !s.is_deleted));
       break;
     case 'sticky':
-      promise = Promise.resolve([stickynotes.Sticky.fetchByUUID(id)]);
+      promise = stickynotes.Sticky.fetchByUUID(id).then((s) => s ? [s] : []);
       break;
     default:
       promise = Promise.resolve([]);

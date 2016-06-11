@@ -7,6 +7,9 @@ stickynotes.Sidebar = {
   close: function() {
     window.close();
   },
+  getDateString: function(sticky) {
+    return sticky.updated_at.substring(0, 10);
+  },
   getCurrentPageUrl: function() {
     if (window.content) {
       return window.content.document.location.href;
@@ -124,6 +127,32 @@ stickynotes.Sidebar = {
     treeitem_sticky.appendChild(t.treerow_sticky);
     parent.appendChild(treeitem_sticky);
     return treeitem_sticky;
+  },
+  createSidebarDateItem: function(date) {
+    var sidebarDoc = this.getSidebarDoc();
+    var parent = sidebarDoc.getElementById('sticky_tree');
+    var treeitem = sidebarDoc.createElement('treeitem');
+    treeitem.setAttribute('id', 'treeitem_date_' + date);
+    treeitem.setAttribute('container', 'true');
+
+    treeitem.setAttribute('open', 'true');
+    var treerow       = document.createElement('treerow');
+    var treecell_text = document.createElement('treecell');
+    var treecell_id   = document.createElement('treecell');
+    var treecell_type = document.createElement('treecell');
+    treecell_text.setAttribute('label', date);
+    treecell_id.setAttribute('label', date);
+    treecell_type.setAttribute('label', 'date');
+    treerow.appendChild(treecell_text);
+    treerow.appendChild(treecell_id);
+    treerow.appendChild(treecell_type);
+    var treechildren = document.createElement('treechildren');
+    treechildren.setAttribute('id', 'tree_date_' + date);
+    treeitem.appendChild(treerow);
+    treeitem.appendChild(treechildren);
+    parent.appendChild(treeitem);
+    treeitem.treechildren = treechildren;
+    return treeitem;
   },
   createSidebarPageItem: function(page, parent, id) {
     var sidebarDoc = this.getSidebarDoc();
@@ -292,13 +321,22 @@ stickynotes.Sidebar = {
   addSticky: function(sticky) {
     const doc          = this.getSidebarDoc();
     const selectedsort = this.getSelectedSort();
-    doc.getElementById('by' + selectedsort).setAttribute('checked', true);
+    doc.getElementById('by_' + selectedsort).setAttribute('checked', true);
     const tags = sticky.tags.concat();
     if (tags.length === 0) {
       tags.push(new stickynotes.Tag({id: 0, name: 'No tag'}));
     }
     let parent;
     switch (selectedsort) {
+     case 'updated_at':
+      var dateStr = this.getDateString(sticky);
+      var dateItem = doc.getElementById('tree_date_' + dateStr);
+      parent = dateItem;
+      if (!dateItem) {
+        parent = this.createSidebarDateItem(dateStr).treechildren;
+      }
+      this.createSidebarStickyItem(sticky, parent);
+      break;
      case 'tag+site':
       tags.forEach((tag) => {
         const id = 'tree_page_' + sticky.page_id + '_tag_' + tag.id;
@@ -381,9 +419,15 @@ stickynotes.Sidebar = {
     if (!selectedsort) {
       selectedsort = this.getSelectedSort();
     }
-    doc.getElementById('by' + selectedsort)
+    doc.getElementById('by_' + selectedsort)
       .setAttribute('checked', true);
     switch (selectedsort) {
+    case 'created_at':
+      this.groupByCreatedAt(key);
+      break;
+    case 'updated_at':
+      this.groupByUpdatedAt(key);
+      break;
     case 'tag+site':
       this.groupByTagAndSite(key);
       break;
@@ -393,16 +437,13 @@ stickynotes.Sidebar = {
     case 'tag':
       this.groupByTag(key);
       break;
-    case 'time':
-      this.groupByTime(key);
-      break;
     }
   },
-  fetchAllItems: function(key) {
+  fetchAllItems: function(key, orderBy=stickynotes.Sticky.OrderBy.Alphabetical) {
     return Promise.all([
       stickynotes.Tag.fetchAll(),
       stickynotes.Page.fetchAll(),
-      stickynotes.Sticky.fetchAll().then((stickies) => {
+      stickynotes.Sticky.fetchAll(orderBy).then((stickies) => {
         return stickies.filter((s) => {
           return !s.isDeleted() && s.filter(key);
         });
@@ -497,8 +538,31 @@ stickynotes.Sidebar = {
     });
     this.updateContextMenuVisibility();
   },
-  groupByTime: function(key) {
-    this.createSidebarTree();
+  groupByCreatedAt: function(key) {
+    this.groupByDate(key, stickynotes.Sticky.OrderBy.CreatedAt);
+  },
+  groupByUpdatedAt: function(key) {
+    this.groupByDate(key, stickynotes.Sticky.OrderBy.UpdatedAt);
+  },
+  groupByDate: function(key, orderBy) {
+    this.fetchAllItems(key, orderBy).then((items) => {
+      let [tags, pages, allStickies] = items;
+      this.createSidebarTree();
+      var _items = [];
+      allStickies.forEach((s) => {
+        var dateStr = this.getDateString(s);
+        var dateItem = null;
+        var item = _items.find((i) => i.id === dateStr);
+        if (item) {
+          dateItem = item.elem;
+        } else {
+          dateItem = this.createSidebarDateItem(dateStr);
+          _items.push({ id: dateStr, elem: dateItem });
+        }
+        this.createSidebarStickyItem(s, dateItem.treechildren);
+      });
+    });
+    this.updateContextMenuVisibility();
   },
   searchSticky: function(key) {
     this.groupBy(null, key);

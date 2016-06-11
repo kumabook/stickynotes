@@ -14,6 +14,8 @@
 <!ENTITY sticky_list.sidebarHide "Hide this sticky">
 <!ENTITY sticky_list.sidebarVisible "Display this sticky">
 <!ENTITY sticky_list.sidebarExport "Export">
+<!ENTITY stickynotes.list_by_created_at "Date created">
+<!ENTITY stickynotes.list_by_updated_at "Date modified">
 <!ENTITY stickynotes.list_by_tag_and_site "Both tag and site">
 <!ENTITY stickynotes.list_by_site "Site">
 <!ENTITY stickynotes.list_by_tag "Tag">

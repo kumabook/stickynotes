@@ -17,7 +17,7 @@ exports['test stickynotes.DBHelper.migrate'] = function(assert, done) {
       }).then(() => {
         return stickynotes.DBHelper.getVersion(c);
       }).then((version) => {
-        assert.equal(1, version);
+        assert.equal(2, version);
         return true;
       }).then(() => {
         c.close();

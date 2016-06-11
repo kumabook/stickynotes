@@ -79,8 +79,10 @@ var onFocusSticky = function(sticky) {
 
 var load = function(stickies) {
   stickies.forEach(function(s) {
-    var view = stickynotes.createStickyView(s);
-    document.body.appendChild(view.dom);
+    if (s.state !== stickynotes.StickyView.State.Deleted) {
+      var view = stickynotes.createStickyView(s);
+      document.body.appendChild(view.dom);
+    }
   });
 };
 
@@ -113,7 +115,7 @@ var onImport = function(createdStickies, updatedStickies) {
   logger.trace('page-mod: import stickies.');
   load(createdStickies);
   updatedStickies.forEach(function(sticky) {
-    if (sticky.is_deleted) {
+    if (sticky.state === stickynotes.StickyView.State.Deleted) {
       stickynotes.StickyView.deleteDom(sticky);
     } else {
       stickynotes.StickyView.updateDom(sticky);

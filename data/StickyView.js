@@ -37,11 +37,21 @@ stickynotes.StickyView = function(param) {
   this.isDragging = false;
 };
 
+stickynotes.StickyView.State = {
+  Normal: 0,
+  Deleted: 1,
+  Minimized: 2
+};
+
 stickynotes.StickyView.deleteAll = function() {
   var elements = stickynotes.doc.getElementsByClassName(CLASS);
   for (var i = elements.length - 1; i >= 0; i--) {
     stickynotes.doc.body.removeChild(elements[i]);
   }
+};
+
+stickynotes.StickyView.prototype.isMinimized = function() {
+  return this.sticky.state === stickynotes.StickyView.State.Minimized;
 };
 
 /**
@@ -50,8 +60,6 @@ stickynotes.StickyView.deleteAll = function() {
 stickynotes.StickyView.prototype.updateDom = function() {
   this.dom.style.left       = this.sticky.left   + 'px';
   this.dom.style.top        = this.sticky.top    + 'px';
-  this.dom.style.width      = this.sticky.width  + 'px';
-  this.dom.style.height     = this.sticky.height + 'px';
   this.updateClassName();
   this.statusUpdated();
   var textarea              = this.textarea;
@@ -59,11 +67,22 @@ stickynotes.StickyView.prototype.updateDom = function() {
   textarea.id               = 'sticky_id_' + this.sticky.uuid;
   textarea.placeholder      = stickynotes.strings['sticky.placeholderText'];
   textarea.sticky           = this;
+  if (this.isMinimized()) {
+    this.dom.style.width        = null;
+    this.dom.style.height       = null;
+    this.toolbar.style.display  = 'none';
+    this.textarea.style.display = 'none';
+  } else {
+    this.dom.style.width        = this.sticky.width + 'px';
+    this.dom.style.height       = this.sticky.height + 'px';
+    this.toolbar.style.display  = null;
+    this.textarea.style.display = null;
+  }
 };
 
 stickynotes.StickyView.prototype.updateClassName = function() {
   var classNames = [CLASS];
-  if (this.sticky.status === 'minimized') {
+  if (this.isMinimized()) {
     classNames.push(MINIMIZED);
   }
   if (this.isDragging) {
@@ -74,7 +93,7 @@ stickynotes.StickyView.prototype.updateClassName = function() {
 
 stickynotes.StickyView.prototype.statusUpdated = function() {
   var color = stickynotes.ColorPicker.getColorById(this.sticky.color);
-  if (this.sticky.status === 'minimized') {
+  if (this.isMinimized()) {
     let c = color.background;
     let colors = ['rgb(200,200,200)', 'rgb(222,222,222)'];
     this.dom.style.background = 'linear-gradient(to right,' + colors.join(',') + ')';
@@ -337,24 +356,18 @@ stickynotes.StickyView.prototype.isEditing = function() {
 };
 
 stickynotes.StickyView.prototype.minimize = function() {
-  this.dom.style.width        = null;
-  this.dom.style.height       = null;
-  this.toolbar.style.display  = 'none';
-  this.textarea.style.display = 'none';
-  this.sticky.status          = 'minimized';
+  this.sticky.state = stickynotes.StickyView.State.Minimized;
   this.updateClassName();
   this.statusUpdated();
+  this.updateDom();
   this.hideDialog();
 };
 
 stickynotes.StickyView.prototype.maximize = function() {
-  this.dom.style.width        = this.sticky.width + 'px';
-  this.dom.style.height       = this.sticky.height + 'px';
-  this.toolbar.style.display  = null;
-  this.textarea.style.display = null;
-  this.sticky.status          = 'normal';
+  this.sticky.state = stickynotes.StickyView.State.Normal;
   this.updateClassName();
   this.statusUpdated();
+  this.updateDom();
 };
 
 stickynotes.StickyView.prototype.toggleMenuDialog = function() {

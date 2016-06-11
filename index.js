@@ -208,7 +208,6 @@ var resolveStickies = function(stickies) {
       }
       delete s.page_id;
       delete s.id;
-      s.is_deleted = Boolean(s.is_deleted);
     });
     return stickies;
   });
@@ -236,7 +235,7 @@ var deleteSticky = function(sticky) {
 
   var _sticky = new stickynotes.Sticky(sticky);
   if (ApiClient.isLoggedIn()) {
-    _sticky.is_deleted = true;
+    _sticky.state = stickynotes.Sticky.State.Deleted;
     _sticky.save().then(() => {
       emitAll(contentWorkers, 'delete-sticky', _sticky);
       emitAll(sidebarWorkers,        'delete', _sticky);
@@ -261,8 +260,7 @@ var createStickyWithMessage = function (message) {
     title: title,
     content: '',
     color: 'yellow',
-    tags: '',
-    is_deleted: false
+    tags: ''
   }).then((sticky) => {
     emitAll(contentWorkers,'create-sticky', sticky, message.url);
     emitAll(sidebarWorkers,          'add', sticky);
@@ -484,7 +482,7 @@ var importStickies = function(stickies) {
       sticky = _sticky;
       if (sticky) {
         updatedStickies.push(sticky);
-        if (!s.is_deleted) {
+        if (s.state !== stickynotes.Sticky.State.Deleted) {
           return sticky.update(s)
             .then(() => sticky.save())
             .then(() => sticky.setTags(s.tags))
@@ -497,7 +495,7 @@ var importStickies = function(stickies) {
           });
           }
       } else {
-        if (!s.is_deleted) {
+        if (s.state !== stickynotes.Sticky.State.Deleted) {
           return stickynotes.Sticky.create(s).then((sticky) => {
             logger.trace('Created ' + sticky.uuid);
             createdStickies.push(sticky);

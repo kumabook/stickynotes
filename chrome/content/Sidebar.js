@@ -196,11 +196,11 @@ stickynotes.Sidebar = {
     switch (type)  {
     case 'page':
       promise = stickynotes.Sticky.fetchByPage({ id: parseInt(id)})
-        .then((ss) => ss.filter((s) => !s.is_deleted));
+        .then((ss) => ss.filter((s) => !s.isDeleted()));
       break;
     case 'tag':
       promise = stickynotes.Sticky.fetchByTag( { id: parseInt(id)})
-        .then((ss) => ss.filter((s) => !s.is_deleted));
+        .then((ss) => ss.filter((s) => !s.isDeleted()));
       break;
     case 'sticky':
       promise = stickynotes.Sticky.fetchByUUID(id).then((s) => s ? [s] : []);
@@ -416,7 +416,7 @@ stickynotes.Sidebar = {
       stickynotes.Page.fetchAll(),
       stickynotes.Sticky.fetchAll().then((stickies) => {
         return stickies.filter((s) => {
-          return !s.is_deleted && s.filter(key);
+          return !s.isDeleted() && s.filter(key);
         });
       })
     ]);
@@ -428,7 +428,7 @@ stickynotes.Sidebar = {
       this.createSidebarTree();
       tags.forEach((t) => {
         const stickies = allStickies.filter((sticky) => {
-          return !sticky.is_deleted && sticky.tags.some((tag) => t.id === tag.id);
+          return !sticky.isDeleted() && sticky.tags.some((tag) => t.id === tag.id);
         });
         if (stickies.length === 0) return;
         let tagItem = this.createSidebarTagItem({id: t.id, name: t.name});
@@ -471,7 +471,7 @@ stickynotes.Sidebar = {
       pages.forEach((page) => {
         const stickies = allStickies
                 .filter((s) => s.page_id === page.id)
-                .filter((s) => !s.is_deleted);
+                .filter((s) => !s.isDeleted());
         if (stickies.length == 0) return;
         const urlItem = this.createSidebarPageItem(page);
         stickies.forEach((sticky) => {
@@ -491,7 +491,7 @@ stickynotes.Sidebar = {
       tags.forEach((t) => {
         stickies = allStickies
           .filter((s) => s.tags.some((tag) => tag.id === t.id))
-          .filter((s) => !s.is_deleted);
+          .filter((s) => !s.isDeleted());
         if (stickies.length === 0) return;
         tagItem = this.createSidebarTagItem(t);
         stickies.forEach((s) => {

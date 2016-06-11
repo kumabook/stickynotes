@@ -38,13 +38,15 @@ stickynotes.createStickyView = function(sticky) {
     onMoveEnd: function(e) {
       sticky.left = parseInt(stickyView.dom.style.left);
       sticky.top = parseInt(stickyView.dom.style.top);
-      stickynotes.saveSticky(sticky, {
-        left: sticky.left,
-        top: sticky.top
-      });
+      setTimeout(() => {
+        stickynotes.saveSticky(sticky, {
+          left: sticky.left,
+          top: sticky.top
+        });
+      }, 0); // Wait for minized button handler
     },
     onResizeEnd: function(e) {
-      if (stickyView.status !== 'minimized') {
+      if (stickyView.isMinimized()) {
         sticky.width = parseInt(stickyView.dom.style.width);
         sticky.height = parseInt(stickyView.dom.style.height) + 7;
         stickynotes.saveSticky(sticky, {

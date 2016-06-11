@@ -68,7 +68,7 @@
       stickynotes.Sidebar.addSticky(new stickynotes.Sticky(s));
     });
     updatedStickies.forEach(function(s) {
-      if (s.is_deleted) {
+      if (s.state === stickynotes.Sticky.State.Deleted) {
         stickynotes.Sidebar.deleteSticky(new stickynotes.Sticky(s));
       } else {
         stickynotes.Sidebar.updateSticky(new stickynotes.Sticky(s));

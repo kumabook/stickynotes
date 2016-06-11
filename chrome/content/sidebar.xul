@@ -37,24 +37,34 @@
     <button id="display-option-button" style="min-width:0px !important;"
             tabIndex="2"
             type="menu" label="&stickynotes.display;"
-            selectedsort="site" persist="selectedsort">
+            selectedsort="updated_at" persist="selectedsort">
       <menupopup id="display-option-menupopup">
-      <menuitem id="bytag+site"
-                label="&stickynotes.list_by_tag_and_site;"
-                accesskey="b" type="radio"
-                oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag+site'); stickynotes.Sidebar.groupBy('tag+site');" >
-      </menuitem>
-      <menuitem id="bysite"
-                label="&stickynotes.list_by_site;"
-                accesskey="s" type="radio"
-                oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'site'); stickynotes.Sidebar.groupBy('site');">
-      </menuitem>
-      <menuitem id="bytag"
-                label="&stickynotes.list_by_tag;"
-                accesskey="t"
-                type="radio"
-                oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag'); stickynotes.Sidebar.groupBy('tag');" >
-      </menuitem>
+        <menuitem id="by_created_at"
+                  label="&stickynotes.list_by_created_at;"
+                  accesskey="l" type="radio"
+                  oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'created_at'); stickynotes.Sidebar.groupBy('created_at');" >
+        </menuitem>
+        <menuitem id="by_updated_at"
+                  label="&stickynotes.list_by_updated_at;"
+                  accesskey="l" type="radio"
+                  oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'updated_at'); stickynotes.Sidebar.groupBy('updated_at');" >
+        </menuitem>
+        <menuitem id="by_tag+site"
+                  label="&stickynotes.list_by_tag_and_site;"
+                  accesskey="b" type="radio"
+                  oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag+site'); stickynotes.Sidebar.groupBy('tag+site');" >
+        </menuitem>
+        <menuitem id="by_site"
+                  label="&stickynotes.list_by_site;"
+                  accesskey="s" type="radio"
+                  oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'site'); stickynotes.Sidebar.groupBy('site');">
+        </menuitem>
+        <menuitem id="by_tag"
+                  label="&stickynotes.list_by_tag;"
+                  accesskey="t"
+                  type="radio"
+                  oncommand="this.parentNode.parentNode.setAttribute('selectedsort', 'tag'); stickynotes.Sidebar.groupBy('tag');" >
+        </menuitem>
       </menupopup>
     </button>
   </hbox>

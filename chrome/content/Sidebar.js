@@ -7,6 +7,13 @@ stickynotes.Sidebar = {
   close: function() {
     window.close();
   },
+  getCurrentPageUrl: function() {
+    if (window.content) {
+      return window.content.document.location.href;
+    } else {
+      return null;
+    }
+  },
   updateContextMenuVisibility: function() {
     if (document.getElementById('sticky_tree').childNodes.length === 0) {
       document.getElementById('context-menu').hidden = true;
@@ -125,7 +132,8 @@ stickynotes.Sidebar = {
     var treeitem = sidebarDoc.createElement('treeitem');
     treeitem.setAttribute('id', id ? id : 'treeitem_page_' + page.id);
     treeitem.setAttribute('container', 'true');
-    if (page.url == window.content.document.location.href) {
+
+    if (page.url == this.getCurrentPageUrl()) {
       treeitem.setAttribute('open', 'true');
     } else {
       treeitem.setAttribute('open', 'false');

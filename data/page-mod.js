@@ -113,7 +113,7 @@ var onImport = function(createdStickies, updatedStickies) {
   logger.trace('page-mod: import stickies.');
   load(createdStickies);
   updatedStickies.forEach(function(sticky) {
-    if (sticky.is_deleted) {
+    if (sticky.state === stickynotes.Sticky.State.Deleted) {
       stickynotes.StickyView.deleteDom(sticky);
     } else {
       stickynotes.StickyView.updateDom(sticky);

@@ -239,6 +239,7 @@ stickynotes.StickyView.prototype.unbind = function() {
   this.deleteButton.removeEventListener(  'click', this.onClickDeleteButton);
   this.minimizeButton.removeEventListener('click', this.onClickMinimizeButton);
   this.editTagButton.removeEventListener( 'click', this.onClickEditTagButton);
+  this.editTagButton.removeEventListener( 'focus', this.onClickEditTagButton);
   this.menuButton.removeEventListener(    'click', this.onClickMenuButton);
 
   this.textarea.removeEventListener('change'   , this.onContentChange);

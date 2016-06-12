@@ -258,19 +258,6 @@ stickynotes.Sidebar = {
     displayOptionButton.open = true;
     displayOptionButton.focus();
   },
-  toggleVisibilityAllStickies: function() {
-    var doc = window.content.document;
-    var URL = doc.location.href;
-    var page = DOA.getPageByUrl(URL);
-    var stickies = DOA.getStickiesByPageId(page.id);
-    for (var i = 0; i < stickies.length; i++) {
-      var stickyDom = doc.getElementById('sticky' + stickies[i].id);
-      if (sticky.style.visibility == 'hidden')
-        stickyDom.style.visibility = 'visible';
-      else
-        stickyDom.style.visibility = 'hidden';
-    }
-  },
   resizeSidebarHeight: function() {
     var Ci = stickynotes.Ci;
     var doc = this.getSidebarDoc();

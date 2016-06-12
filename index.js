@@ -279,6 +279,9 @@ var jump2Sticky = function(sticky, dstUrl) {
       }
     }
   });
+  if (tabs.activeTab.url !== dstUrl) {
+    tabs.activeTab.url = dstUrl;
+  }
 };
 
 var toggleVisibilityWithMessage = function (message) {

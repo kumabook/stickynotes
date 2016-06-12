@@ -230,22 +230,15 @@ stickynotes.Sidebar = {
       this.close();
       return;
     }
+    var sidebarDoc = this.getSidebarDoc();
     stickynotes.Sticky.fetchByUUID(this.getSelectedItemId()).then((sticky) => {
       if (sticky == null) {
         return Promise.resolve(true);
       }
       return sticky.fetchPage().then(() => {
         const page = sticky.getPage();
+        sidebarDoc.activeElement.blur();
         addon.port.emit('jump', sticky, page.url);
-        document.getElementById('sticky').blur();
-        if (window.content.document.location.href != page.url) {
-          let Cc = stickynotes.Cc;
-          let Ci = stickynotes.Ci;
-          Cc['@mozilla.org/timer;1'].createInstance(Ci.nsITimer).initWithCallback(
-            function() { window.content.document.location.href = page.url;  },
-            200,
-            Ci.nsITimer.TYPE_ONE_SHOT);
-        }
       });
     });
   },

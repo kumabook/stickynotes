@@ -545,6 +545,7 @@ stickynotes.Sidebar = {
     this.groupByDate(key, stickynotes.Sticky.OrderBy.UpdatedAt);
   },
   groupByDate: function(key, orderBy) {
+    var sidebarDoc = this.getSidebarDoc();
     this.fetchAllItems(key, orderBy).then((items) => {
       let [tags, pages, allStickies] = items;
       this.createSidebarTree();
@@ -559,7 +560,15 @@ stickynotes.Sidebar = {
           dateItem = this.createSidebarDateItem(dateStr);
           _items.push({ id: dateStr, elem: dateItem });
         }
-        this.createSidebarStickyItem(s, dateItem.treechildren);
+        const id = 'tree_page_' + s.page_id + '_date_' + dateStr;
+        let pageItem = sidebarDoc.getElementById(id);
+        if (!pageItem) {
+          const page = pages.find((p) => p.id == s.page_id);
+          pageItem = this.createSidebarPageItem(page,
+                                                dateItem.treechildren,
+                                                id);
+        }
+        this.createSidebarStickyItem(s, pageItem.treechildren);
       });
     });
     this.updateContextMenuVisibility();

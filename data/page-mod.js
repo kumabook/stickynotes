@@ -81,7 +81,7 @@ var load = function(stickies) {
   stickies.forEach(function(s) {
     if (s.state !== stickynotes.StickyView.State.Deleted) {
       var view = stickynotes.createStickyView(s);
-      document.body.appendChild(view.dom);
+      view.attachDom();
     }
   });
 };

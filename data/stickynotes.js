@@ -24,9 +24,7 @@ stickynotes.createStickyView = function(sticky) {
     },
     onTextareaChange: function(e) {
       sticky.content = this.textarea.value;
-      stickynotes.saveSticky(sticky, {
-        content: this.textarea.value
-      });
+      stickynotes.saveSticky(sticky);
     },
     onColorChange: function(colorItem) {
       sticky.color = colorItem.id;
@@ -41,21 +39,20 @@ stickynotes.createStickyView = function(sticky) {
       sticky.left = parseInt(stickyView.dom.style.left);
       sticky.top = parseInt(stickyView.dom.style.top);
       setTimeout(() => {
-        stickynotes.saveSticky(sticky, {
-          left: sticky.left,
-          top: sticky.top
-        });
+        stickynotes.saveSticky(sticky);
       }, 0); // Wait for minized button handler
     },
     onResizeEnd: function(e) {
       if (stickyView.isMinimized()) {
         sticky.width = parseInt(stickyView.dom.style.width);
         sticky.height = parseInt(stickyView.dom.style.height) + 7;
-        stickynotes.saveSticky(sticky, {
-          width: sticky.width,
-          height: sticky.height
-        });
+        stickynotes.saveSticky(sticky);
       }
+    },
+    onPinEnd: function() {
+      sticky.left = parseInt(stickyView.dom.style.left);
+      sticky.top = parseInt(stickyView.dom.style.top);
+      stickynotes.saveSticky(sticky);
     }
   });
   return stickyView;

@@ -160,7 +160,7 @@ if (!stickynotes.isAlreadyLoaded()) {
   self.port.on('import',            onImport);
   self.port.on('load-css',          loadCSS);
 
-  document.addEventListener('mousedown', watchClickPosition, false);
+  document.addEventListener('mousedown', watchClickPosition, true);
   window.addEventListener('hashchange',  onHashChange);
   window.addEventListener('popstate',    onPopState);
 

@@ -13,7 +13,7 @@
 <!ENTITY sticky_list.sidebarHide "付箋を非表示にする">
 <!ENTITY sticky_list.sidebarVisible "付箋を表示する">
 <!ENTITY sticky_list.sidebarExport "エクスポート">
-<!ENTITY stickynotes.list_by_updated_at "作成日時順">
+<!ENTITY stickynotes.list_by_created_at "作成日時順">
 <!ENTITY stickynotes.list_by_updated_at "更新日時順">
 <!ENTITY stickynotes.list_by_tag_and_site "タグとサイト名別">
 <!ENTITY stickynotes.list_by_site "サイト名別">

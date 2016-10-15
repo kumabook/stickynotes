@@ -482,33 +482,32 @@ var importStickies = function(stickies) {
   logger.trace('import ' + stickies.length + ' stickies.');
   var createdStickies = [];
   var updatedStickies = [];
-  let sticky;
   stickies.reduce((p, s) => {
     return p.then(() => {
       return stickynotes.Sticky.fetchByUUID(s.uuid);
-    }).then((_sticky) => {
-      sticky = _sticky;
+    }).then((sticky) => {
       if (sticky) {
-        updatedStickies.push(sticky);
         if (s.state !== stickynotes.Sticky.State.Deleted) {
-          return sticky.update(s)
-            .then(() => sticky.save())
+          sticky.update(s);
+          return sticky.save()
             .then(() => sticky.setTags(s.tags))
             .then(() => {
-              logger.trace('Updated ' + sticky.uuid);
-            });
+              logger.info('Updated ' + sticky.uuid);
+              updatedStickies.push(sticky);
+            })
+            .catch((e) => logger.error(e));
         } else {
           return sticky.remove().then(() => {
-            logger.trace('Removed ' + sticky.uuid);
+            logger.info('Removed ' + sticky.uuid);
           });
           }
       } else {
         if (s.state !== stickynotes.Sticky.State.Deleted) {
           return stickynotes.Sticky.create(s).then((sticky) => {
-            logger.trace('Created ' + sticky.uuid);
+            logger.info('Created ' + sticky.uuid);
             createdStickies.push(sticky);
           }).catch((e) => {
-            logger.trace('Failed to created ' + sticky.uuid);
+            logger.info('Failed to created ' + sticky.uuid);
           });
         } else {
           logger.trace('already removed ' + s.uuid);
@@ -519,13 +518,12 @@ var importStickies = function(stickies) {
   }, Promise.resolve()).then(() => {
     contentWorkers.forEach(function(w) {
       w.port.emit('import',
-                  createdStickies.filter((s) => w.url == s.getPage().url),
-                  updatedStickies.filter((s) => w.url == s.getPage().url));
+                  createdStickies.filter((s) => w.url == s.getUrl()),
+                  updatedStickies.filter((s) => w.url == s.getUrl()));
     });
-  });
-
-  sidebarWorkers.forEach(function(w) {
-    w.port.emit('import', createdStickies, updatedStickies);
+    sidebarWorkers.forEach(function(w, i) {
+      w.port.emit('import', createdStickies, updatedStickies);
+    });
   });
 };
 
@@ -550,7 +548,7 @@ var sync = function() {
     }
     stickynotes.lastSynced = new Date();
     startSyncTimer();
-  }, function(error) {
+  }).catch(function(error) {
     startSyncTimer();
   });
 };

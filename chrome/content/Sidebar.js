@@ -7,8 +7,8 @@ stickynotes.Sidebar = {
   close: function() {
     window.close();
   },
-  getDateString: function(sticky) {
-    return sticky.updated_at.substring(0, 10);
+  getDateString: function(date) {
+    return date.substring(0, 10);
   },
   getCurrentPageUrl: function() {
     if (window.content) {
@@ -318,26 +318,42 @@ stickynotes.Sidebar = {
       selectedsort = 'tag+site';
     return selectedsort;
   },
+  addDateSidebarItem(sticky, date) {
+    const doc          = this.getSidebarDoc();
+    const selectedsort = this.getSelectedSort();
+    let parent;
+    let dateStr = this.getDateString(date);
+    let dateItem = doc.getElementById('treeitem_date_' + dateStr);
+    if (!dateItem) {
+      dateItem = this.createSidebarDateItem(dateStr);
+    }
+    const id = 'tree_page_' + sticky.page_id + '_date_' + dateStr;
+    let pageItem = doc.getElementById(id);
+    if (!pageItem) {
+      stickynotes.Page.fetchById(sticky.page_id).then((page) => {
+        pageItem = this.createSidebarPageItem(page, dateItem.treechildren, id);
+        this.createSidebarStickyItem(sticky, pageItem.treechildren);
+      });
+    } else {
+      this.createSidebarStickyItem(sticky, pageItem.treechildren);
+    }
+  },
   addSticky: function(sticky) {
     const doc          = this.getSidebarDoc();
     const selectedsort = this.getSelectedSort();
-    doc.getElementById('by_' + selectedsort).setAttribute('checked', true);
     const tags = sticky.tags.concat();
     if (tags.length === 0) {
       tags.push(new stickynotes.Tag({id: 0, name: 'No tag'}));
     }
     let parent;
     switch (selectedsort) {
-     case 'updated_at':
-      var dateStr = this.getDateString(sticky);
-      var dateItem = doc.getElementById('tree_date_' + dateStr);
-      parent = dateItem;
-      if (!dateItem) {
-        parent = this.createSidebarDateItem(dateStr).treechildren;
-      }
-      this.createSidebarStickyItem(sticky, parent);
+    case 'created_at':
+      this.addDateSidebarItem(sticky, sticky.created_at);
       break;
-     case 'tag+site':
+    case 'updated_at':
+      this.addDateSidebarItem(sticky, sticky.updated_at);
+      break;
+    case 'tag+site':
       tags.forEach((tag) => {
         const id = 'tree_page_' + sticky.page_id + '_tag_' + tag.id;
         parent = doc.getElementById(id);
@@ -352,8 +368,8 @@ stickynotes.Sidebar = {
         this.createSidebarStickyItem(sticky, parent);
       });
       break;
-     case 'site':
-      var url_item = doc.getElementById('tree_page_' + sticky.page_id);
+    case 'site':
+      let url_item = doc.getElementById('tree_page_' + sticky.page_id);
       parent = url_item;
       if (!url_item) {
         parent = this.createSidebarPageItem(sticky.getPage()).treechildren;
@@ -368,8 +384,6 @@ stickynotes.Sidebar = {
         }
         this.createSidebarStickyItem(sticky, parent);
       });
-      break;
-     case 'time':
       break;
     }
     this.updateContextMenuVisibility();
@@ -539,19 +553,19 @@ stickynotes.Sidebar = {
     this.updateContextMenuVisibility();
   },
   groupByCreatedAt: function(key) {
-    this.groupByDate(key, stickynotes.Sticky.OrderBy.CreatedAt);
+    this.groupByDate(key, stickynotes.Sticky.OrderBy.CreatedAt, 'created_at');
   },
   groupByUpdatedAt: function(key) {
-    this.groupByDate(key, stickynotes.Sticky.OrderBy.UpdatedAt);
+    this.groupByDate(key, stickynotes.Sticky.OrderBy.UpdatedAt, 'updated_at');
   },
-  groupByDate: function(key, orderBy) {
+  groupByDate: function(key, orderBy, dateKey) {
     var sidebarDoc = this.getSidebarDoc();
     this.fetchAllItems(key, orderBy).then((items) => {
       let [tags, pages, allStickies] = items;
       this.createSidebarTree();
       var _items = [];
       allStickies.forEach((s) => {
-        var dateStr = this.getDateString(s);
+        var dateStr = this.getDateString(s[dateKey]);
         var dateItem = null;
         var item = _items.find((i) => i.id === dateStr);
         if (item) {

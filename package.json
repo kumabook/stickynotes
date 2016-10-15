@@ -6,11 +6,17 @@
   "description": "Put sticky notes on the web page",
   "main": "index.js",
   "author": "Hiroki Kumamoto",
+  "scripts": {
+    "get-unbranded-firefox": "get-firefox -ecb unbranded-release"
+  },
   "engines": {
     "firefox": ">=38.0a1"
   },
   "license": "MIT",
   "keywords": [
     "jetpack"
-  ]
+  ],
+  "devDependencies": {
+    "get-firefox": "^1.5.0"
+  }
 }

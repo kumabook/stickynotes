@@ -18,5 +18,8 @@
   ],
   "devDependencies": {
     "get-firefox": "^1.5.0"
+  },
+  "permissions": {
+    "multiprocess": true
   }
 }

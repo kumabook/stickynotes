@@ -385,6 +385,11 @@ stickynotes.StickyView.prototype.toggleTagDialog = function() {
   }
 };
 
+stickynotes.StickyView.prototype.isChanged = function(sticky) {
+  const keys = ['left', 'top', 'width', 'height', 'content', 'color', 'state'];
+  return keys.some((key) => this.sticky[key] !== sticky[key]);
+};
+
 /**
  * toString
  * @return {String} string.
@@ -426,7 +431,7 @@ stickynotes.StickyView.deleteDom = function(sticky) {
 
 stickynotes.StickyView.updateDom = function(sticky) {
   let dom = stickynotes.doc.getElementById('sticky' + sticky.uuid);
-  if (dom && dom.__stickyView) {
+  if (dom && dom.__stickyView && dom.__stickyView.isChanged(sticky)) {
     let str = 'Current editing sticky is updated. Do you update the sticky?';
     if (dom.__stickyView.isEditing() && !confirm(str)) {
       return;

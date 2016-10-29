@@ -498,9 +498,9 @@ stickynotes.Sidebar = {
       if (noTagStickies.length === 0) return;
       const noTagItem = this.createSidebarTagItem({ id: 0, name: 'No tag'});
       noTagItem.setAttribute('open', 'true');
-      allStickies.forEach((s) => {
+      noTagStickies.forEach((s) => {
         const page = pages.find((page) => page.id === s.page_id);
-        const pageItem = doc.getElementById('tree_page_' + s.page_id + '_tag_' + '0');
+        let pageItem = doc.getElementById('tree_page_' + s.page_id + '_tag_' + '0');
         if (!pageItem) {
           pageItem = this.createSidebarPageItem(
             page,

@@ -417,7 +417,7 @@ stickynotes.StickyView.toggleVisibilityAllStickies = function(stickies) {
 };
 
 stickynotes.StickyView.deleteDom = function(sticky) {
-  var dom = stickynotes.doc.getElementById('sticky' + sticky.uuid);
+  const dom = stickynotes.doc.getElementById('sticky' + sticky.uuid);
   if (dom && dom.__stickyView) {
     dom.__stickyView.sticky = sticky;
     dom.__stickyView.deleteDom();

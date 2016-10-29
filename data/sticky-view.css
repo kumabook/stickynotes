@@ -13,7 +13,7 @@
 .stickynotes-sticky-minimized {
     border-radius : 2px;
     box-shadow    : 15px 0px 32px -12px rgba(128,128,128,0.75);
-    width         : 40px;
+    width         : 44px;
     height        : 20px;
 }
 
@@ -22,7 +22,7 @@
 }
 
 .stickynotes-band {
-    width            : 6px;
+    width            : 12px;
     height           : 100%;
 }
 

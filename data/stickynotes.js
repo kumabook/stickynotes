@@ -9,9 +9,7 @@ stickynotes.createStickyView = function(sticky) {
   var stickyView = new stickynotes.StickyView({
     sticky: sticky,
     onClickDeleteButton: function(e) {
-      setTimeout(() => {
-        stickynotes.deleteSticky(sticky);
-      }, 0);
+      setTimeout(() => stickynotes.deleteSticky(sticky), 0);
     },
     onClickMinimizeButton: function(e) {
       stickyView.minimize();

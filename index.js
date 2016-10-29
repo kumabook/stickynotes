@@ -18,6 +18,10 @@ const unload         = require('sdk/system/unload');
 const config         = require('./lib/config');
 const ApiClient      = stickynotes.ApiClient;
 const logger         = stickynotes.Logger;
+const windows        = require("sdk/windows").browserWindows;
+const { modelFor }   = require("sdk/model/core");
+const { viewFor }    = require("sdk/view/core");
+
 
 if (config.logLevel) {
   logger.setLevel(config.logLevel);
@@ -152,7 +156,8 @@ var setupContentWorker = function(worker) {
     }
   });
   worker.port.emit('strings', {
-    'sticky.placeholderText': _('sticky.placeholderText')
+    'sticky.placeholderText': _('sticky.placeholderText'),
+    'sticky.needConfirmDelete': _('sticky.needConfirmDelete')
   });
   stickynotes.Sticky.fetchByUrl(worker.url).then((stickies) => {
     worker.port.emit('load-stickies', stickies, worker.url);
@@ -224,6 +229,21 @@ var exportStickies = function(stickies, name) {
   });
 };
 
+var _deleteSticky = function(sticky) {
+  if (ApiClient.isLoggedIn()) {
+    sticky.state = stickynotes.Sticky.State.Deleted;
+    sticky.save().then(() => {
+      emitAll(contentWorkers, 'delete-sticky', sticky);
+      emitAll(sidebarWorkers,        'delete', sticky);
+    });
+  } else {
+    sticky.remove().then(() => {
+      emitAll(contentWorkers, 'delete-sticky', sticky);
+      emitAll(sidebarWorkers,        'delete', sticky);
+    });
+  }
+};
+
 var deleteSticky = function(sticky) {
   if (sticky.content && stickynotes.needConfirmBeforeDelete) {
     var check = {value: true};
@@ -237,19 +257,20 @@ var deleteSticky = function(sticky) {
     }
     stickynotes.needConfirmBeforeDelete = check.value;
   }
+  _deleteSticky(new stickynotes.Sticky(sticky));
+};
 
-  var _sticky = new stickynotes.Sticky(sticky);
-  if (ApiClient.isLoggedIn()) {
-    _sticky.state = stickynotes.Sticky.State.Deleted;
-    _sticky.save().then(() => {
-      emitAll(contentWorkers, 'delete-sticky', _sticky);
-      emitAll(sidebarWorkers,        'delete', _sticky);
-    });
-  } else {
-    _sticky.remove().then(() => {
-      emitAll(contentWorkers, 'delete-sticky', _sticky);
-      emitAll(sidebarWorkers,        'delete', _sticky);
-    });
+var deleteAllStickiesOfCurrentPage = function(message) {
+  const chromeWindow = viewFor(windows.activeWindow);
+  const msg          = _('sticky.confirmAllDeleteContent');
+  if (chromeWindow.confirm(msg)) {
+    stickynotes.Page.fetchByUrl(message.url).then((page) => {
+      if (page) {
+        return stickynotes.Sticky.fetchByPage(page);
+      } else {
+        return Promise.resolve([]);
+      }
+    }).then((stickies) => stickies.forEach(_deleteSticky));
   }
 };
 
@@ -400,6 +421,13 @@ var toggleVisibilityMenuItem = contextMenu.Item({
   context: contextMenu.PageContext(),
   contentScriptFile: self.data.url('context-menu.js'),
   onMessage: toggleVisibilityWithMessage
+});
+
+var removeAllStickyOfCurrentPage = contextMenu.Item({
+  label: _('stickyRemoveAllMenu.label'),
+  context: contextMenu.PageContext(),
+  contentScriptFile: self.data.url('context-menu.js'),
+  onMessage: deleteAllStickiesOfCurrentPage
 });
 
 var shortcuts = [

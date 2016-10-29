@@ -46,7 +46,7 @@ stickynotes.createStickyView = function(sticky) {
       }, 0); // Wait for minized button handler
     },
     onResizeEnd: function(e) {
-      if (stickyView.isMinimized()) {
+      if (!stickyView.isMinimized()) {
         sticky.width = parseInt(stickyView.dom.style.width);
         sticky.height = parseInt(stickyView.dom.style.height) + 7;
         stickynotes.saveSticky(sticky, {

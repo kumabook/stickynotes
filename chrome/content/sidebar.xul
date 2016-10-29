@@ -14,16 +14,20 @@
           oncommand="stickynotes.Sidebar.jump();"
           />
       <menuitem
+          label="&sticky_list.sidebarExport;"
+          id="popup_export"
+          oncommand="stickynotes.Sidebar.exportStickies();"
+          />
+      <menuitem
           label="&sticky_list.sidebarDelete;"
                     id="popup_delete"
           oncommand="stickynotes.Sidebar.remove();"
           />
       <menuitem
-          label="&sticky_list.sidebarExport;"
-          id="popup_export"
-          oncommand="stickynotes.Sidebar.exportStickies();"
+          label="&sticky_list.sidebarDeleteAll;"
+          id="popup_delete_all"
+          oncommand="stickynotes.Sidebar.removeAll();"
           />
-
     </menupopup>
   </popupset>
 

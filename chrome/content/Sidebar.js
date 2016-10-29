@@ -222,31 +222,28 @@ stickynotes.Sidebar = {
     return tree.view.getCellText(tree.currentIndex,
                                tree.columns.getNamedColumn('type'));
   },
-  exportStickies: function() {
+  fetchStickiesOfSidebarItem: function(id, type) {
     if (!addon) {
       this.close();
-      return;
+      return new Promise((resolve) => resolve([]));
     }
-    var id   = this.getSelectedItemId();
-    var type = this.getSelectedItemType();
-    let promise;
     switch (type)  {
     case 'page':
-      promise = stickynotes.Sticky.fetchByPage({ id: parseInt(id)})
+      return stickynotes.Sticky.fetchByPage({ id: parseInt(id)})
         .then((ss) => ss.filter((s) => !s.isDeleted()));
-      break;
     case 'tag':
-      promise = stickynotes.Sticky.fetchByTag( { id: parseInt(id)})
+      return stickynotes.Sticky.fetchByTag( { id: parseInt(id)})
         .then((ss) => ss.filter((s) => !s.isDeleted()));
-      break;
     case 'sticky':
-      promise = stickynotes.Sticky.fetchByUUID(id).then((s) => s ? [s] : []);
-      break;
+      return stickynotes.Sticky.fetchByUUID(id).then((s) => s ? [s] : []);
     default:
-      promise = Promise.resolve([]);
-      break;
+      return Promise.resolve([]);
     }
-    promise.then((stickies) => {
+  },
+  exportStickies: function() {
+    const id   = this.getSelectedItemId();
+    const type = this.getSelectedItemType();
+    this.fetchStickiesOfSidebarItem(id, type).then((stickies) => {
       addon.port.emit('export', stickies, type + '_' + id);
     });
   },
@@ -261,6 +258,15 @@ stickynotes.Sidebar = {
       }
       addon.port.emit('delete', sticky);
     });
+  },
+  removeAll: function() {
+    if (!confirm('Are you sure to delete these stickies')) {
+      return;
+    }
+    const id   = this.getSelectedItemId();
+    const type = this.getSelectedItemType();
+    this.fetchStickiesOfSidebarItem(id, type)
+      .then((stickies) => stickies.forEach((s) => addon.port.emit('delete', s)));
   },
   jump: function() {
     if (!addon) {
@@ -591,26 +597,29 @@ stickynotes.Sidebar = {
     this.groupBy(null, key);
   },
   filterContextMenu: function(e) {
-    var sidebarDoc = this.getSidebarDoc();
-    var tree = sidebarDoc.getElementById('sticky');
+    const sidebarDoc = this.getSidebarDoc();
+    const tree = sidebarDoc.getElementById('sticky');
     if (tree.currentIndex === -1) {
       return;
     }
-    var type = tree.view.getCellText(tree.currentIndex,
+    const type = tree.view.getCellText(tree.currentIndex,
                                tree.columns.getNamedColumn('type'));
-    var jumpMenu = sidebarDoc.getElementById("popup_jump");
-    var deleteMenu = sidebarDoc.getElementById("popup_delete");
-    var exportMenu = sidebarDoc.getElementById("popup_export");
+    const jumpMenu      = sidebarDoc.getElementById("popup_jump");
+    const deleteMenu    = sidebarDoc.getElementById("popup_delete");
+    const deleteAllMenu = sidebarDoc.getElementById("popup_delete_all");
+    const exportMenu    = sidebarDoc.getElementById("popup_export");
     jumpMenu.hidden = (document.popupNode.localName != "IMG");
     if (type === 'sticky') {
-      jumpMenu.hidden = false;
-      deleteMenu.hidden = false;
-      exportMenu.hidden = false;
+      jumpMenu.hidden      = false;
+      deleteMenu.hidden    = false;
+      deleteAllMenu.hidden = true;
+      exportMenu.hidden    = false;
     }
     if (type === 'page' || type == 'tag') {
-      jumpMenu.hidden = true;
-      deleteMenu.hidden = true;
-      exportMenu.hidden = false;
+      jumpMenu.hidden      = true;
+      deleteMenu.hidden    = true;
+      deleteAllMenu.hidden = false;
+      exportMenu.hidden    = false;
     }
     return;
   }

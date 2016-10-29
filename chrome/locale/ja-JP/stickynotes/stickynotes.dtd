@@ -10,6 +10,7 @@
 <!ENTITY sticky_list.sidebarToggleV "表示/非表示">
 <!ENTITY sticky_list.sidebarJump "付箋にジャンプ">
 <!ENTITY sticky_list.sidebarDelete "付箋を消去">
+<!ENTITY sticky_list.sidebarDeleteAll "以下をすべて消去">
 <!ENTITY sticky_list.sidebarHide "付箋を非表示にする">
 <!ENTITY sticky_list.sidebarVisible "付箋を表示する">
 <!ENTITY sticky_list.sidebarExport "エクスポート">

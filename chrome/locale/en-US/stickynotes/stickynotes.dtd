@@ -11,6 +11,7 @@
 <!ENTITY sticky_list.sidebarToggleV "Hide/Display">
 <!ENTITY sticky_list.sidebarJump "Jump to this sticky">
 <!ENTITY sticky_list.sidebarDelete "Delete this sticky">
+<!ENTITY sticky_list.sidebarDeleteAll "Delete the followings">
 <!ENTITY sticky_list.sidebarHide "Hide this sticky">
 <!ENTITY sticky_list.sidebarVisible "Display this sticky">
 <!ENTITY sticky_list.sidebarExport "Export">

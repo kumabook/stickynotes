@@ -44,6 +44,10 @@ var onStrings = function(_strings) {
   stickynotes.strings = _strings;
 };
 
+var onColors = function(colors) {
+  stickynotes.colors = colors;
+};
+
 var isChildWindow = function() {
   return window !== window.parent;
 };
@@ -151,6 +155,7 @@ var loadCSS = function(href) {
 if (!stickynotes.isAlreadyLoaded()) {
   stickynotes.markAsLoaded();
   self.port.on('strings',           onStrings);
+  self.port.on('colors',            onColors);
   self.port.on('create-sticky',     onCreateSticky);
   self.port.on('delete-sticky',     onDeleteSticky);
   self.port.on('jump-sticky',       onJumpSticky);

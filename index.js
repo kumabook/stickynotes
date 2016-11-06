@@ -159,6 +159,7 @@ var setupContentWorker = function(worker) {
     'sticky.placeholderText': _('sticky.placeholderText'),
     'sticky.needConfirmDelete': _('sticky.needConfirmDelete')
   });
+  worker.port.emit('colors', colors);
   stickynotes.Sticky.fetchByUrl(worker.url).then((stickies) => {
     worker.port.emit('load-stickies', stickies, worker.url);
     if (jumpingSticky) {
@@ -405,6 +406,7 @@ var showPreference = function() {
   preferenceWindow.onChangeShortcut = setShortcuts;
 
   preferenceWindow.shortcuts = shortcuts;
+  preferenceWindow.colors = colors;
 };
 
 var stickyListSidebarMenuItem = contextMenu.Item({
@@ -494,6 +496,25 @@ var shortcuts = [
       modifiers: ['control', 'shift']
     }
   })
+];
+
+var colors = [
+  { id: 'navy',    background: '#001f3f', font: '#ffffff'},
+  { id: 'blue',    background: '#0074d9', font: '#ffffff'},
+  { id: 'aqua',    background: '#7fdbff', font: '#000000'},
+  { id: 'teal',    background: '#39cccc', font: '#000000'},
+  { id: 'olive',   background: '#3d9970', font: '#ffffff'},
+  { id: 'green',   background: '#2ecc40', font: '#ffffff'},
+  { id: 'lime',    background: '#01ff70', font: '#000000'},
+  { id: 'yellow',  background: '#f1c40f', font: '#000000'},
+  { id: 'orange',  background: '#ff851b', font: '#000000'},
+  { id: 'red',     background: '#ff4136', font: '#000000'},
+  { id: 'maroon',  background: '#85144b', font: '#ffffff'},
+  { id: 'fuchsia', background: '#f012be', font: '#ffffff'},
+  { id: 'purple',  background: '#b10dc9', font: '#ffffff'},
+  { id: 'black',   background: '#111111', font: '#ffffff'},
+  { id: 'gray',    background: '#aaaaaa', font: '#000000'},
+  { id: 'silver',  background: '#dddddd', font: '#000000'}
 ];
 
 var panel = panels.Panel({

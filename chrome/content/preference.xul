@@ -16,7 +16,7 @@
               preference="needConfirmBeforeDelete"/>
   </prefpane>
   <prefpane id="shortcut-pane" label="Shortcuts"
-            style="width: 500px; height: 100px;">
+            style="width: 500px;">
     <tree id="stickynotes-shortcuts-tree"
           editable="true"
           rows="7"
@@ -29,6 +29,24 @@
                  editable="true" />
       </treecols>
       <treechildren id="stickynotes-shortcuts-treechildren" />
+    </tree>
+  </prefpane>
+  <prefpane id="color-pane" label="Colors"
+            style="width: 500px;">
+    <tree id="stickynotes-colors-tree"
+          editable="true"
+          rows="16"
+          seltype="cell"
+          selstyle="primary"
+          hidecolumnpicker="true">
+      <treecols>
+        <treecol id="name" label="Name" flex="2" />
+        <treecol id="background" label="Background" flex="1"
+                 editable="true" />
+        <treecol id="font" label="Font" flex="1"
+                 editable="true" />
+      </treecols>
+      <treechildren id="stickynotes-colors-treechildren" />
     </tree>
   </prefpane>
   <script type="application/x-javascript"

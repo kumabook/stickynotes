@@ -17,7 +17,7 @@
   </prefpane>
   <prefpane id="shortcut-pane" label="Shortcuts"
             style="width: 500px; height: 100px;">
-    <tree id="stickynotes-preference-tree"
+    <tree id="stickynotes-shortcuts-tree"
           editable="true"
           rows="7"
           seltype="cell"
@@ -28,7 +28,7 @@
         <treecol id="shortcut" label="Shortcut" flex="1"
                  editable="true" />
       </treecols>
-      <treechildren id="stickynotes-preference-treechildren" />
+      <treechildren id="stickynotes-shortcuts-treechildren" />
     </tree>
   </prefpane>
   <script type="application/x-javascript"

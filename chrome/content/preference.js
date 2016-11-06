@@ -1,8 +1,8 @@
-const prefWin = window;
-prefWin.preferenceTree =
-  document.getElementById('stickynotes-preference-tree');
-prefWin.preferenceTreeChildren =
-  document.getElementById('stickynotes-preference-treechildren');
+const win = window;
+win.shortcutsTree =
+  document.getElementById('stickynotes-shortcuts-tree');
+win.shortcutsTreeChildren =
+  document.getElementById('stickynotes-shortcuts-treechildren');
 
 stickynotes.reloadShortcuts = function(shortcuts) {
   shortcuts.forEach(function(shortcut) {
@@ -13,33 +13,33 @@ stickynotes.reloadShortcuts = function(shortcuts) {
 
 stickynotes.createShortcuts = function(shortcuts) {
   shortcuts.forEach(function(shortcut) {
-    var treeitem = prefWin.document.createElement('treeitem');
-    var treerow = prefWin.document.createElement('treerow');
-    var actionTreecell = prefWin.document.createElement('treecell');
+    var treeitem = win.document.createElement('treeitem');
+    var treerow = win.document.createElement('treerow');
+    var actionTreecell = win.document.createElement('treecell');
     actionTreecell.setAttribute('label', shortcut.label);
     actionTreecell.setAttribute('value', shortcut.name);
     actionTreecell.setAttribute('editable', false);
-    var commandTreecell = prefWin.document.createElement('treecell');
+    var commandTreecell = win.document.createElement('treecell');
     commandTreecell.setAttribute('id', shortcut.name);
     commandTreecell.setAttribute('editable', true);
 
     treeitem.appendChild(treerow);
     treerow.appendChild(actionTreecell);
     treerow.appendChild(commandTreecell);
-    prefWin.preferenceTreeChildren.appendChild(treeitem);
+    win.shortcutsTreeChildren.appendChild(treeitem);
   });
   stickynotes.reloadShortcuts(shortcuts);
 };
-prefWin.preferenceTree.addEventListener('blur', function(e) {
-  stickynotes.reloadShortcuts(prefWin.shortcuts);
+win.shortcutsTree.addEventListener('blur', function(e) {
+  stickynotes.reloadShortcuts(win.shortcuts);
 });
-prefWin.addEventListener('keydown', function(e) {
-  var tree = prefWin.preferenceTree;
+win.addEventListener('keydown', function(e) {
+  var tree = win.shortcutsTree;
 
   if (tree.editingColumn && tree.editingRow >= 0) {
     var name = tree.view.getCellValue(tree.editingRow,
                                       tree.columns.getColumnAt(0));
-    prefWin.shortcuts.filter(function(shortcut) {
+    win.shortcuts.filter(function(shortcut) {
       return shortcut.name == name;
     }).forEach(function(shortcut) {
       tree.inputField.value = shortcut.modifiers.join('-');
@@ -50,13 +50,13 @@ prefWin.addEventListener('keydown', function(e) {
         tree.inputField.value = shortcut.combo;
         tree.stopEditing(true);
         shortcut.update(e);
-        prefWin.onChangeShortcut(shortcut);
-        stickynotes.reloadShortcuts(prefWin.shortcuts);
+        win.onChangeShortcut(shortcut);
+        stickynotes.reloadShortcuts(win.shortcuts);
     }
     });
   }
 });
 
-if (prefWin.shortcuts) {
-  stickynotes.createShortcuts(prefWin.shortcuts);
+if (win.shortcuts) {
+  stickynotes.createShortcuts(win.shortcuts);
 }

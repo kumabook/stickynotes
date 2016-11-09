@@ -48,7 +48,7 @@ stickynotes.getScrollOffset = function(elem, position) {
   for (var n = elem.parentNode; n !== stickynotes.doc; n = n.parentNode) {
     p.left += n.scrollLeft;
     p.top += n.scrollTop;
-   }
+  }
   return p;
 };
 
@@ -450,6 +450,13 @@ stickynotes.StickyView.updateDom = function(sticky) {
     }
     dom.__stickyView.sticky = sticky;
     dom.__stickyView.updateDom();
+  }
+};
+
+stickynotes.StickyView.updateColor = function(sticky) {
+  let dom = stickynotes.doc.getElementById('sticky' + sticky.uuid);
+  if (dom && dom.__stickyView) {
+    dom.__stickyView.statusUpdated();
   }
 };
 

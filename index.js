@@ -146,7 +146,7 @@ var setupContentWorker = function(worker) {
     });
   });
 
-  worker.on('detach', function (w) {
+  worker.port.on('detach', function (w) {
     try {
       logger.trace('detach ' + this.url);
       detachWorker(this, contentWorkers);
@@ -159,7 +159,7 @@ var setupContentWorker = function(worker) {
     'sticky.placeholderText': _('sticky.placeholderText'),
     'sticky.needConfirmDelete': _('sticky.needConfirmDelete')
   });
-  worker.port.emit('colors', colors);
+  worker.port.emit('colors', colors.map((color) => color.toJSON()));
   stickynotes.Sticky.fetchByUrl(worker.url).then((stickies) => {
     worker.port.emit('load-stickies', stickies, worker.url);
     if (jumpingSticky) {
@@ -404,6 +404,7 @@ var showPreference = function() {
       }
     });
   preferenceWindow.onChangeShortcut = setShortcuts;
+  preferenceWindow.onChangeColor = setColors;
 
   preferenceWindow.shortcuts = shortcuts;
   preferenceWindow.colors = colors;
@@ -515,7 +516,7 @@ var colors = [
   { id: 'black',   background: '#111111', font: '#ffffff'},
   { id: 'gray',    background: '#aaaaaa', font: '#000000'},
   { id: 'silver',  background: '#dddddd', font: '#000000'}
-];
+].map ((color) => new stickynotes.Color(color));
 
 var panel = panels.Panel({
   width: 170,
@@ -685,6 +686,11 @@ var setShortcuts = function() {
 };
 
 setShortcuts();
+
+var setColors = function() {
+  emitAll(contentWorkers, 'colors', colors.map((color) => color.toJSON()));
+  emitAll(contentWorkers,'reload');
+};
 
 var sidebar = side.Sidebar({
   id: 'stickynotes-sidebar',

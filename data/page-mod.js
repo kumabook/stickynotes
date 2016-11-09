@@ -27,6 +27,7 @@ var logger = {
 stickynotes.MARKER_ID = 'stickynotes-marker';
 stickynotes.doc = document;
 stickynotes.window = window;
+stickynotes.stickies = [];
 stickynotes.isAlreadyLoaded = function() {
   return document.getElementById(this.MARKER_ID) !== null;
 };
@@ -60,6 +61,7 @@ var onCreateSticky = function(sticky, url) {
   sticky.left = stickynotes.x;
   sticky.top = stickynotes.y;
   var stickyView = stickynotes.createStickyView(sticky);
+  stickynotes.stickies.push(sticky);
   document.body.appendChild(stickyView.dom);
   stickynotes.saveSticky(sticky);
   stickynotes.x += 10;
@@ -87,6 +89,16 @@ var load = function(stickies) {
       var view = stickynotes.createStickyView(s);
       document.body.appendChild(view.dom);
     }
+  });
+  stickynotes.stickies = stickies;
+};
+
+var reload = function() {
+  if (!stickynotes.stickies) {
+    return;
+  }
+  stickynotes.stickies.forEach(function(sticky) {
+    stickynotes.StickyView.updateColor(sticky);
   });
 };
 
@@ -164,6 +176,7 @@ if (!stickynotes.isAlreadyLoaded()) {
   self.port.on('toggle-visibility', onToggleVisibility);
   self.port.on('import',            onImport);
   self.port.on('load-css',          loadCSS);
+  self.port.on('reload',            reload);
 
   document.addEventListener('mousedown', watchClickPosition, true);
   window.addEventListener('hashchange',  onHashChange);

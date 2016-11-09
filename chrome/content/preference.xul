@@ -40,7 +40,7 @@
           selstyle="primary"
           hidecolumnpicker="true">
       <treecols>
-        <treecol id="name" label="Name" flex="2" />
+        <treecol id="name" label="Name" flex="1" />
         <treecol id="background" label="Background" flex="1"
                  editable="true" />
         <treecol id="font" label="Font" flex="1"
@@ -53,6 +53,8 @@
           src="chrome://stickynotes/content/stickynotes.js" />
   <script type="application/x-javascript"
           src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/Shortcut.js"/>
+  <script type="application/x-javascript"
+          src="resource://sticky-at-filenamezero-dot-dip-dot-jp/lib/Color.js"/>
   <script type="application/x-javascript"
           src="chrome://stickynotes/content/preference.js" />
 </prefwindow>

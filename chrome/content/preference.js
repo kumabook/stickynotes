@@ -38,7 +38,7 @@ stickynotes.createShortcuts = function(shortcuts) {
 win.shortcutsTree.addEventListener('blur', function(e) {
   stickynotes.reloadShortcuts(win.shortcuts);
 });
-win.addEventListener('keydown', function(e) {
+win.shortcutsTree.addEventListener('keydown', function(e) {
   var tree = win.shortcutsTree;
 
   if (tree.editingColumn && tree.editingRow >= 0) {
@@ -99,6 +99,27 @@ stickynotes.reloadColors = function(colors) {
     font.setAttribute('label', color.font);
   });
 };
+
+
+win.colorsTree.addEventListener('input', function(e) {
+  var tree = win.colorsTree;
+  if (tree.editingColumn && tree.editingRow >= 0) {
+    var id = tree.view.getCellValue(tree.editingRow,
+                                    tree.columns.getColumnAt(0));
+    win.colors.filter(function(color) {
+        return color.id === id;
+      }).forEach(function(color) {
+        var background = document.getElementById(color.id + '-background');
+        var font = document.getElementById(color.id + '-font');
+        if (tree.editingColumn.index == 1) {
+          color.background = tree.inputField.value;
+        } else if (tree.editingColumn.index == 2) {
+          color.font = tree.inputField.value;
+        }
+        win.onChangeColor(tree.inputField.value);
+      });
+  };
+});
 
 if (win.colors) {
   stickynotes.createColors(win.colors);

@@ -276,8 +276,11 @@ stickynotes.StickyView.prototype.drag = function(e) {
   var pos    = this.getElementPosition(this.dom);
   var right  = pos.left + parseInt(this.dom.style.width);
   var bottom = pos.top  + parseInt(this.dom.style.height);
-  if ((right - RESIZE_SIZE < e.clientX  && e.clientX < right + RESIZE_SIZE) &&
-      (bottom - RESIZE_SIZE < e.clientY && e.clientY < bottom + RESIZE_SIZE)) {
+  const offset  = stickynotes.getScrollOffset(stickynotes.doc.body);
+  const clientX = e.clientX + offset.left;
+  const clientY = e.clientY + offset.top;
+  if ((right - RESIZE_SIZE < clientX  && clientX < right + RESIZE_SIZE) &&
+      (bottom - RESIZE_SIZE < clientY && clientY < bottom + RESIZE_SIZE)) {
     this.hideDialog();
     this.resize(this.dom, e);
     return;

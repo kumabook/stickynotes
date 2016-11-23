@@ -1,91 +1,137 @@
-<!DOCTYPE html>
-<html>
-
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Stickynotes : sticky notes firefox addon" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A layout example that shows off a responsive product landing page.">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Stickynotes</title>
+    <title>StickyNotes</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+<!--<![endif]-->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="css/layouts/marketing-old-ie.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="css/layouts/marketing.css">
+    <!--<![endif]-->
   </head>
+<body>
+  <div class="header">
+    <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+      <img class="icon" src="./img/icon.png">
+      <a class="pure-menu-heading" href="">StickyNotes</a>
+      <ul class="pure-menu-list">
+        <li class="pure-menu-item"><a href="./privacy.html" class="pure-menu-link">Privacy</a></li>
+        <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Home</a></li>
+      </ul>
+    </div>
+  </div>
 
-  <body>
+  <div class="splash-container">
+    <div class="splash">
+      <h1 class="splash-head">Put stickies on your web</h1>
+      <p class="splash-subhead">
+        Sticky notes is a Firefox addon that put the sticky on the web page.
+        Write a note on it.
+      </p>
+      <p>
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/sticky-notes/"
+           class="pure-button pure-button-primary">Get Started</a>
+      </p>
+    </div>
+  </div>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/kumabook/stickynotes">View on GitHub</a>
+  <div class="content-wrapper">
 
-          <h1 id="project_title">Stickynotes</h1>
-          <h2 id="project_tagline">sticky notes firefox addon</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/kumabook/stickynotes/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/kumabook/stickynotes/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+    <div class="content">
+      <h2 class="content-head is-center">Features.</h2>
+      <div class="pure-g">
+        <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+          <h3 class="content-subhead">
+            <i class="fa fa-tag"></i>
+            Tag, Color
+          </h3>
+          <p>
+            <ul>
+              <li>Sticky can be categorized by tag.</li>
+              <li>Change the color of sticky</li>
+            </ul>
+          </p>
+        </div>
+        <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+          <h3 class="content-subhead">
+            <i class="fa fa-bars"></i>
+            Sidebar
+          </h3>
+          <p>
+            In sidebar, stickies are displayed in:
+            <ul>
+              <li>time order</li>
+              <li>alphabetical order of tag</li>
+              <li>alphabetical order of page</li>
+            </ul>
+          </p>
+        </div>
+        <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+          <h3 class="content-subhead">
+            <i class="fa fa-search"></i>
+            Search
+          </h3>
+          <p>
+            You can search stickies from:
+            <ul>
+              <li>note of sticky</li>
+              <li>title of page</li>
+              <li>tag name</li>
+            </ul>
+          </p>
+        </div>
+        <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+          <h3 class="content-subhead">
+            <i class="fa fa-refresh"></i>
+            Sync
+          </h3>
+          <p>
+            Sync stickies between multiple browsers
+            <ul>
+              <li>Sync feature requires creating account and login</li>
+            </ul>
+          </p>
+        </div>
+      </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="sticky-notes" class="anchor" href="#sticky-notes"><span class="octicon octicon-link"></span></a>Sticky Notes</h1>
-
-<p>Sticky Notes is a firefox addon that enable firefox to put sticky to web page.</p>
-
-<h2>
-<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
-
-<p>Each sticky can have memo, and the size and position are changeable.
-This displays the list of stickies, you can jump a selected sticky.</p>
-
-<h3>
-<a name="main-functionality-and-shortcut-in-parentheses-for-mac" class="anchor" href="#main-functionality-and-shortcut-in-parentheses-for-mac"><span class="octicon octicon-link"></span></a>Main functionality and shortcut (in parentheses for mac)</h3>
-
-<ul>
-<li>Create a sticky: Right click menu -&gt; "Generate Sticky" or Ctrl + Shift + C</li>
-<li>Delete a sticky: Ctrl + Shift + D or click "x" on sticky</li>
-<li>Toggle Visible/Invisible: Right click menu -&gt; "Display/Hide this sticky" or Ctrl + q</li>
-<li>Change the position of a sticky: Drag the upper part of a sticky</li>
-<li>Change the size of a sticky: Drag the lower right a sticky</li>
-<li>Display sticky list on Sidebar: tool menu -&gt; "Sticky List" or Ctrl(Command) + Shift + S</li>
-<li>Focus to Sidebar: Ctrl + Shift + F</li>
-</ul><h3>
-<a name="sidebar" class="anchor" href="#sidebar"><span class="octicon octicon-link"></span></a>Sidebar</h3>
-
-<ul>
-<li>Sidebar displays stickies that are sorted by site name, or tag name, or tag name and site name.</li>
-</ul><p>Jump to a sticky: Right click menu "Jump to this sticky" or type "j" on selection state
-Delete a sticky: Right click menu "Delete this sticky" or type "Enter" on selection state or double click a sticky</p>
-
-<h3>
-<a name="tag" class="anchor" href="#tag"><span class="octicon octicon-link"></span></a>Tag</h3>
-
-<p>You can add tag to sticky with the upper textbox.
-you can add multiple tags with "," separated characters.
-In sidebar, stickies are gathered by tag.</p>
-
-<h2>
-<a name="how-to-build" class="anchor" href="#how-to-build"><span class="octicon octicon-link"></span></a>How to build</h2>
-
-<pre><code>$ git submodule init
-$ addon-sdk/bin/cfx xpi
-</code></pre>
-      </section>
+    <div class="content">
+      <h2 class="content-head is-center"></h2>
+      <div class="pure-g">
+        <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
+          <h4>Contact Us</h4>
+          <p>
+            If there is a problem or a request,
+            please email stickynotes@outlook.jp or report to <a href="https://github.com/kumabook/stickynotes/issues">this</a>. <br />
+            And I also watch a review of this site, Please feedback without hesitation.
+          </p>
+          <h4>Open source</h4>
+          <p>
+            StickyNotes is open source product.
+            You can access Source code <a href="https://github.com/kumabook/stickynotes">here</a>
+          </p>
+        </div>
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Stickynotes maintained by <a href="https://github.com/kumabook">kumabook</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
+    <div class="footer l-box is-center">
+      © 2016 Hiroki Kumamoto
+      <a class="twitter-follow-button"
+         href="https://twitter.com/stickynotesjp">
+        <img src="./img/twitter.png" width="20" height-"20" />
+      </a>
     </div>
-
-    
-
-  </body>
+  </div>
+</body>
 </html>

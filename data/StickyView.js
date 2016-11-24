@@ -43,6 +43,15 @@ stickynotes.StickyView.State = {
   Minimized: 2
 };
 
+stickynotes.getScrollOffset = function(elem, position) {
+  var p = { left: 0, top: 0 };
+  for (var n = elem.parentNode; n !== stickynotes.doc; n = n.parentNode) {
+    p.left += n.scrollLeft;
+    p.top += n.scrollTop;
+   }
+  return p;
+};
+
 stickynotes.StickyView.deleteAll = function() {
   var elements = stickynotes.doc.getElementsByClassName(CLASS);
   for (var i = elements.length - 1; i >= 0; i--) {

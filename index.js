@@ -405,6 +405,7 @@ var showPreference = function() {
     });
   preferenceWindow.onChangeShortcut = setShortcuts;
   preferenceWindow.onChangeColor = setColors;
+  preferenceWindow.restoreColorDefaults = restoreColorDefaults;
 
   preferenceWindow.shortcuts = shortcuts;
   preferenceWindow.colors = colors;
@@ -517,6 +518,13 @@ var colors = [
   { id: 'gray',    background: '#aaaaaa', font: '#000000'},
   { id: 'silver',  background: '#dddddd', font: '#000000'}
 ].map ((color) => new stickynotes.Color(color));
+
+var restoreColorDefaults = function() {
+  colors.forEach((color) => color.restoreDefault());
+  emitAll(contentWorkers, 'colors', colors.map((color) => color.toJSON()));
+  emitAll(contentWorkers,'reload');
+  preferenceWindow.reloadColors(colors);
+};
 
 var panel = panels.Panel({
   width: 170,

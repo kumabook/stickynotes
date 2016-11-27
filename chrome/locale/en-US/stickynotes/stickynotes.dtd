@@ -26,3 +26,4 @@
 <!ENTITY sticky.defaultContent "">
 <!ENTITY sticky.placeholderText "Insert a note here">
 <!ENTITY sticky.needConfirmDelete "Confirm before delete a sticky.">
+<!ENTITY sticky.restore_default "Restore default">

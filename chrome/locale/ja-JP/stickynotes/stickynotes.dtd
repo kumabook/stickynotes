@@ -25,3 +25,4 @@
 <!ENTITY sticky.defaultContent "">
 <!ENTITY sticky.placeholderText "ここにメモを挿入">
 <!ENTITY sticky.needConfirmDelete "付箋を削除する前に確認する">
+<!ENTITY sticky.restore_default "初期値を復元">

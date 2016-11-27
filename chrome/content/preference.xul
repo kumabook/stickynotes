@@ -48,6 +48,7 @@
       </treecols>
       <treechildren id="stickynotes-colors-treechildren" />
     </tree>
+    <button id="stickynotes-restore-color-button" label="&sticky.restore_default;" />
   </prefpane>
   <script type="application/x-javascript"
           src="chrome://stickynotes/content/stickynotes.js" />

@@ -8,6 +8,8 @@ win.colorsTree =
   document.getElementById('stickynotes-colors-tree');
 win.colorsTreeChildren =
   document.getElementById('stickynotes-colors-treechildren');
+win.restoreButton =
+  document.getElementById('stickynotes-restore-color-button');
 
 stickynotes.reloadShortcuts = function(shortcuts) {
   shortcuts.forEach(function(shortcut) {
@@ -121,6 +123,11 @@ win.colorsTree.addEventListener('input', function(e) {
   };
 });
 
+win.restoreButton.addEventListener('click', function() {
+  win.restoreColorDefaults();
+});
+
 if (win.colors) {
   stickynotes.createColors(win.colors);
 }
+win.reloadColors = stickynotes.reloadColors;

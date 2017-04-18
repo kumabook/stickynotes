@@ -38,7 +38,7 @@ stickynotes.DBHelper.connection().then((_c) => {
     return stickynotes.DBHelper.migrate(c);
   }).then(() => {
     c.close();
-  }, () => {
+  }, (e) => {
     logger.error('Migration error' + e);
     c.close();
   });

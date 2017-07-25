@@ -141,6 +141,7 @@ a.pure-button-primary {
     background: #1f8dd6;
     z-index: 1;
     overflow: hidden;
+    -webkit-overflow-scrolling: touch;
     /* The following styles are required for the "scroll-over" effect */
     width: 100%;
     height: 88%;

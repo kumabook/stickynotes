@@ -9,6 +9,7 @@
     padding: 12px;
     position: fixed !important;
     overflow: scroll;
+    -webkit-overflow-scrolling: touch;
 }
 
 .privacy-content {

@@ -6,3 +6,4 @@ README.md
 *.xpi
 stickynotes-*
 node_modules/*
+**/node_modules/*

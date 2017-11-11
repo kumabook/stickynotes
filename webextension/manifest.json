@@ -1,0 +1,51 @@
+{
+  "name": "StickyNotes",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "permissions": ["contextMenus",
+                  "storage",
+                  "notifications",
+                  "tabs",
+                  "activeTab",
+                  "*://stickynotes-backend.herokuapp.com/*"
+                 ],
+  "background": {
+    "scripts": ["background/bundle.js"]
+  },
+  "default_locale": "en",
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "match_about_blank": true,
+      "css": ["content_scripts/sticky-view.css"],
+      "js": [
+        "content_scripts/stickynotes.js",
+        "content_scripts/Logger.js",
+        "content_scripts/StickyView.js",
+        "content_scripts/StickyMenu.js",
+        "content_scripts/Dialog.js",
+        "content_scripts/ColorPicker.js",
+        "content_scripts/TagEditor.js",
+        "content_scripts/index.js"
+      ]
+    }
+  ],
+  "browser_action": {
+    "browser_style": true,
+    "default_icon": "icons/icon-32.png",
+    "default_title": "button label",
+    "default_popup": "popup/index.html"
+  },
+  "sidebar_action": {
+    "default_icon": "icons/icon-32.png",
+    "default_title" : "StickyNotes",
+    "default_panel": "sidebar/index.html"
+  },
+  "commands": {
+    "_execute_sidebar_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S"
+      }
+    }
+  }
+}

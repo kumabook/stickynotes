@@ -7,7 +7,9 @@
   "main": "./main.js",
   "author": "Hiroki Kumamoto",
   "scripts": {
-    "get-unbranded-firefox": "get-firefox -ecb unbranded-release"
+    "get-unbranded-firefox": "get-firefox -ecb unbranded-release",
+    "build": "webpack",
+    "start": "webpack && jpm run -b /Applications/FirefoxDeveloperEdition.app/"
   },
   "engines": {
     "firefox": ">=38.0a1"
@@ -23,7 +25,27 @@
     "multiprocess": true
   },
   "dependencies": {
-    "web-ext": "^1.8.1"
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "history": "^4.7.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.8",
+    "react-treeview": "^0.4.7",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0",
+    "redux-saga-router": "^2.1.1",
+    "regenerator-runtime": "0.10.0",
+    "regenerator-transform": "^0.11.0",
+    "uuid": "^3.1.0",
+    "web-ext": "^1.8.1",
+    "webpack": "^3.8.1"
   },
-  "hasEmbeddedWebExtension": true
+  "hasEmbeddedWebExtension": true,
+  "repository": "https://github.com/kumabook/stickynotes"
 }

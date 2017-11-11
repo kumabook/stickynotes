@@ -1,0 +1,91 @@
+html,
+body {
+  height: 400px;
+  width: 200px;
+  padding: 0;
+  margin: 0;
+  background: #FAFAFA;
+  font-family: 'Helvetica Neue', arial, sans-serif;
+  font-weight: 400;
+  color: #444;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+#app {
+  height: 100%;
+}
+input[type="password"] {
+  -webkit-text-security: disc;
+  border-style: solid;
+}
+
+.home {
+  padding: 56px 20px;
+  min-height: 100%;
+  width: 200px;
+}
+
+.ul {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    padding-top: 4px;
+    list-style-type: none;
+    text-align: left;
+}
+
+.li {
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px #c0c0c0 solid;
+    box-sizing: border-box;
+}
+
+.a {
+    text-decoration: none;
+}
+
+.menuItem {
+    display: block;
+    height: 30px;
+    color: #000000;
+    padding-left: 20px;
+    font-size: 12px;
+}
+.menuItem:hover {
+    background-color: #f0f0f0;
+}
+
+.newIcon {
+    width: 20px;
+    height: 20px;
+}
+
+.container {
+    padding: 12px;
+}
+
+.userNameInput {
+    height: 28px;
+    width: 180px;
+}
+
+.passwordInput {
+    height: 28px;
+    width: 180px;
+}
+
+.loginButton {
+    height: 28px;
+    margin: 8px 0;
+}
+.errorMessage {
+    color: red;
+}

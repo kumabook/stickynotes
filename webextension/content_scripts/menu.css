@@ -1,0 +1,36 @@
+ul {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: left;
+}
+li {
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px #c0c0c0 solid;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+.menu-item {
+    display: block;
+    height: 30px;
+    color: #000000;
+    padding-left: 20px;
+    font-size: 12px;
+}
+.menu-item:hover {
+    background-color: #f0f0f0;
+}
+
+.new-icon {
+    width: 20px;
+    height: 20px;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="menu.css" type="text/css" />
+  </head>
+  <body>
+    <ul id="menu">
+      <li><a id="import-menu" class="menu-item">Import</a></li>
+      <li><a id="export-menu" class="menu-item">Export</a></li>
+      <li><a id="sidebar-menu" class="menu-item">Show/Hide sidebar</a></li>
+      <li><a id="toggle-menu" class="menu-item">Show/Hide stickies</a></li>
+      <li><a id="create-menu" class="menu-item">Create sticky</a></li>
+      <li><a id="search-menu" class="menu-item" href="#">Search stickies</a></li>
+      <li><a id="display-option-menu" class="menu-item">Sidebar display option</a></li>
+      <li><a id="sync-menu" class="menu-item">Sync</a></li>
+      <li>
+        <a id="login-menu" class="menu-item">Login<img class="new-icon" src="./new.png"></a>
+      </li>
+      <li><a id="logout-menu" class="menu-item">Logout</a></li>
+      <li style="border-bottom: 0px;">
+        <a id="preference-menu" class="menu-item">Preference</a>
+      </li>
+      <input id="file-picker" type="file" style="display: none;"/>
+    </ul>
+    <div id="login" style="display: none;">
+      <div><a id="back-to-menu" href="#">Back</a></div>
+      <p>
+        You can sync stickies between devices after login.
+        <br>
+        Note: This function is at the experimental stage.
+      </p>
+      <label>email
+        <input id="user-input" type="text" name="username" size="20">
+      </label>
+      <label>password
+        <input id="password-input" type="password" name="password" size="20">
+      </label>
+      <input id="login-button" type="button" value="login">
+
+      <div><a id="signup" href="#">Sign up</a></div>
+      <div><a id="reset-password" href="#">Reset password</a></div>
+    </div>
+  </body>
+</html>

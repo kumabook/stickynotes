@@ -162,6 +162,7 @@ function handlePopupMessage(msg) {
     case 'logout-menu':
       api.logout()
         .then(() => api.setLastSynced(null))
+        .then(() => stopSyncTimer())
         .then(() => port.postMessage({ type: 'logged-out' }))
         .catch(e => logger.error(e));
       break;
@@ -287,10 +288,14 @@ function importStickies(stickies, db) {
 }
 
 function startSyncTimer() {
+  syncTimer = setTimeout(sync, config.SYNC_INTERVAL);
+}
+
+function stopSyncTimer() {
   if (syncTimer !== null) {
     clearTimeout(syncTimer);
+    syncTimer = null;
   }
-  syncTimer = setTimeout(sync, config.SYNC_INTERVAL);
 }
 
 function sync() {

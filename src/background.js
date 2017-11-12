@@ -86,6 +86,7 @@ function handleContentScriptMessage(msg) {
     }
     case 'save-sticky': {
       const { sticky } = msg;
+      sticky.updated_at = new Date();
       idb.open(dbName)
         .then(db => Sticky.update(sticky, db))
         .then(() => {
@@ -104,6 +105,7 @@ function handleContentScriptMessage(msg) {
       api.isLoggedIn().then((isLoggedIn) => {
         if (isLoggedIn) {
           sticky.state = Sticky.State.Deleted;
+          sticky.updated_at = new Date();
           return idb.open(dbName).then(db => Sticky.update(sticky, db));
         }
         return idb.open(dbName).then(db => Sticky.destroy(sticky.id, db));

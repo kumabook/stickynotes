@@ -288,7 +288,7 @@ StickyView.prototype.unbind = function() {
 };
 
 StickyView.prototype.onContentChange = function() {
-  if (this.content != this.textarea.value) {
+  if (this.sticky.content !== this.textarea.value) {
     this.onTextareaChange();
   }
 };
@@ -482,15 +482,20 @@ StickyView.deleteDom = function(sticky) {
   }
 };
 
-StickyView.updateDom = function(sticky, { force = false } = {}) {
+StickyView.updateDom = function(sticky, { force } = { force: false }) {
   const e = document.getElementById(`sticky${sticky.id}`);
   if (!e) {
     return;
   }
   const view = e.__stickyView;
-  if (force || view.isChanged(sticky)) {
+  if (force) {
+    view.sticky = sticky;
+    view.updateDom();
+    return;
+  }
+  if (view.isChanged(sticky)) {
     const str = 'Current editing sticky is updated. Do you update the sticky?';
-    if (e.__stickyView.isEditing() && !confirm(str)) {
+    if (view.isEditing() && !confirm(str)) {
       return;
     }
     view.sticky = sticky;

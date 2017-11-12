@@ -61,32 +61,25 @@ function addStickyView(sticky) {
     onClickEditTagButton:  () => stickyView.toggleTagDialog(),
     onClickMenuButton:     () => stickyView.toggleMenuDialog(),
     onTextareaChange:      () => {
-      sticky.content = stickyView.textarea.value;
-      saveSticky(sticky, { content: stickyView.textarea.value });
+      stickyView.sticky.content = stickyView.textarea.value;
+      saveSticky(stickyView.sticky);
     },
     onColorChange: (colorItem) => {
-      sticky.color = colorItem.id;
-      saveSticky(sticky, { color: colorItem.id });
+      stickyView.sticky.color = colorItem.id;
+      saveSticky(stickyView.sticky, { color: colorItem.id });
     },
     onTagsChange: (tags) => setTags(sticky, tags),
     onMoveEnd: () => {
-      sticky.left = parseInt(stickyView.dom.style.left, 10);
-      sticky.top  = parseInt(stickyView.dom.style.top, 10);
-      setTimeout(() => {
-        saveSticky(sticky, {
-          left: sticky.left,
-          top:  sticky.top,
-        });
-      }, 0); // Wait for minized button handler
+      stickyView.sticky.left = parseInt(stickyView.dom.style.left, 10);
+      stickyView.sticky.top  = parseInt(stickyView.dom.style.top, 10);
+      setTimeout(() => saveSticky(stickyView.sticky), 0);
+      // Wait for minized button handler
     },
     onResizeEnd: () => {
       if (!stickyView.isMinimized()) {
-        sticky.width  = parseInt(stickyView.dom.style.width, 10);
-        sticky.height = parseInt(stickyView.dom.style.height, 10) + 7;
-        saveSticky(sticky, {
-          width:  sticky.width,
-          height: sticky.height,
-        });
+        stickyView.sticky.width  = parseInt(stickyView.dom.style.width, 10);
+        stickyView.sticky.height = parseInt(stickyView.dom.style.height, 10) + 7;
+        saveSticky(stickyView.sticky);
       }
     },
   });

@@ -329,27 +329,41 @@ function sync() {
     });
 }
 
+function passToLegacyPort(msg) {
+  legacyPort.postMessage(msg);
+}
+
 browser.runtime.onConnect.addListener((port) => {
   if (port === legacyPort) return;
   const name = port.name;
   if (name.startsWith('content-script')) {
     contentScriptPorts[port.name] = port;
-    port.onDisconnect.addListener(() => delete contentScriptPorts[port.name]);
+    port.onDisconnect.addListener(() => {
+      delete contentScriptPorts[port.name];
+      port.onMessage.removeListener(handleContentScriptMessage);
+      port.onMessage.removeListener(passToLegacyPort);
+    });
     port.onMessage.addListener(handleContentScriptMessage);
-    port.onMessage.addListener(msg => legacyPort.postMessage(msg));
+    port.onMessage.addListener(passToLegacyPort);
   } else if (name === 'popup') {
     popupPort = port;
     port.onDisconnect.addListener(() => {
       popupPort = null;
+      port.onMessage.removeListener(handlePopupMessage);
+      port.onMessage.removeListener(passToLegacyPort);
     });
     port.onMessage.addListener(handlePopupMessage);
-    port.onMessage.addListener(msg => legacyPort.postMessage(msg));
+    port.onMessage.addListener(passToLegacyPort);
     api.getUser().then(payload => popupPort.postMessage({ type: 'logged-in', payload }));
   } else if (name.startsWith('sidebar')) {
     sidebarPorts[port.name] = port;
-    port.onDisconnect.addListener(() => delete sidebarPorts[port.name]);
+    port.onDisconnect.addListener(() => {
+      delete sidebarPorts[port.name];
+      port.onMessage.removeListener(handleSidebarMessage);
+      port.onMessage.removeListener(passToLegacyPort);
+    });
     port.onMessage.addListener(handleSidebarMessage);
-    port.onMessage.addListener(msg => legacyPort.postMessage(msg));
+    port.onMessage.addListener(passToLegacyPort);
   }
 });
 

@@ -133,12 +133,11 @@ function load(stickies) {
       addStickyView(s);
     }
   });
-  stickynotes.stickies = stickies;
 }
 
 function importedStickies(createdStickies, updatedStickies) {
   load(createdStickies);
-  updatedStickies.forEach(function(sticky) {
+  updatedStickies.forEach((sticky) => {
     if (sticky.state === StickyView.State.Deleted) {
       StickyView.deleteDom(sticky);
     } else {
@@ -177,8 +176,11 @@ port.onMessage.addListener((msg) => {
     case 'deleted-sticky':
       deleteStickyView(msg.payload);
       break;
-    case 'imported-stickies':
+    case 'imported-stickies': {
+      const { createdStickies, updatedStickies } = msg.payload;
+      importedStickies(createdStickies, updatedStickies);
       break;
+    }
     case 'toggle-visibility':
       if (msg.targetUrl !== window.location.href) {
         return;

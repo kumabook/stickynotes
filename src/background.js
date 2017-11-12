@@ -254,16 +254,16 @@ function importStickies(stickies, db) {
         if (!Sticky.isDeleted(s)) {
           const item = Object.assign({}, sticky, s);
           return Sticky.update(item, db)
-            .then(() => {
-              logger.trace(`Updated ${s.id}`);
-              updatedStickies.push(sticky);
+            .then((v) => {
+              logger.trace(`Updated ${v.id}`);
+              updatedStickies.push(v);
             })
             .catch(e => logger.error(e));
         }
         return Sticky.destroy(sticky.id, db)
           .then(() => logger.trace(`Removed ${s.id}`));
       }
-      if (s.state !== Sticky.State.Deleted) {
+      if (!Sticky.isDeleted(s)) {
         return Sticky.new(s, db).then((st) => {
           logger.trace(`Created ${s.id}`);
           createdStickies.push(st);
@@ -276,6 +276,16 @@ function importStickies(stickies, db) {
       return Promise.resolve();
     });
   }, Promise.resolve()).then(() => {
+    getContentScriptPorts().forEach((p) => {
+      const url = p.name.substring('content-script-'.length);
+      p.postMessage({
+        type:    'imported-stickies',
+        payload: {
+          createdStickies: createdStickies.filter(s => url === s.url),
+          updatedStickies: updatedStickies.filter(s => url === s.url),
+        },
+      });
+    });
     Promise.all([
       Sticky.findAll(db).then(a => a.filter(s => !Sticky.isDeleted(s))),
       Tag.findAll(db),

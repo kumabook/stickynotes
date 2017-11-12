@@ -224,8 +224,8 @@ function handleSidebarMessage(msg) {
 function resolveStickies(stickies, db) {
   return Page.findAll(db).then((pages) => {
     stickies.forEach((s) => {
+      s.uuid = s.id;
       const stickyPages = pages.filter((p) => {
-        logger.info(`${p.id} ${p.url}`);
         return p.id === s.page.id;
       });
       if (stickyPages.length > 0) {

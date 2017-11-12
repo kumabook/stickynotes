@@ -104,8 +104,6 @@ Sticky.findByUrl = function findByUrl(url, db) {
 };
 
 Sticky.findBySince = function findBySince(date, db) {
-  console.log('-------');
-  console.log(date);
   const store = this.objectStore(db);
   const items = [];
   return new Promise((resolve, reject) => {
@@ -119,7 +117,6 @@ Sticky.findBySince = function findBySince(date, db) {
         items.push(cursor.value);
         cursor.continue();
       } else {
-        console.log(items);
         resolve(items);
       }
     };

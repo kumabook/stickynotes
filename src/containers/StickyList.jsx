@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TreeView from 'react-treeview';
-import { GroupBy } from '../reducers/sidebar';
+import { GroupBy, OrderBy } from '../reducers/sidebar';
 
 
 const noTag = { id: 'no-tag', name: 'no tag' };
@@ -19,6 +19,24 @@ class StickyList extends React.Component {
     this.state = {
       collapsedMap: {},
     };
+  }
+  compare() {
+    switch (this.props.orderBy) {
+      case OrderBy.CreatedAt:
+        return (a, b) => b.created_at.getTime() - a.created_at.getTime();
+      case OrderBy.UpdatedAt:
+        return (a, b) => b.updated_at.getTime() - a.updated_at.getTime();
+      case OrderBy.Alphabetical:
+        return (a, b) => {
+          if (a < b) {
+            return -1;
+          }
+          if (a > b) {
+            return 1;
+          }
+          return 0;
+        };
+    }
   }
   renderSticky(sticky) {
     return (
@@ -56,11 +74,30 @@ class StickyList extends React.Component {
   }
   renderPages(stickies) {
     const pages = this.props.pages.filter(p => stickies.some(s => s.page.id === p.id));
-    return pages.map(p => this.renderItem(p, stickies.filter(s => s.page.id === p.id)));
+    return pages.map((p) => {
+      const vals = stickies.filter(s => s.page.id === p.id).sort(this.compare());
+      return this.renderItem(p, vals);
+    });
+  }
+  renderDateStickies(stickies) {
+    const pages = [];
+    stickies.forEach((s) => {
+      if (!pages.find(p => p.id === s.page.id)) {
+        const p = this.props.pages.find(p => p.id === s.page.id);
+        if (p) {
+          pages.push(p);
+        }
+      }
+    });
+    return pages.map((p) => {
+      const vals = stickies.filter(s => s.page.id === p.id);
+      return this.renderItem(p, vals);
+    });
   }
   renderGroupByDate(key) {
     const stickiesOfDate = {};
-    this.props.stickies.forEach((s) => {
+    const stickies = this.props.stickies.sort(this.compare());
+    stickies.forEach((s) => {
       const d = getDateString(s[key]);
       if (!stickiesOfDate[d]) {
         stickiesOfDate[d] = [];
@@ -71,7 +108,7 @@ class StickyList extends React.Component {
                  .sort()
                  .reverse()
                  .map(d => this.renderTreeView({ id: d, name: d },
-                                               this.renderPages(stickiesOfDate[d])));
+                                               this.renderDateStickies(stickiesOfDate[d])));
   }
   renderGroupByCreatedAtTree() {
     return this.renderGroupByDate('created_at');
@@ -92,10 +129,17 @@ class StickyList extends React.Component {
     return trees;
   }
   renderGroupBySiteTree() {
-    return this.props.pages.map(p => this.renderItem(p, this.props.stickies));
+    const compare = (a, b) => a.title.localeCompare(b.title);
+    return this.props.pages.sort(compare).map((p) => {
+      const vals = this.props.stickies
+                       .filter(s => s.page.id === p.id)
+                       .sort(compare);
+      return this.renderItem(p, vals);
+    });
   }
   renderGroupByTagTree() {
-    const trees =  this.props.tags.map((t) => {
+    const compare = (a, b) => a.name.localeCompare(b.name);
+    const trees =  this.props.tags.sort(compare).map((t) => {
       const items = this.props.stickies
                         .filter(s => s.tags.some(tag => t.id === tag.id))
                         .map(sticky => this.renderSticky(sticky));
@@ -128,9 +172,18 @@ class StickyList extends React.Component {
     }
   }
   render() {
-    const groupByOptions = Object.keys(GroupBy).map(key => (
-      <option key={key} selected={this.props.groupBy === key} value={key}>{GroupBy[key]}</option>
-    ));
+    const groupByOptions = Object.keys(GroupBy).map((key) => {
+      const value = GroupBy[key];
+      return (
+        <option
+          key={key}
+          selected={this.props.groupBy === value}
+          value={value}
+        >
+          {value}
+        </option>
+      );
+    });
     return (
       <div>
         <label>Search
@@ -146,7 +199,7 @@ class StickyList extends React.Component {
         <select
           value={this.props.groupBy}
           className="groupby-select"
-          onChange={e => this.props.handleGroupByChange(GroupBy[e.target.value])}
+          onChange={e => this.props.handleGroupByChange(e.target.value)}
         >
           {groupByOptions}
         </select>
@@ -183,6 +236,7 @@ function mapStateToProps(state) {
     pages:       state.pages,
     searchQuery: state.searchQuery,
     groupBy:     state.groupBy,
+    orderBy:     state.orderBy,
   };
 }
 

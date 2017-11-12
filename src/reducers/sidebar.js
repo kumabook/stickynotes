@@ -22,8 +22,8 @@ export const OrderBy = {
 };
 
 export const GroupBy = {
+  UpdatedAt: 'Updated',
   CreatedAt: 'Created',
-  UpdatedAt: 'Modified',
   TagSite:   'Tag+Site',
   Site:      'Site',
   Tag:       'Tag',
@@ -109,8 +109,15 @@ const searchQuery = (state = '', action) => {
 
 const orderBy = (state = OrderBy.Alphabetical, action) => {
   switch (action.type) {
-    case 'CHANGE_ORDER_BY':
-      return action.payload;
+    case 'CHANGE_GROUP_BY':
+      switch (action.payload) {
+        case GroupBy.CreatedAt:
+          return OrderBy.CreatedAt;
+        case GroupBy.UpdatedAt:
+          return OrderBy.UpdatedAt;
+        default:
+          return OrderBy.Alphabetical;
+      }
     default:
       return state;
   }

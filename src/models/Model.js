@@ -65,7 +65,7 @@ Model.prototype.update = function update(data, db) {
     const request = store.put(data);
     request.onerror = reject;
     request.onsuccess = resolve;
-  });
+  }).then(() => data);
 };
 
 Model.prototype.destroy = function destroy(id, db) {

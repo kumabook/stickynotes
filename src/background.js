@@ -425,7 +425,6 @@ function migrate({ stickies, lastSynced, accessToken, user }) {
     logger.info('User is not logged in');
   }
   logger.info(`There are ${stickies.length} stickies`);
-
   Promise.all([
     api.setLastSynced(lastSynced),
     api.setAccessToken(accessToken),
@@ -440,6 +439,12 @@ function migrate({ stickies, lastSynced, accessToken, user }) {
     }).catch((e) => {
       logger.fatal('----------------- indexedDB migration fail -----------------');
       logger.error(e);
+    })
+    .then(() => api.isLoggedIn())
+    .then((isLoggedIn) => {
+      if (isLoggedIn) {
+        startSyncTimer();
+      }
     });
 }
 
@@ -448,4 +453,9 @@ logger.info(`Current log level is ${logger.getLevel()}`);
 
 createDB().then(() => {
   logger.info('Create database');
+  return api.isLoggedIn();
+}).then((isLoggedIn) => {
+  if (isLoggedIn) {
+    startSyncTimer();
+  }
 });

@@ -5,7 +5,7 @@ import logger from './logger';
 function getAccessToken() {
   return new Promise(r => browser.storage.local.get('accessToken', r))
     .then((v) => {
-      if (v) {
+      if (v && v.accessToken) {
         return v.accessToken;
       }
       return null;
@@ -19,7 +19,7 @@ function setAccessToken(accessToken) {
 function getUser() {
   return new Promise(r => browser.storage.local.get('user', r))
     .then((v) => {
-      if (v) {
+      if (v && v.user) {
         return v.user;
       }
       return null;

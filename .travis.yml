@@ -12,4 +12,3 @@ before_script:
   - npm run get-unbranded-firefox -- --target ../
 script:
   - export JPM_FIREFOX_BINARY=$TRAVIS_BUILD_DIR/../firefox/firefox-bin
-  - jpm test

@@ -32,6 +32,7 @@ Sticky.normalize = function normalize(sticky) {
     sticky.updated_at = new Date(sticky.updated_at);
   }
   delete sticky.uuid;
+  delete sticky.page;
   return sticky;
 };
 

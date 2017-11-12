@@ -60,7 +60,7 @@ const stickies = (state = [], action) => {
       return state.concat([action.payload]);
     case 'SAVED_STICKIES':
       return state.map((sticky) => {
-        if (sticky.uuid === action.payload.uuid) {
+        if (sticky.id === action.payload.id) {
           return action.payload;
         }
         return sticky;

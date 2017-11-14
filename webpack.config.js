@@ -6,7 +6,7 @@ module.exports = {
     sidebar:    './src/sidebar.jsx',
   },
   output: {
-    path:     `${__dirname}/webextension/`,
+    path:     `${__dirname}/`,
     filename: '[name]/bundle.js',
   },
   module: {

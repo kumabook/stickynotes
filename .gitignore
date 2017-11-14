@@ -2,3 +2,8 @@
 
 ./lib/config.js
 *~
+bundle.js
+bundle.js.map
+node_modules
+src/config.json
+.envrc

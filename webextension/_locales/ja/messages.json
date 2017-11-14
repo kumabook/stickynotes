@@ -8,6 +8,9 @@
   "create": {
     "message": "ここに付箋を作成"
   },
+  "sidebar": {
+    "message": "サイドバーに付箋の一覧表示"
+  },
   "toggle": {
     "message": "付箋の表示/非表示"
   },

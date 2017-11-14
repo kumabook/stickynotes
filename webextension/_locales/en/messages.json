@@ -9,6 +9,9 @@
     "message": "Generate Sticky"
   },
   "sidebar": {
+    "message": "Sidebar Sticky list"
+  },
+  "toggle": {
     "message": "Show/Hide Stickies"
   },
   "sync": {

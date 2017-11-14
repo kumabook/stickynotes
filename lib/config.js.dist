@@ -1,7 +1,0 @@
-module.exports = {
-  rootUrl: 'https://stickynotes-backend.herokuapp.com',
-  clientId: "xxxx",
-  clientSecret: "xxxx",
-  syncInterval: 30 * 1000,
-  logLevel: 'FATAL'
-};

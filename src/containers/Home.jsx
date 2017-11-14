@@ -7,7 +7,7 @@ import { getMessage } from '../utils/i18n';
 const MENUS = [
 //  'import',
 //  'export',
-//  'sidebar',
+  'sidebar',
   'toggle',
   'create',
 //  'search',

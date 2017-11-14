@@ -8,8 +8,8 @@
   "author": "Hiroki Kumamoto",
   "scripts": {
     "get-unbranded-firefox": "get-firefox -ecb unbranded-release",
-    "build": "webpack",
-    "start": "webpack && jpm run -b /Applications/FirefoxDeveloperEdition.app/"
+    "build": "webpack && web-ext build --overwrite-dest -i src/ \"**/*~\"",
+    "start": "webpack && web-ext run -i src/ \"**/*~\""
   },
   "engines": {
     "firefox": ">=38.0a1"
@@ -43,7 +43,7 @@
     "regenerator-runtime": "0.10.0",
     "regenerator-transform": "^0.11.0",
     "uuid": "^3.1.0",
-    "web-ext": "^1.8.1",
+    "web-ext": "^2.2.2",
     "webpack": "^3.8.1"
   },
   "hasEmbeddedWebExtension": true,

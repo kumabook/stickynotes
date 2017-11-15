@@ -256,7 +256,10 @@ function importStickies(stickies, db) {
             .catch(e => logger.error(e));
         }
         return Sticky.destroy(sticky.id, db)
-          .then(() => logger.trace(`Removed ${s.id}`));
+          .then(() => {
+            logger.trace(`Removed ${s.id}`);
+            updatedStickies.push(sticky);
+          });
       }
       if (!Sticky.isDeleted(s)) {
         return Sticky.new(s, db).then((st) => {

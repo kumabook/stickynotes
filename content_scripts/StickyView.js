@@ -475,7 +475,7 @@ StickyView.toggleVisibilityAllStickies = function() {
 };
 
 StickyView.deleteDom = function(sticky) {
-  const dom = document.getElementById('sticky' + sticky.id);
+  const dom = document.getElementById(`sticky${sticky.id}`);
   if (dom && dom.__stickyView) {
     dom.__stickyView.sticky = sticky;
     dom.__stickyView.deleteDom();

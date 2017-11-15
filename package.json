@@ -10,7 +10,8 @@
     "get-unbranded-firefox": "get-firefox -ecb unbranded-release",
     "build": "webpack && web-ext build --overwrite-dest -i src/ \"**/*~\"",
     "start": "webpack && web-ext run -i src/ \"**/*~\"",
-    "sign": "webpack && web-ext sign -i src/ \"**/*~\""
+    "sign": "webpack && web-ext sign -i src/ \"**/*~\"",
+    "pack": "git archive HEAD --output=stickynotes.zip"
   },
   "engines": {
     "firefox": ">=38.0a1"

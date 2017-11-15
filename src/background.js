@@ -12,8 +12,6 @@ const contentScriptPorts = {};
 const sidebarPorts       = {};
 let popupPort            = null;
 let syncTimer            = null;
-const legacyPortName     = 'legacy-stickynotes';
-const legacyPort         = browser.runtime.connect({ name: legacyPortName });
 const dbName             = config.DATABASE_NAME;
 const dbVersion          = 1;
 
@@ -38,21 +36,6 @@ function getContentScriptPorts() {
 function getSidebarPorts() {
   return Object.values(sidebarPorts);
 }
-
-legacyPort.onMessage.addListener((msg) => {
-  const { portName, type } = msg;
-  const port = getPort(portName);
-  if (port) {
-    port.postMessage(msg);
-  }
-  switch (type) {
-    case 'migrate':
-      migrate(msg.payload);
-      break;
-    default:
-      break;
-  }
-});
 
 function handleContentScriptMessage(msg) {
   logger.info(`handleContentScriptMessage ${JSON.stringify(msg)}`);
@@ -327,41 +310,30 @@ function sync() {
     });
 }
 
-function passToLegacyPort(msg) {
-  legacyPort.postMessage(msg);
-}
-
 browser.runtime.onConnect.addListener((port) => {
-  if (port === legacyPort) return;
   const name = port.name;
   if (name.startsWith('content-script')) {
     contentScriptPorts[port.name] = port;
     port.onDisconnect.addListener(() => {
       delete contentScriptPorts[port.name];
       port.onMessage.removeListener(handleContentScriptMessage);
-      port.onMessage.removeListener(passToLegacyPort);
     });
     port.onMessage.addListener(handleContentScriptMessage);
-    port.onMessage.addListener(passToLegacyPort);
   } else if (name === 'popup') {
     popupPort = port;
     port.onDisconnect.addListener(() => {
       popupPort = null;
       port.onMessage.removeListener(handlePopupMessage);
-      port.onMessage.removeListener(passToLegacyPort);
     });
     port.onMessage.addListener(handlePopupMessage);
-    port.onMessage.addListener(passToLegacyPort);
     api.getUser().then(payload => popupPort.postMessage({ type: 'logged-in', payload }));
   } else if (name.startsWith('sidebar')) {
     sidebarPorts[port.name] = port;
     port.onDisconnect.addListener(() => {
       delete sidebarPorts[port.name];
       port.onMessage.removeListener(handleSidebarMessage);
-      port.onMessage.removeListener(passToLegacyPort);
     });
     port.onMessage.addListener(handleSidebarMessage);
-    port.onMessage.addListener(passToLegacyPort);
   }
 });
 
@@ -421,38 +393,6 @@ function createDB() {
     Page.createObjectStore(db),
     Tag.createObjectStore(db),
   ]));
-}
-
-function migrate({ stickies, lastSynced, accessToken, user }) {
-  logger.info('---------------------------- migration start -----------------');
-  if (user) {
-    logger.info(`User is ${user.id}`);
-    logger.info(`Last synced is ${lastSynced}`);
-  } else {
-    logger.info('User is not logged in');
-  }
-  logger.info(`There are ${stickies.length} stickies`);
-  Promise.all([
-    api.setLastSynced(lastSynced),
-    api.setAccessToken(accessToken),
-    api.setUser(user),
-  ]).then(() => {
-    logger.info('----------------- indexedDB migration start -----------------');
-  }).then(() => idb.open(dbName))
-    .then(db => stickies.map(s => () => Sticky.new(Sticky.normalizeLegacy(s), db))
-          .reduce((acc, p) => acc.then(p), Promise.resolve()).then(() => db))
-    .then(() => {
-      logger.info('----------------- indexedDB migration end ------------------');
-    }).catch((e) => {
-      logger.fatal('----------------- indexedDB migration fail -----------------');
-      logger.error(e);
-    })
-    .then(() => api.isLoggedIn())
-    .then((isLoggedIn) => {
-      if (isLoggedIn) {
-        startSyncTimer();
-      }
-    });
 }
 
 logger.setLevel(config.LOG_LEVEL);

@@ -126,11 +126,6 @@ function handlePopupMessage(msg) {
   logger.info(`handlePopupMessage ${msg.type} from ${msg.portName}`);
   const port = getPort(msg.portName);
   switch (msg.type) {
-    case 'sidebar-menu':
-      if (browser.sidebarAction.open) {
-        browser.sidebarAction.open();
-      }
-      break;
     case 'toggle-menu':
       browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         if (tabs.length > 0) {
@@ -386,6 +381,12 @@ browser.contextMenus.create({
   contexts: ['all'],
 });
 
+browser.contextMenus.create({
+  id:       'open-sidebar',
+  title:    'open sidebar',
+  contexts: ['all'],
+});
+
 browser.contextMenus.onClicked.addListener((info, tab) => {
   const portName = `content-script-${info.pageUrl}`;
   const port     = contentScriptPorts[portName];
@@ -402,6 +403,9 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
     case 'toggle-visibility':
       break;
     case 'delete-all':
+      break;
+    case 'open-sidebar':
+      browser.sidebarAction.open();
       break;
     default:
       break;

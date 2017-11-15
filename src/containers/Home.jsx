@@ -1,3 +1,4 @@
+/* global browser: false */
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -63,6 +64,9 @@ function mapDispatchToProps(dispatch, { history }) {
           break;
         case 'import':
           filePicker.click();
+          break;
+        case 'sidebar':
+          browser.sidebarAction.open();
           break;
         default:
           dispatch({ type: 'MENU', payload: { name: menu } });

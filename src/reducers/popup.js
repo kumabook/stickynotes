@@ -40,11 +40,23 @@ const signupStatus = (state = { type: 'waiting' }, action) => {
   }
 };
 
+const confirm = (state = false, action) => {
+  switch (action.type) {
+    case 'CONFIRM_CLEAR_CACHE':
+      return true;
+    case 'HIDE_CONFIRM':
+      return false;
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
   router: routerReducer,
   user,
   loginStatus,
   signupStatus,
+  confirm,
 });
 
 export default rootReducer;

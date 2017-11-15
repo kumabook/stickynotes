@@ -57,6 +57,9 @@ function* watchPort() {
       case 'deleted-sticky':
         yield put({ type: 'DELETED_STICKIES', payload: event.payload });
         break;
+      case 'cleared-stickies':
+        yield put({ type: 'CLEARED_STICKIES', payload: event.payload });
+        break;
       case 'imported-stickies':
         break;
       default:

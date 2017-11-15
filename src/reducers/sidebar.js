@@ -67,6 +67,8 @@ const stickies = (state = [], action) => {
       });
     case 'DELETED_STICKIES':
       return state.filter(s => s.id !== action.payload.id);
+    case 'CLEARED_STICKIES':
+      return [];
     default:
       return state;
   }
@@ -80,6 +82,8 @@ const tags = (state = [], action) => {
       return addTags(state.slice(), action.payload.tags);
     case 'SAVED_STICKIES':
       return addTags(state.slice(), action.payload.tags);
+    case 'CLEARED_STICKIES':
+      return [];
     default:
       return state;
   }
@@ -93,6 +97,8 @@ const pages = (state = [], action) => {
       return addPage(state.slice(), action.payload.page);
     case 'SAVED_STICKIES':
       return addPage(state.slice(), action.payload.page);
+    case 'CLEARED_STICKIES':
+      return [];
     default:
       return state;
   }

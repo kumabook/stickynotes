@@ -169,6 +169,9 @@ port.onMessage.addListener((msg) => {
     case 'deleted-sticky':
       deleteStickyView(msg.payload);
       break;
+    case 'cleared-stickies':
+      StickyView.deleteAll();
+      break;
     case 'imported-stickies': {
       const { createdStickies, updatedStickies } = msg.payload;
       importedStickies(createdStickies, updatedStickies);

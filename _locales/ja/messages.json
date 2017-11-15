@@ -20,6 +20,12 @@
   "focus": {
     "message": "サイドバーにフォーカスする"
   },
+  "clear-cache": {
+    "message": "キャッシュをクリアする"
+  },
+  "clear-cache.confirmMessage": {
+    "message": "ローカルにある付箋を全て削除してよろしいですか？サーバー上にある付箋は削除されません。"
+  },
   "search": {
     "message": "付箋を検索"
   },

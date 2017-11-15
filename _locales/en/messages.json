@@ -20,6 +20,12 @@
   "focus": {
     "message": "Focus on sticky sidebar"
   },
+  "clear-cache": {
+    "message": "Clear cache"
+  },
+  "clear-cache.confirmMessage": {
+    "message": "Are you sure to delete all local stickies?. Stickies on cloud server won't be depleted"
+  },
   "search": {
     "message": "Search stikies"
   },

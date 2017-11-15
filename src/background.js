@@ -144,6 +144,27 @@ function handlePopupMessage(msg) {
         .then(() => port.postMessage({ type: 'logged-out' }))
         .catch(e => logger.error(e));
       break;
+    case 'clear-cache-menu':
+      stopSyncTimer();
+      idb.open(dbName).then(db => Promise.all([
+        Sticky.clear(db),
+        Page.clear(db),
+        Tag.clear(db),
+      ]))
+        .then(() => api.setLastSynced(null))
+        .then(() => {
+          const type = 'cleared-stickies';
+          getSidebarPorts().forEach(p => p.postMessage({ type }));
+          getContentScriptPorts().forEach(p => p.postMessage({ type }));
+        })
+        .then(() => api.isLoggedIn())
+        .then((isLoggedIn) => {
+          if (isLoggedIn) {
+            startSyncTimer();
+          }
+        })
+        .catch(e => logger.error(e));
+      break;
     case 'signup': {
       const { email, password, passwordConfirmation } = msg.payload;
       api.signup(email, password, passwordConfirmation)

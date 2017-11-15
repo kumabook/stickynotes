@@ -83,7 +83,9 @@ function addStickyView(sticky) {
       }
     },
   });
-  document.body.appendChild(stickyView.dom);
+  if (!document.getElementById(stickyView.dom.id)) {
+    document.body.appendChild(stickyView.dom);
+  }
   return stickyView;
 }
 

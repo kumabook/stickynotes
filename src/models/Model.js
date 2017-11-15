@@ -78,3 +78,12 @@ Model.prototype.destroy = function destroy(id, db) {
     };
   });
 };
+
+Model.prototype.clear = function clear(db) {
+  const store = this.objectStore(db);
+  return new Promise((resolve, reject) => {
+    const request = store.clear();
+    request.onerror   = reject;
+    request.onsuccess = resolve;
+  });
+};

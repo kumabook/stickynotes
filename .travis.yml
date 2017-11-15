@@ -8,7 +8,6 @@ env:
 before_install:
   - sh -e /etc/init.d/xvfb start
 before_script:
-  - npm install -g jpm
   - npm run get-unbranded-firefox -- --target ../
 script:
   - export WEB_EXT_FIREFOX_BINARY=$TRAVIS_BUILD_DIR/../firefox/firefox-bin

@@ -29,8 +29,26 @@
   "logout": {
     "message": "ログアウト"
   },
+  "removeAll": {
+    "message": "現在のページの付箋をすべて削除"
+  },
+  "display-option": {
+    "message": "サイドバーの表示方法"
+  },
+  "preference": {
+     "message": "設定"
+  },
   "back": {
     "message": "戻る"
+  },
+  "email": {
+    "message": "Eメール"
+  },
+  "password": {
+    "message": "パスワード"
+  },
+  "password_confirmation": {
+    "message": "パスワード (確認用)"
   },
   "signup": {
     "message": "サインアップ"
@@ -40,21 +58,6 @@
   },
   "account_description": {
     "message": "ログインすると複数デバイスで付箋を共有できるようになります"
-  },
-  "password": {
-    "message": "パスワード"
-  },
-  "password_confirmation": {
-    "message": "パスワード(確認)"
-  },
-  "removeAll": {
-    "message": "現在のページの付箋をすべて削除"
-  },
-  "display-option": {
-    "message": "サイドバーの表示方法"
-  },
-  "preference": {
-     "message": "設定"
   },
   "show_sticky_list.label": {
     "message": "付箋の一覧を表示"

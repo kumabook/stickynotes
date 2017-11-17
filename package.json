@@ -8,8 +8,8 @@
   "author": "Hiroki Kumamoto",
   "scripts": {
     "get-unbranded-firefox": "get-firefox -ecb unbranded-release",
-    "build": "webpack",
-    "start": "webpack && jpm run -b /Applications/FirefoxDeveloperEdition.app/"
+    "build": "webpack && jpm xpi && cp stickynotes.xpi ~/Desktop/",
+    "start": "webpack && jpm run -b /Applications/Firefox56.app/ -p /Users/kumabook/Library/Application\\ Support/Firefox/Profiles/ujn5ioau.dev/"
   },
   "engines": {
     "firefox": ">=38.0a1"

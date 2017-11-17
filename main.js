@@ -1,6 +1,7 @@
 "use strict";
 
 const webext      = require('sdk/webextension');
+const timers      = require('sdk/timers');
 const sdkMain     = require('./index');
 const config      = require('./lib/config');
 const Logger      = require('./lib/Logger');
@@ -50,15 +51,40 @@ webext.startup().then(({ browser }) => {
 function main() {
   const lastSynced = stickynotes.lastSynced;
   Logger.setLevel(config.logLevel);
+  console.log('migrate ----------------------------------------------------------------');
   sdkMain.migrate()
-    .then(() => stickynotes.Sticky.fetchAll())
-    .then(stickies => webExtensionPort.postMessage({
-      type:    'migrate',
-      payload: {
-        stickies,
-        lastSynced,
-        accessToken: ApiClient.getAccessToken(),
-        user:        ApiClient.getUser(),
-      },
-    }));
+    .then(() => {
+      console.log('migrate ----------------------------------------------------------------');
+    })
+    .then(() => stickynotes.Sticky.count())
+    .then((count) => {
+      const limit = 1000;
+      const delay = limit * 20;
+      let promise = Promise.resolve();
+      for (let offset = 0; offset < count; offset += limit) {
+        promise = promise
+          .then(() => stickynotes.Sticky.fetchItems(offset, limit))
+          .then((stickies) => {
+            const finish = offset + limit >= count;
+            webExtensionPort.postMessage({
+              type:    'migrate',
+              payload: {
+                stickies,
+                lastSynced,
+                accessToken: ApiClient.getAccessToken(),
+                user:        ApiClient.getUser(),
+                finish,
+                offset,
+                count,
+              },
+            });
+            return new Promise((resolve) => {
+              timers.setTimeout(() => {
+                resolve();
+              }, delay);
+            });
+          });
+      }
+      return promise;
+    });
 }

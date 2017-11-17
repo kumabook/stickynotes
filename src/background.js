@@ -416,7 +416,7 @@ function createDB() {
   ]));
 }
 
-function migrate({ stickies, lastSynced, accessToken, user }) {
+function migrate({ stickies, lastSynced, accessToken, user, finish, offset, count }) {
   logger.info('---------------------------- migration start -----------------');
   if (user) {
     logger.info(`User is ${user.id}`);
@@ -442,7 +442,14 @@ function migrate({ stickies, lastSynced, accessToken, user }) {
     })
     .then(() => api.isLoggedIn())
     .then((isLoggedIn) => {
-      if (isLoggedIn) {
+      const state = finish ? '[FINISH]' : '[PROGRESS]';
+      browser.notifications.create({
+        type:     'basic',
+        iconUrl:  browser.extension.getURL('icons/icon-64.png'),
+        title:    'StickyNotes migration',
+        message: `${state} ${offset + stickies.length}/${count} stickies are imported in webextension`,
+      });
+      if (isLoggedIn && finish) {
         startSyncTimer();
       }
     });

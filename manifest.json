@@ -38,7 +38,7 @@
   "browser_action": {
     "browser_style": true,
     "default_icon": "icons/icon-32.png",
-    "default_title": "button label",
+    "default_title": "StickyNotes",
     "default_popup": "popup/index.html"
   },
   "sidebar_action": {

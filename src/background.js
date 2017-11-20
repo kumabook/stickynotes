@@ -358,55 +358,58 @@ browser.runtime.onConnect.addListener((port) => {
   }
 });
 
-browser.contextMenus.create({
-  id:       'create-sticky',
-  title:    'create sticky',
-  contexts: ['all'],
-});
+function setupContextMenus() {
+  browser.contextMenus.create({
+    id:       'create-sticky',
+    title:    'create sticky',
+    contexts: ['all'],
+  });
 
-browser.contextMenus.create({
-  id:       'toggle-visibility',
-  type:     'radio',
-  title:    'show/hide stickies',
-  contexts: ['all'],
-});
+  browser.contextMenus.create({
+    id:       'toggle-visibility',
+    type:     'radio',
+    title:    'show/hide stickies',
+    contexts: ['all'],
+  });
 
-browser.contextMenus.create({
-  id:       'delete-all',
-  title:    'delte all stickies on this page',
-  contexts: ['all'],
-});
+  browser.contextMenus.create({
+    id:       'delete-all',
+    title:    'delte all stickies on this page',
+    contexts: ['all'],
+  });
 
-browser.contextMenus.create({
-  id:       'open-sidebar',
-  title:    'open sidebar',
-  contexts: ['all'],
-});
+  browser.contextMenus.create({
+    id:       'open-sidebar',
+    title:    'open sidebar',
+    contexts: ['all'],
+  });
 
-browser.contextMenus.onClicked.addListener((info, tab) => {
-  const portName = `content-script-${info.pageUrl}`;
-  const port     = contentScriptPorts[portName];
-  switch (info.menuItemId) {
-    case 'create-sticky':
-      if (port) {
-        port.postMessage({
-          type:      'create-sticky',
-          targetUrl: info.pageUrl,
-          portName,
-        });
-      }
-      break;
-    case 'toggle-visibility':
-      break;
-    case 'delete-all':
-      break;
-    case 'open-sidebar':
-      browser.sidebarAction.open();
-      break;
-    default:
-      break;
-  }
-});
+  browser.contextMenus.onClicked.addListener((info, tab) => {
+    const portName = `content-script-${info.pageUrl}`;
+    const port     = contentScriptPorts[portName];
+    switch (info.menuItemId) {
+      case 'create-sticky':
+        if (port) {
+          port.postMessage({
+            type:      'create-sticky',
+            targetUrl: info.pageUrl,
+            portName,
+          });
+        }
+        break;
+      case 'toggle-visibility':
+        break;
+      case 'delete-all':
+        break;
+      case 'open-sidebar':
+        browser.sidebarAction.open();
+        break;
+      default:
+        break;
+    }
+  });
+}
+
 
 function createDB() {
   return idb.upgrade(dbName, dbVersion, db => Promise.all([
@@ -425,5 +428,15 @@ createDB().then(() => {
 }).then((isLoggedIn) => {
   if (isLoggedIn) {
     startSyncTimer();
+  }
+});
+
+browser.runtime.getPlatformInfo().then((info) => {
+  switch (info.os) {
+    case 'android':
+      break;
+    default:
+      setupContextMenus();
+      break;
   }
 });

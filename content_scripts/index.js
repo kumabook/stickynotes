@@ -154,7 +154,7 @@ port.onMessage.addListener((msg) => {
       createSticky();
       break;
     case 'created-sticky':
-      addStickyView(msg.payload);
+      addStickyView(msg.payload).focus();
       break;
     case 'saved-sticky': {
       const sticky = msg.payload;

@@ -40,4 +40,4 @@ export function getPort(name) {
   const port = browser.runtime.connect({ name });
   ports[name] = port;
   return port;
-};
+}

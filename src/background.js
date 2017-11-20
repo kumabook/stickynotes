@@ -37,6 +37,28 @@ function getSidebarPorts() {
   return Object.values(sidebarPorts);
 }
 
+function createStickyOnActiveTab() {
+  browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+    if (tabs.length > 0) {
+      getContentScriptPorts().forEach(p => p.postMessage({
+        type:      'create-sticky',
+        targetUrl: tabs[0].url,
+      }));
+    }
+  });
+}
+
+function toggleStickies() {
+  browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+    if (tabs.length > 0) {
+      getContentScriptPorts().forEach(p => p.postMessage({
+        type:      'toggle-visibility',
+        targetUrl: tabs[0].url,
+      }));
+    }
+  });
+}
+
 function handleContentScriptMessage(msg) {
   logger.info(`handleContentScriptMessage ${JSON.stringify(msg)}`);
   const port = getPort(msg.portName);
@@ -129,24 +151,10 @@ function handlePopupMessage(msg) {
       break;
     }
     case 'toggle-menu':
-      browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
-        if (tabs.length > 0) {
-          getContentScriptPorts().forEach(p => p.postMessage({
-            type:      'toggle-visibility',
-            targetUrl: tabs[0].url,
-          }));
-        }
-      });
+      toggleStickies();
       break;
     case 'create-menu':
-      browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
-        if (tabs.length > 0) {
-          getContentScriptPorts().forEach(p => p.postMessage({
-            type:      'create-sticky',
-            targetUrl: tabs[0].url,
-          }));
-        }
-      });
+      createStickyOnActiveTab();
       break;
     case 'login': {
       const { email, password } = msg.payload;
@@ -434,6 +442,21 @@ function setupContextMenus() {
   });
 }
 
+function setupCommands() {
+  browser.commands.onCommand.addListener((command) => {
+    switch (command) {
+      case 'create_sticky':
+        createStickyOnActiveTab();
+        break;
+      case 'toggle_stickies':
+        toggleStickies();
+        break;
+      default:
+        break;
+    }
+  });
+}
+
 
 function createDB() {
   return idb.upgrade(dbName, dbVersion, db => Promise.all([
@@ -461,6 +484,7 @@ browser.runtime.getPlatformInfo().then((info) => {
       break;
     default:
       setupContextMenus();
+      setupCommands();
       break;
   }
 });

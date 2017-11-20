@@ -49,8 +49,23 @@
   "commands": {
     "_execute_sidebar_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+S"
+        "default": "Ctrl+Shift+S",
+        "mac":     "MacCtrl+Shift+S"
       }
+    },
+    "create_sticky": {
+      "suggested_key": {
+        "default":     "Ctrl+Shift+C",
+        "mac":         "MacCtrl+Shift+C"
+      },
+      "description": "Create a sticky in active tab"
+    },
+    "toggle_stickies": {
+      "suggested_key": {
+        "default":     "Ctrl+Q",
+        "mac":         "MacCtrl+Q"
+      },
+      "description": "Toggle visiblities of stickies in active tab"
     }
   }
 }

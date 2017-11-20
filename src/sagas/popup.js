@@ -1,3 +1,4 @@
+/* global browser: false */
 import {
   fork,
   takeEvery,
@@ -95,4 +96,6 @@ export default function* root() {
     fork(watchResetPassword),
     fork(watchPort),
   ];
+  const info = yield call(browser.runtime.getPlatformInfo);
+  yield put({ type: 'INFO', payload: info });
 }

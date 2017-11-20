@@ -1,6 +1,15 @@
 import { combineReducers } from 'redux';
 import { routerReducer }   from 'react-router-redux';
 
+const info = (state = {}, action) => {
+  switch (action.type) {
+    case 'INFO':
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 const user = (state = null, action) => {
   switch (action.type) {
     case 'LOGGED_IN':
@@ -53,6 +62,7 @@ const confirm = (state = false, action) => {
 
 const rootReducer = combineReducers({
   router: routerReducer,
+  info,
   user,
   loginStatus,
   signupStatus,

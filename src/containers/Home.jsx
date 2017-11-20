@@ -6,23 +6,30 @@ import { isJSON } from '../utils/file';
 import { getMessage } from '../utils/i18n';
 import Confirm from '../components/Confirm';
 
-const MENUS = [
-//  'import',
-//  'export',
-  'sidebar',
-  'toggle',
-  'create',
-//  'search',
-//  'display-option',
-//  'preference',
-];
-
-class Home extends React.Component {
+ class Home extends React.Component {
+  static canOpenSidebar() {
+    return browser.sidebarAction && browser.sidebarAction.open;
+  }
   menus() {
-    if (this.props.user) {
-      return MENUS.concat(['sync', 'logout', 'clear-cache']);
+    let menus = [];
+    switch (this.props.info.os) {
+      case 'android':
+        menus.push('list');
+        break;
+      default:
+        menus.push('list');
+        if (Home.canOpenSidebar()) {
+          menus.push('sidebar');
+        }
+        menus = menus.concat(['toggle', 'create']);
+        break;
     }
-    return MENUS.concat('login');
+    if (this.props.user) {
+      menus = menus.concat(['sync', 'logout', 'clear-cache']);
+    } else {
+      menus = menus.concat(['login']);
+    }
+    return menus;
   }
   render() {
     return (
@@ -60,6 +67,7 @@ class Home extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    info:    state.info,
     user:    state.user,
     confirm: state.confirm,
   };

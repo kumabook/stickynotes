@@ -12,7 +12,8 @@
     "start": "webpack && web-ext run -i src/ \"**/*~\" --verbose",
     "sign": "webpack && web-ext sign -i src/ \"**/*~\"",
     "pack": "git archive HEAD --output=stickynotes.zip",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "android": "npm run build && mv web-ext-artifacts/stickynotes-1.1.0.zip web-ext-artifacts/stickynotes-1.1.0.xpi && adb push web-ext-artifacts/stickynotes-1.1.0.xpi /mnt/sdcard/xpi"
   },
   "engines": {
     "firefox": ">=38.0a1"

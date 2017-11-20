@@ -8,8 +8,8 @@ const mounsePosition = {
 
 function watchClickPosition(event) {
   try {
-    mounsePosition.x = event.clientX + window.content.pageXOffset;
-    mounsePosition.y = event.clientY + window.content.pageYOffset;
+    mounsePosition.x = event.clientX + window.top.pageXOffset;
+    mounsePosition.y = event.clientY + window.top.pageYOffset;
   } catch (e) {
     Logger.log(e);
   }

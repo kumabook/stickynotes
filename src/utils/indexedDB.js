@@ -29,8 +29,17 @@ function transactionComplete(store) {
   });
 }
 
+function destroy(dbName) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.deleteDatabase(dbName);
+    request.onerror = event => reject(event);
+    request.onsuccess = event => resolve(event.target.result);
+  });
+}
+
 export default {
   open,
   upgrade,
   transactionComplete,
+  destroy,
 };

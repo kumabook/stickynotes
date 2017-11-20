@@ -51,9 +51,23 @@ p {
     text-overflow: ellipsis;
 }
 
+.header {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+.search-label {
+    margin-top: 2px;
+    flex-basis: 50px;
+}
+.search-input {
+    display: inline-block;
+    flex-grow: 3;
+}
+
 .groupby-select {
     margin-left: 8px;
-    width: 50px;
+    flex-basis: 80px;
 }
 .tree-label {
     display: inline-block;

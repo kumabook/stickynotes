@@ -109,6 +109,25 @@ function handlePopupMessage(msg) {
   logger.info(`handlePopupMessage ${msg.type} from ${msg.portName}`);
   const port = getPort(msg.portName);
   switch (msg.type) {
+    case 'list-menu': {
+      const url = 'sidebar/index.html';
+      const active = true;
+      browser.runtime.getPlatformInfo().then((info) => {
+        switch (info.os) {
+          case 'android':
+            browser.tabs.create({ url, active }).then((tab) => {
+              logger.info(tab);
+            });
+            break;
+          default:
+            browser.windows.create({ url }).then((windowInfo) => {
+              logger.info(windowInfo);
+            });
+            break;
+        }
+      });
+      break;
+    }
     case 'toggle-menu':
       browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         if (tabs.length > 0) {

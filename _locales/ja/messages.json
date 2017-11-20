@@ -8,6 +8,9 @@
   "create": {
     "message": "ここに付箋を作成"
   },
+  "list": {
+    "message": "付箋の一覧表示"
+  },
   "sidebar": {
     "message": "サイドバーに付箋の一覧表示"
   },

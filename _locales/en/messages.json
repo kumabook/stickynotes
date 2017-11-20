@@ -8,6 +8,9 @@
   "create": {
     "message": "Generate Sticky"
   },
+  "list": {
+    "message": "List Stickies"
+  },
   "sidebar": {
     "message": "Sidebar Sticky list"
   },

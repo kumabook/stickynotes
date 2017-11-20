@@ -62,6 +62,9 @@ function* watchPort() {
         break;
       case 'imported-stickies':
         break;
+      case 'error':
+        alert(`${event.type}: ${event.payload.message}`);
+        break;
       default:
         break;
     }

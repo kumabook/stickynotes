@@ -194,7 +194,12 @@ function handleSidebarMessage(msg) {
       ])).then(values => port.postMessage({
         type:    'fetched-stickies',
         payload: { stickies: values[0], tags: values[1], pages: values[2] },
-      }));
+      })).catch((e) => {
+        port.postMessage({
+          type:    'error',
+          payload: { message: e.message },
+        });
+      });
       break;
     }
     case 'jump-to-sticky': {

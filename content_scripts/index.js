@@ -35,11 +35,7 @@ function saveSticky(sticky) {
 
 function setTags(sticky, tagNames) {
   sticky.tagNames = tagNames;
-  port.postMessage({
-    type: 'save-sticky',
-    portName,
-    sticky,
-  });
+  saveSticky(sticky);
 }
 
 function deleteSticky(sticky) {
@@ -68,7 +64,7 @@ function addStickyView(sticky) {
       stickyView.sticky.color = colorItem.id;
       saveSticky(stickyView.sticky, { color: colorItem.id });
     },
-    onTagsChange: (tags) => setTags(sticky, tags),
+    onTagsChange: (tags) => setTags(stickyView.sticky, tags),
     onMoveEnd: () => {
       stickyView.sticky.left = parseInt(stickyView.dom.style.left, 10);
       stickyView.sticky.top  = parseInt(stickyView.dom.style.top, 10);

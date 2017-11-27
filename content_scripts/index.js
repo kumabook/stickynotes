@@ -1,6 +1,6 @@
 /* global browser, StickyView, Logger */
 const portName = `content-script-${window.location.href}`;
-const port     = browser.runtime.connect({ name: portName });
+let port;
 const mounsePosition = {
   x: 0,
   y: 0,
@@ -15,11 +15,6 @@ function watchClickPosition(event) {
   }
 }
 document.addEventListener('mousedown', watchClickPosition, true);
-port.postMessage({
-  portName,
-  type: 'load-stickies',
-  url:  window.location.href,
-});
 
 function isChildWindow() {
   return window !== window.parent;
@@ -137,7 +132,7 @@ function importedStickies(createdStickies, updatedStickies) {
   });
 }
 
-port.onMessage.addListener((msg) => {
+function messageListener(msg) {
   const { type } = msg;
   switch (type) {
     case 'load-stickies':
@@ -203,4 +198,14 @@ port.onMessage.addListener((msg) => {
     default:
       break;
   }
-});
+}
+
+setTimeout(() => {
+  port = browser.runtime.connect({ name: portName });
+  port.onMessage.addListener(messageListener);
+  port.postMessage({
+    portName,
+    type: 'load-stickies',
+    url:  window.location.href,
+  });
+}, 500);

@@ -359,15 +359,14 @@ StickyView.prototype.drag = function(e) {
  * enable drag resize.
  */
 StickyView.prototype.resize = function(elem, e) {
-  const c          = StickyView.classes;
-  const that       = this;
-  const URL        = document.location.href;
-  const origX      = elem.offsetLeft, origY  = elem.offsetTop;
-  const deltaX     = startX - origX , deltaY = startY - origY;
-  const startX     = e.clientX      , startY = e.clientY;
-  const origWidth  = parseInt(that.dom.style.width),
-        origHeight = parseInt(that.dom.style.height);
-  const deltaWidth = startX - origWidth, deltaHeight = startY - origHeight;
+  const c           = StickyView.classes;
+  const that        = this;
+  const startX      = e.clientX;
+  const startY      = e.clientY;
+  const origWidth   = parseInt(that.dom.style.width);
+  const origHeight  = parseInt(that.dom.style.height);
+  const deltaWidth  = startX - origWidth;
+  const deltaHeight = startY - origHeight;
   document.addEventListener('mousemove', moveHandler, true);
   document.addEventListener('mouseup'  , upHandler  , true);
   e.stopPropagation();
@@ -376,8 +375,8 @@ StickyView.prototype.resize = function(elem, e) {
     const width  = e.clientX - deltaWidth;
     const height = e.clientY - deltaHeight;
 
-    that.dom.style.width  = Math.max(width, c.MIN_WIDTH)   + 'px';
-    that.dom.style.height = Math.max(height, c.MIN_HEIGHT) + 'px';
+    that.dom.style.width  = `${Math.max(width, c.MIN_WIDTH)}px`;
+    that.dom.style.height = `${Math.max(height, c.MIN_HEIGHT)}px`;
     e.preventDefault();
     e.stopPropagation();
   }

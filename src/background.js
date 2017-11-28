@@ -1,12 +1,12 @@
-/* global browser: false, setTimeout: false, clearTimeout: false */
-
-import idb    from './utils/indexedDB';
-import logger from './utils/logger';
-import Sticky from './models/Sticky';
-import Page   from './models/Page';
-import Tag    from './models/Tag';
-import config from './config.json';
-import api    from './utils/api';
+/* global setTimeout: false, clearTimeout: false */
+import browser from 'webextension-polyfill';
+import idb     from './utils/indexedDB';
+import logger  from './utils/logger';
+import Sticky  from './models/Sticky';
+import Page    from './models/Page';
+import Tag     from './models/Tag';
+import config  from './config.json';
+import api     from './utils/api';
 
 const contentScriptPorts = {};
 const sidebarPorts       = {};

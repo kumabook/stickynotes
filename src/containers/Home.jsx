@@ -1,4 +1,5 @@
-/* global browser: false, confirm: false */
+/* global confirm: false */
+import browser from 'webextension-polyfill';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -6,7 +7,7 @@ import { isJSON } from '../utils/file';
 import { getMessage } from '../utils/i18n';
 import Confirm from '../components/Confirm';
 
- class Home extends React.Component {
+class Home extends React.Component {
   static canOpenSidebar() {
     return browser.sidebarAction && browser.sidebarAction.open;
   }

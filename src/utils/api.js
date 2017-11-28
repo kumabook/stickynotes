@@ -1,47 +1,45 @@
-/* global browser: false, fetch: false, Headers: false, setTimeout: false */
-import config from '../config.json';
-import logger from './logger';
+/* global fetch: false, Headers: false, setTimeout: false */
+import browser from 'webextension-polyfill';
+import config  from '../config.json';
+import logger  from './logger';
 
 function getAccessToken() {
-  return new Promise(r => browser.storage.local.get('accessToken', r))
-    .then((v) => {
-      if (v && v.accessToken) {
-        return v.accessToken;
-      }
-      return null;
-    });
+  return browser.storage.local.get('accessToken').then((v) => {
+    if (v && v.accessToken) {
+      return v.accessToken;
+    }
+    return null;
+  });
 }
 
 function setAccessToken(accessToken) {
-  return new Promise(r => browser.storage.local.set({ accessToken }, r));
+  return browser.storage.local.set({ accessToken });
 }
 
 function getUser() {
-  return new Promise(r => browser.storage.local.get('user', r))
-    .then((v) => {
-      if (v && v.user) {
-        return v.user;
-      }
-      return null;
-    });
+  return browser.storage.local.get('user').then((v) => {
+    if (v && v.user) {
+      return v.user;
+    }
+    return null;
+  });
 }
 
 function setUser(user) {
-  return new Promise(r => browser.storage.local.set({ user }, r)).then(() => user);
+  return browser.storage.local.set({ user }).then(() => user);
 }
 
 function getLastSynced() {
-  return new Promise(r => browser.storage.local.get('lastSynced', r))
-    .then((v) => {
-      if (v) {
-        return v.lastSynced;
-      }
-      return null;
-    });
+  return browser.storage.local.get('lastSynced').then((v) => {
+    if (v) {
+      return v.lastSynced;
+    }
+    return null;
+  });
 }
 
 function setLastSynced(lastSynced) {
-  return new Promise(r => browser.storage.local.set({ lastSynced }, r));
+  return browser.storage.local.set({ lastSynced });
 }
 
 function sendRequest(method, url, params) {

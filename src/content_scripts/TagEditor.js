@@ -83,3 +83,5 @@ TagEditor.prototype.splitToNames = function(str) {
   }
   return tags;
 };
+
+export default TagEditor;

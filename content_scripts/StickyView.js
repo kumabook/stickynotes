@@ -257,6 +257,8 @@ StickyView.prototype.createDom = function() {
   this.dom.appendChild(this.band);
 
   this.maximize = this.maximize.bind(this);
+
+  this.onTextareaInput = this.onTextareaInput.bind(this);
 };
 
 StickyView.prototype.bind = function() {
@@ -268,6 +270,7 @@ StickyView.prototype.bind = function() {
 
   this.textarea.addEventListener('change'   , this.onContentChange);
   this.textarea.addEventListener('keydown'  , this.onTextareaKeyDown);
+  this.textarea.addEventListener('input'    , this.onTextareaInput);
 
   this.dom.addEventListener('mousedown', this.drag);
   this.dom.addEventListener( 'dblclick', this.maximize);
@@ -285,6 +288,7 @@ StickyView.prototype.unbind = function() {
 
   this.textarea.removeEventListener('change'   , this.onContentChange);
   this.textarea.removeEventListener('keydown'  , this.onTextareaKeyDown);
+  this.textarea.removeEventListener('input'    , this.onTextareaInput);
 };
 
 StickyView.prototype.onContentChange = function() {
@@ -297,6 +301,10 @@ StickyView.prototype.onTextareaKeyDown = function(e) {
   if (e.keyCode == 68 && e.ctrlKey && e.shiftKey) {
     e.target.sticky.remove();
   }
+};
+
+StickyView.prototype.onTextareaInput = function(e) {
+  this.sticky.content = e.target.value;
 };
 
 StickyView.prototype.getElementPosition = function(elem) {

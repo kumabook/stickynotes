@@ -1,9 +1,10 @@
 const webpack = require('webpack');
 module.exports = {
   entry: {
-    background: './src/background.js',
-    popup:      './src/popup.jsx',
-    sidebar:    './src/sidebar.jsx',
+    background:      './src/background.js',
+    popup:           './src/popup.jsx',
+    sidebar:         './src/sidebar.jsx',
+    content_scripts: './src/content_script.js',
   },
   output: {
     path:     `${__dirname}/`,

@@ -23,16 +23,7 @@
       "matches": ["*://*/*"],
       "match_about_blank": true,
       "css": ["content_scripts/sticky-view.css"],
-      "js": [
-        "content_scripts/stickynotes.js",
-        "content_scripts/Logger.js",
-        "content_scripts/StickyView.js",
-        "content_scripts/StickyMenu.js",
-        "content_scripts/Dialog.js",
-        "content_scripts/ColorPicker.js",
-        "content_scripts/TagEditor.js",
-        "content_scripts/index.js"
-      ]
+      "js": ["content_scripts/bundle.js"]
     }
   ],
   "browser_action": {

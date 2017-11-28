@@ -71,7 +71,21 @@ function handleContentScriptMessage(msg) {
           getSidebarPorts().concat(port).forEach(p => p.postMessage({
             type: msg.type,
             stickies,
+            targetUrl: url,
           }));
+        });
+      break;
+    }
+    case 'reload-stickies': {
+      const { url } = msg;
+      idb.open(dbName)
+        .then(db => Sticky.findByUrl(url, db))
+        .then((stickies) => {
+          port.postMessage({
+            type:     'load-stickies',
+            stickies,
+            targetUrl: url,
+          });
         });
       break;
     }

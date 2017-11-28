@@ -14,7 +14,27 @@ function watchClickPosition(event) {
     Logger.log(e);
   }
 }
+function onHashChange(e) {
+  Logger.info(`hashchange: ${e.newURL}`);
+  port.postMessage({
+    portName,
+    type: 'reload-stickies',
+    url:  e.newURL,
+  });
+}
+
+function onPopState(e) {
+  Logger.info(`popstate: ${e.state} , ${document.location.href}`);
+  port.postMessage({
+    portName,
+    type: 'reload-stickies',
+    url:  document.location.href,
+  });
+}
+
 document.addEventListener('mousedown', watchClickPosition, true);
+window.addEventListener('hashchange', onHashChange);
+window.addEventListener('popstate', onPopState);
 
 function isChildWindow() {
   return window !== window.parent;
@@ -80,7 +100,11 @@ function addStickyView(sticky) {
   return stickyView;
 }
 
-function loadStickies(stickies) {
+function loadStickies(stickies, url) {
+  if ((window.location && url !== window.location.href) || isChildWindow()) {
+    return;
+  }
+  StickyView.deleteAll();
   stickies.forEach(addStickyView);
 }
 
@@ -136,7 +160,7 @@ function messageListener(msg) {
   const { type } = msg;
   switch (type) {
     case 'load-stickies':
-      loadStickies(msg.stickies);
+      loadStickies(msg.stickies, msg.targetUrl);
       break;
     case 'create-sticky':
       if (msg.targetUrl !== window.location.href) {

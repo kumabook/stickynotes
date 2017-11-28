@@ -1,4 +1,4 @@
-/* global StickyView */
+import StickyView from './StickyView';
 
 function ColorPicker(param) {
   this.title = 'Edit Color';
@@ -48,3 +48,5 @@ ColorPicker.prototype.unbind = function() {
     item.listener = null;
   });
 };
+
+export default ColorPicker;

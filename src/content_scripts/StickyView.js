@@ -1,4 +1,9 @@
-/* global browser, ColorPicker, TagEditor, Dialog, StickyMenu */
+import browser from 'webextension-polyfill';
+import ColorPicker from './ColorPicker';
+import TagEditor from './TagEditor';
+import Dialog from './Dialog';
+import StickyMenu from './StickyMenu';
+
 function StickyView(param) {
   this.sticky                = param.sticky;
   this.onClickDeleteButton   = param.onClickDeleteButton;
@@ -41,8 +46,8 @@ StickyView.classes = {
 };
 
 StickyView.State = {
-  Normal: 0,
-  Deleted: 1,
+  Normal:    0,
+  Deleted:   1,
   Minimized: 2
 };
 
@@ -519,3 +524,4 @@ StickyView.updateColor = function(sticky) {
 
 StickyView.StickiesVisibility = true;
 
+export default StickyView;

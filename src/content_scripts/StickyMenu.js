@@ -1,9 +1,9 @@
 function StickyMenu(param) {
   this.title = 'Sticky Menu';
   this.items = [{
-       id: StickyMenu.Type.EditColor,
+    id:    StickyMenu.Type.EditColor,
     label: 'Edit Color',
-     icon: 'color'
+    icon:  'color'
   }/*, {
        id: stickynotes.StickyMenu.Type.PageOption,
     label: 'Page Option',
@@ -81,3 +81,5 @@ StickyMenu.prototype.unbind = function() {
     item.dom.removeEventListener('click', this._onSelectMenu);
   });
 };
+
+export default StickyMenu;

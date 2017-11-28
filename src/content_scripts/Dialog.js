@@ -90,3 +90,4 @@ Dialog.prototype.onMouseDown = function(e) {
   e.preventDefault();
 };
 
+export default Dialog;

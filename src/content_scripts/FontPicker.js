@@ -1,4 +1,4 @@
-/* global StickyMenu */
+import StickyMenu from './StickyMenu';
 
 function FontPicker(param) {
   this.title = 'Sticky Menu';
@@ -78,3 +78,5 @@ FontPicker.prototype.unbind = function() {
 FontPicker.prototype.dispose = function() {
   this.unbind();
 };
+
+export default FontPicker;

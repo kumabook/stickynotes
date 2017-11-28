@@ -12,7 +12,7 @@ class Login extends React.Component {
       let message = getMessage('loginError');
       switch (this.props.loginStatus.type) {
         case 401:
-          message = getMessage('loginError.invalid');
+          message = getMessage('loginErrorInvalid');
           break;
         default:
           break;
@@ -30,7 +30,7 @@ class Login extends React.Component {
       <div className="container">
         <div className="navBar"><a onClick={() => this.back()}>{getMessage('back')}</a></div>
         <p>
-          {getMessage('account_description')}
+          {getMessage('accountDescription')}
         </p>
         {this.getErrorMessage()}
         <form onSubmit={e => this.handleSubmit(e)}>
@@ -65,7 +65,7 @@ class Login extends React.Component {
               this.props.resetPassword();
             }}
           >
-            {getMessage('reset_password')}
+            {getMessage('resetPassword')}
           </a>
         </div>
       </div>

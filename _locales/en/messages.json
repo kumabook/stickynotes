@@ -23,10 +23,10 @@
   "focus": {
     "message": "Focus on sticky sidebar"
   },
-  "clear-cache": {
+  "clearCache": {
     "message": "Clear cache"
   },
-  "clear-cache.confirmMessage": {
+  "clearCacheConfirmMessage": {
     "message": "Are you sure to delete all local stickies?. Stickies on cloud server won't be depleted"
   },
   "search": {
@@ -41,9 +41,6 @@
   "removeAll": {
     "message": "Delete all stickies of this page"
   },
-  "display-option": {
-    "message": "Sidebar display option"
-  },
   "preference": {
      "message": "Preference"
   },
@@ -56,88 +53,25 @@
   "password": {
     "message": "Password"
   },
-  "password_confirmation": {
+  "passwordConfirmation": {
     "message": "Password (confirmation)"
   },
-  "sign_up": {
+  "signup": {
     "message": "Sign up"
   },
-  "reset_password": {
+  "resetPassword": {
     "message": "Forgot my password"
   },
-  "account_description": {
+  "accountDescription": {
     "message": "You can sync stickies between devices after login."
   },
-  "show_sticky_list.label": {
-    "message": "Sidebar Sticky list"
-  },
-  "sticky_list.sidebarTitle": {
-    "message": "Sticky List"
-  },
-  "sticky_list.sidebarText": {
-    "message": "Text"
-  },
-  "sticky_list.sidebarX": {
-    "message": "X"
-    },
-  "sticky_list.sidebarY": {
-    "message": "Y"
-  },
-  "sticky_list.sidebarDisplay": {
-    "message": "Display"
-  },
-  "sticky_list.sidebarToggleV": {
-    "message": "Hide/Display"
-  },
-  "sticky_list.sidebarJump": {
-    "message": "Jump to this sticky"
-  },
-  "sticky_list.sidebarDelete": {
-    "message": "Delete this sticky"
-  },
-  "sticky_list.sidebarHide": {
-    "message": "Hide this sticky"
-    },
-  "sticky_list.sidebarVisible": {
-    "message": "Display this sticky"
-  },
-  "stickynotes.list_by_tag_and_site": {
-    "message": "List by tag and site"
-  },
-  "stickynotes.list_by_site": {
-    "message": "List by site"
-  },
-  "stickynotes.list_by_tag": {
-    "message": "List by tag"
-  },
-  "stickynotes.search": {
-    "message": "Search"
-    },
-  "stickynotes.display": {
-    "message": "Display"
-  },
-  "sticky.noTitle": {
-    "message": "No title"
-  },
-  "sticky.placeholderText": {
+  "stickyViewPlaceholderText": {
     "message": "Insert a note here"
-  },
-  "sticky.confirmDeleteTitle": {
-    "message": "Confirm of delete sticky"
-  },
-  "sticky.confirmDeleteContent": {
-    "message": "Are you sure to delete the sticky?"
-  },
-  "sticky.confirmAllDeleteContent": {
-    "message": "Are you sure to delete stickies of current page？"
-  },
-  "sticky.needConfirmDelete": {
-    "message": "Confirm before delete a sticky"
   },
   "loginError": {
     "message": "The login attempt failed"
   },
-  "loginError.invalid": {
+  "loginErrorInvalid": {
     "message": "The login attempt failed. Either email address or password is invalid"
   },
   "signupError": {

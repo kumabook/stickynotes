@@ -102,7 +102,7 @@ StickyView.prototype.updateDom = function() {
   const textarea            = this.textarea;
   textarea.value            = this.sticky.content;
   textarea.id               = 'sticky_id_' + this.sticky.id;
-  textarea.placeholder      = browser.i18n.getMessage('sticky.placeholderText');
+   textarea.placeholder      = browser.i18n.getMessage('stickyViewPlaceholderText');
   textarea.sticky           = this;
   if (this.isMinimized()) {
     this.dom.style.width        = null;

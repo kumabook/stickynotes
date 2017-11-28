@@ -30,7 +30,7 @@ class SignUp extends React.Component {
       <div className="container">
         <div className="navBar"><a onClick={() => this.back()}>{getMessage('back')}</a></div>
         <p>
-          {getMessage('account_description')}
+          {getMessage('accountDescription')}
         </p>
         {this.getErrorMessage()}
         <form onSubmit={e => this.handleSubmit(e)}>
@@ -54,7 +54,7 @@ class SignUp extends React.Component {
               ref={(password) => { this.password = password; }}
             />
           </label>
-          <label htmlFor="password_confirmation">{getMessage('password_confirmation')}
+          <label htmlFor="password_confirmation">{getMessage('passwordConfirmation')}
             <input
               id="password_confirmation"
               className="passwordInput"

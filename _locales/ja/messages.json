@@ -23,10 +23,10 @@
   "focus": {
     "message": "サイドバーにフォーカスする"
   },
-  "clear-cache": {
+  "clearCache": {
     "message": "キャッシュをクリアする"
   },
-  "clear-cache.confirmMessage": {
+  "clearCacheConfirmMessage": {
     "message": "ローカルにある付箋を全て削除してよろしいですか？サーバー上にある付箋は削除されません。"
   },
   "search": {
@@ -41,9 +41,6 @@
   "removeAll": {
     "message": "現在のページの付箋をすべて削除"
   },
-  "display-option": {
-    "message": "サイドバーの表示方法"
-  },
   "preference": {
      "message": "設定"
   },
@@ -56,88 +53,25 @@
   "password": {
     "message": "パスワード"
   },
-  "password_confirmation": {
+  "passwordConfirmation": {
     "message": "パスワード (確認用)"
   },
   "signup": {
     "message": "サインアップ"
   },
-  "reset_password": {
+  "resetPassword": {
     "message": "パスワードを忘れた場合"
   },
-  "account_description": {
+  "accountDescription": {
     "message": "ログインすると複数デバイスで付箋を共有できるようになります"
   },
-  "show_sticky_list.label": {
-    "message": "付箋の一覧を表示"
-  },
-  "sticky_list.sidebarTitle": {
-    "message": "付箋の一覧"
-  },
-  "sticky_list.sidebarText": {
-    "message": "内容"
-  },
-  "sticky_list.sidebarX": {
-    "message": "X座標"
-    },
-  "sticky_list.sidebarY": {
-    "message": "Y座標"
-  },
-  "sticky_list.sidebarDisplay": {
-    "message": "表示"
-  },
-  "sticky_list.sidebarToggleV": {
-    "message": "表示/非表示"
-  },
-  "sticky_list.sidebarJump": {
-    "message": "付箋にジャンプ"
-  },
-  "sticky_list.sidebarDelete": {
-    "message": "付箋を消去"
-  },
-  "sticky_list.sidebarHide": {
-    "message": "付箋を非表示にする"
-    },
-  "sticky_list.sidebarVisible": {
-    "message": "付箋を表示する"
-  },
-  "stickynotes.list_by_tag_and_site": {
-    "message": "タグとサイト名順に並べる"
-  },
-  "stickynotes.list_by_site": {
-    "message": "サイト名順に並べる"
-  },
-  "stickynotes.list_by_tag": {
-    "message": "タグ順に並べる"
-  },
-  "stickynotes.search": {
-    "message": "検索"
-    },
-  "stickynotes.display": {
-    "message": "表示"
-  },
-  "sticky.noTitle": {
-    "message": "タイトルなし"
-  },
-  "sticky.placeholderText": {
+  "stickyViewPlaceholderText": {
     "message": "ここにメモを挿入"
-  },
-  "sticky.confirmDeleteTitle": {
-    "message": "付箋を削除する確認"
-  },
-  "sticky.confirmDeleteContent": {
-    "message": "付箋を削除してもよろしいでしょうか？"
-  },
-  "sticky.confirmAllDeleteContent": {
-    "message": "現在のページの付箋をすべて削除してもよろしいでしょうか？"
-  },
-  "sticky.needConfirmDelete": {
-    "message": "付箋を削除するときは確認する"
   },
   "loginError": {
     "message": "ログインに失敗しました"
   },
-  "loginError.invalid": {
+  "loginErrorInvalid": {
     "message": "ログインに失敗しました。メールアドレスまたはパスワードが違います"
   },
   "signupError": {

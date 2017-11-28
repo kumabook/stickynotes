@@ -25,7 +25,7 @@ import Confirm from '../components/Confirm';
         break;
     }
     if (this.props.user) {
-      menus = menus.concat(['sync', 'logout', 'clear-cache']);
+      menus = menus.concat(['sync', 'logout', 'clearCache']);
     } else {
       menus = menus.concat(['login']);
     }
@@ -56,8 +56,8 @@ import Confirm from '../components/Confirm';
         </div>
         <Confirm
           hidden={!this.props.confirm}
-          title={getMessage('clear-cache')}
-          message={getMessage('clear-cache.confirmMessage')}
+          title={getMessage('clearCache')}
+          message={getMessage('clearCacheConfirmMessage')}
           onSubmit={result => this.props.handleConfirm(result)}
         />
       </div>
@@ -86,7 +86,7 @@ function mapDispatchToProps(dispatch, { history }) {
         case 'sidebar':
           browser.sidebarAction.open();
           break;
-        case 'clear-cache':
+        case 'clearCache':
           dispatch({ type: 'CONFIRM_CLEAR_CACHE' });
           break;
         default:
@@ -96,7 +96,7 @@ function mapDispatchToProps(dispatch, { history }) {
     },
     handleConfirm: (result) => {
       if (result) {
-        dispatch({ type: 'MENU', payload: { name: 'clear-cache' }});
+        dispatch({ type: 'MENU', payload: { name: 'clearCache' } });
       }
       dispatch({ type: 'HIDE_CONFIRM' });
     },

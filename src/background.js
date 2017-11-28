@@ -185,7 +185,7 @@ function handlePopupMessage(msg) {
         .then(() => port.postMessage({ type: 'logged-out' }))
         .catch(e => logger.error(e));
       break;
-    case 'clear-cache-menu':
+    case 'clearCache-menu':
       stopSyncTimer();
       idb.open(dbName).then(db => Promise.all([
         Sticky.clear(db),

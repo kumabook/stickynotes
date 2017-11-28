@@ -61,34 +61,34 @@
 
 .stickynotes-delete-button {
     float            : left;
-    background-image : url('delete.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/delete.png');
 }
 .stickynotes-delete-button:hover {
-    background-image : url('delete-hover.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/delete-hover.png');
 }
 
 .stickynotes-menu-button {
     float            : right;
-    background-image : url('menu.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/menu.png');
 }
 .stickynotes-menu-button:hover {
-    background-image : url('menu-hover.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/menu-hover.png');
 }
 
 .stickynotes-edit-tag-button {
     float            : right;
-    background-image : url('edit-tag.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/edit-tag.png');
 }
 .stickynotes-edit-tag-button:hover {
-    background-image : url('edit-tag-hover.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/edit-tag-hover.png');
 }
 
 .stickynotes-minimize-button {
     float            : left;
-    background-image : url('minimize.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/minimize.png');
 }
 .stickynotes-minimize-button:hover {
-    background-image : url('minimize-hover.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/minimize-hover.png');
 }
 
 .stickynotes-textarea:focus,
@@ -141,18 +141,18 @@
 }
 
 .stickynotes-icon-color {
-    background-image : url('color.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/color.png');
 }
 
 .stickynotes-icon-page-option {
-    background-image : url('page-option.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/page-option.png');
 }
 
 .stickynotes-icon-back {
-    background-image : url('back.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/back.png');
 }
 .stickynotes-icon-close {
-    background-image : url('close.png');
+    background-image : url('chrome-extension://__MSG_@@extension_id__/content_scripts/close.png');
 }
 
 .stickynotes-button {
@@ -230,4 +230,43 @@
 
 .stickynotes-tag-editor-button {
     margin : 4px 12px;
+}
+
+@-moz-document url-prefix() {
+    .stickynotes-delete-button {
+        background-image : url('delete.png');
+    }
+    .stickynotes-delete-button:hover {
+        background-image : url('delete-hover.png');
+    }
+    .stickynotes-menu-button {
+        background-image : url('menu.png');
+    }
+    .stickynotes-menu-button:hover {
+        background-image : url('menu-hover.png');
+    }
+    .stickynotes-edit-tag-button {
+        background-image : url('edit-tag.png');
+    }
+    .stickynotes-edit-tag-button:hover {
+        background-image : url('edit-tag-hover.png');
+    }
+    .stickynotes-minimize-button {
+        background-image : url('minimize.png');
+    }
+    .stickynotes-minimize-button:hover {
+        background-image : url('minimize-hover.png');
+    }
+    .stickynotes-icon-color {
+        background-image : url('color.png');
+    }
+    .stickynotes-icon-page-option {
+        background-image : url('page-option.png');
+    }
+    .stickynotes-icon-back {
+        background-image : url('back.png');
+    }
+    .stickynotes-icon-close {
+        background-image : url('close.png');
+    }
 }

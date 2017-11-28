@@ -67,5 +67,19 @@
       },
       "description": "Toggle visiblities of stickies in active tab"
     }
-  }
+  },
+  "web_accessible_resources": [
+    "content_scripts/delete.png",
+    "content_scripts/delete-hover.png",
+    "content_scripts/menu.png",
+    "content_scripts/menu-hover.png",
+    "content_scripts/edit-tag.png",
+    "content_scripts/edit-tag-hover.png",
+    "content_scripts/minimize.png",
+    "content_scripts/minimize-hover.png",
+    "content_scripts/color.png",
+    "content_scripts/page-option.png",
+    "content_scripts/back.png",
+    "content_scripts/close.png"
+  ]
 }

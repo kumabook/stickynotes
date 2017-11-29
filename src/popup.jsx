@@ -1,4 +1,5 @@
 import 'regenerator-runtime/runtime';
+import logger        from 'kiroku';
 import React         from 'react';
 import ReactDOM      from 'react-dom';
 import createHistory from 'history/createHashHistory';
@@ -26,6 +27,10 @@ import SignUp        from './containers/SignUp';
 
 import reducers from './reducers/popup';
 import rootSaga from './sagas/popup';
+import config  from './config.json';
+
+logger.setLevel(config.LOG_LEVEL);
+logger.info(`Current log level is ${logger.getLevel()}`);
 
 const history = createHistory();
 const sagaMiddleware = createSagaMiddleware();

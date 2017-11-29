@@ -39,15 +39,44 @@ function* watchFetchStickies() {
   yield takeEvery('FETCH_STICKIES', fetchStickies);
 }
 
+function normalizeMessagePayload(payload) {
+  let info = Promise.resolve({ name: 'chrome' });
+  if (browser.runtime.getBrowserInfo) {
+    info = browser.runtime.getBrowserInfo();
+  }
+  return info.then((info) => {
+    switch (info.name) {
+      case 'Firefox':
+        return payload;
+      default: {
+        const { stickies, pages, tags } = payload;
+        const normalize = (items) => {
+          for (let i = 0; i < items.length; i += 1) {
+            console.log(items[i].updated_at);
+            items[i].created_at = new Date(items[i].created_at);
+            items[i].updated_at = new Date(items[i].updated_at);
+          }
+        };
+        normalize(stickies);
+        normalize(pages);
+        normalize(tags);
+        return payload;
+      }
+    }
+  });
+}
+
 function* watchPort() {
   const portChannel = yield call(createPortChannel, port);
 
   for (;;) {
     const event = yield take(portChannel);
     switch (event.type) {
-      case 'fetched-stickies':
-        yield put({ type: 'FETCHED_STICKIES', payload: event.payload });
+      case 'fetched-stickies': {
+        const payload = yield normalizeMessagePayload(event.payload);
+        yield put({ type: 'FETCHED_STICKIES', payload });
         break;
+      }
       case 'created-sticky':
         yield put({ type: 'CREATED_STICKIES', payload: event.payload });
         break;

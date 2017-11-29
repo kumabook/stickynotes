@@ -229,6 +229,32 @@ function handlePopupMessage(msg) {
   }
 }
 
+function normalizeMessagePayload(payload) {
+  let info = Promise.resolve({ name: 'chrome' });
+  if (browser.runtime.getBrowserInfo) {
+    info = browser.runtime.getBrowserInfo();
+  }
+  return info.then((info) => {
+    switch (info.name) {
+      case 'Firefox':
+        return payload;
+      default: {
+        const { stickies, pages, tags } = payload;
+        const normalize = (items) => {
+          for (let i = 0; i < items.length; i += 1) {
+            items[i].created_at = items[i].created_at.toJSON();
+            items[i].updated_at = items[i].updated_at.toJSON();
+          }
+        };
+        normalize(stickies);
+        normalize(pages);
+        normalize(tags);
+        return payload;
+      }
+    }
+  });
+}
+
 function handleSidebarMessage(msg) {
   const port = getPort(msg.portName);
   switch (msg.type) {
@@ -237,15 +263,17 @@ function handleSidebarMessage(msg) {
         Sticky.findAll(db).then(a => a.filter(s => !Sticky.isDeleted(s))),
         Tag.findAll(db),
         Page.findAll(db),
-      ])).then(values => port.postMessage({
-        type:    'fetched-stickies',
-        payload: { stickies: values[0], tags: values[1], pages: values[2] },
-      })).catch((e) => {
-        port.postMessage({
-          type:    'error',
-          payload: { message: e.message },
-        });
-      });
+      ])).then(values => normalizeMessagePayload({
+        stickies: values[0],
+        tags:     values[1],
+        pages:    values[2],
+      })).then(payload => port.postMessage({
+        type: 'fetched-stickies',
+        payload,
+      })).catch(e => port.postMessage({
+        type:    'error',
+        payload: { message: e.message },
+      }));
       break;
     }
     case 'jump-to-sticky': {
@@ -343,9 +371,13 @@ function importStickies(stickies, db) {
       Sticky.findAll(db).then(a => a.filter(s => !Sticky.isDeleted(s))),
       Tag.findAll(db),
       Page.findAll(db),
-    ]).then(vals => getSidebarPorts().forEach(p => p.postMessage({
-      type:    'fetched-stickies',
-      payload: { stickies: vals[0], tags: vals[1], pages: vals[2] },
+    ]).then(values => normalizeMessagePayload({
+      stickies: values[0],
+      tags:     values[1],
+      pages:    values[2],
+    })).then(payload => getSidebarPorts().forEach(p => p.postMessage({
+      type: 'fetched-stickies',
+      payload,
     })));
   });
 }

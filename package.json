@@ -36,6 +36,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "cross-env": "^5.1.1",
     "history": "^4.7.2",
+    "kiroku": "^0.0.1",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",

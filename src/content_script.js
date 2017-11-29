@@ -1,4 +1,11 @@
-/* global browser, StickyView, Logger */
+import browser from 'webextension-polyfill';
+import logger from 'kiroku';
+import StickyView from './content_scripts/StickyView';
+import config  from './config.json';
+
+logger.setLevel(config.LOG_LEVEL);
+logger.info(`Current log level is ${logger.getLevel()}`);
+
 const portName = `content-script-${window.location.href}`;
 let port;
 const mounsePosition = {
@@ -11,11 +18,11 @@ function watchClickPosition(event) {
     mounsePosition.x = event.clientX + window.top.pageXOffset;
     mounsePosition.y = event.clientY + window.top.pageYOffset;
   } catch (e) {
-    Logger.log(e);
+    logger.log(e);
   }
 }
 function onHashChange(e) {
-  Logger.info(`hashchange: ${e.newURL}`);
+  logger.info(`hashchange: ${e.newURL}`);
   port.postMessage({
     portName,
     type: 'reload-stickies',
@@ -24,7 +31,7 @@ function onHashChange(e) {
 }
 
 function onPopState(e) {
-  Logger.info(`popstate: ${e.state} , ${document.location.href}`);
+  logger.info(`popstate: ${e.state} , ${document.location.href}`);
   port.postMessage({
     portName,
     type: 'reload-stickies',

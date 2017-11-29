@@ -42,7 +42,8 @@
       "suggested_key": {
         "default": "Ctrl+Shift+S",
         "mac":     "MacCtrl+Shift+S"
-      }
+      },
+      "description": "Show stickies on sidebar"
     },
     "create_sticky": {
       "suggested_key": {

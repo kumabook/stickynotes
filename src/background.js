@@ -14,6 +14,7 @@ let popupPort            = null;
 let syncTimer            = null;
 const dbName             = config.DATABASE_NAME;
 const dbVersion          = 1;
+const windowWidth        = 400;
 
 function getPort(name) {
   if (!name) {
@@ -156,7 +157,11 @@ function handlePopupMessage(msg) {
             });
             break;
           default:
-            browser.windows.create({ url }).then((windowInfo) => {
+            browser.windows.create({
+              url,
+              width: windowWidth,
+              type:  'popup',
+            }).then((windowInfo) => {
               logger.info(windowInfo);
             });
             break;

@@ -96,6 +96,6 @@ export default function* root() {
     fork(watchResetPassword),
     fork(watchPort),
   ];
-  const info = yield call(browser.runtime.getPlatformInfo);
+  const info = yield browser.runtime.getPlatformInfo();
   yield put({ type: 'INFO', payload: info });
 }

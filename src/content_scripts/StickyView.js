@@ -222,7 +222,7 @@ StickyView.prototype.hideDialog = function() {
  */
 StickyView.prototype.deleteDom = function() {
   this.unbind();
-  document.body.removeChild(this.dom);
+  this.dom.parentNode.removeChild(this.dom);
 };
 /**
  * create dom element.

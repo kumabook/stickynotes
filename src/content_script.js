@@ -71,6 +71,13 @@ function deleteSticky(sticky) {
   });
 }
 
+function getParentNode() {
+  if (document.body.nodeName === 'FRAMESET') {
+    return document.body.parentNode;
+  }
+  return document.body;
+}
+
 function addStickyView(sticky) {
   const stickyView = new StickyView({
     sticky,
@@ -102,7 +109,7 @@ function addStickyView(sticky) {
     },
   });
   if (!document.getElementById(stickyView.dom.id)) {
-    document.body.appendChild(stickyView.dom);
+    getParentNode().appendChild(stickyView.dom);
   }
   return stickyView;
 }

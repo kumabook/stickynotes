@@ -20,7 +20,6 @@ body {
 }
 input[type="password"] {
   -webkit-text-security: disc;
-  border-style: solid;
 }
 
 .home {

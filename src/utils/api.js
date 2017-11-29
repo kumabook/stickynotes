@@ -32,13 +32,20 @@ function setUser(user) {
 function getLastSynced() {
   return browser.storage.local.get('lastSynced').then((v) => {
     if (v) {
-      return v.lastSynced;
+      if (v.lastSynced instanceof Date) {
+        return v.lastSynced;
+      }
+      return new Date(v.lastSynced);
     }
     return null;
   });
 }
 
-function setLastSynced(lastSynced) {
+function setLastSynced(date) {
+  let lastSynced = null;
+  if (date instanceof Date) {
+    lastSynced = date.getTime();
+  }
   return browser.storage.local.set({ lastSynced });
 }
 

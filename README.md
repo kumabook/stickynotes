@@ -59,13 +59,4 @@ you can import/export with json file.
 ### Preference
 you can cutomize shortcut and other settings fron icon-menu.
 
-- Shortcuts
 - whether or not confirm before delete
-
-## How to build
-```
-$ git submodule init
-$ git submodule update
-$ addon-sdk/bin/cfx run # debug
-$ addon-sdk/bin/cfx xpi # package
-```

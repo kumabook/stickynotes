@@ -4,7 +4,7 @@ body {
   width: 200px;
   padding: 0;
   margin: 0;
-  background: #FAFAFA;
+  background: #fafafa;
   font-family: 'Helvetica Neue', arial, sans-serif;
   font-weight: 400;
   color: #444;
@@ -15,9 +15,11 @@ body {
 * {
   box-sizing: border-box;
 }
+
 #app {
   height: 100%;
 }
+
 input[type="password"] {
   -webkit-text-security: disc;
 }
@@ -29,101 +31,97 @@ input[type="password"] {
 }
 
 .ul {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    padding-top: 4px;
-    list-style-type: none;
-    text-align: left;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  padding-top: 4px;
+  list-style-type: none;
+  text-align: left;
 }
 
 .li {
-    height: 30px;
-    line-height: 30px;
-    border-bottom: 1px #c0c0c0 solid;
-    box-sizing: border-box;
+  height: 30px;
+  line-height: 30px;
+  border-bottom: 1px #c0c0c0 solid;
+  box-sizing: border-box;
 }
 
 .a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .menuItem {
-    display: block;
-    height: 30px;
-    color: #000000;
-    padding-left: 20px;
-    font-size: 12px;
+  display: block;
+  height: 30px;
+  color: #000;
+  padding-left: 20px;
+  font-size: 12px;
 }
+
 .menuItem:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .newIcon {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .container {
-    padding: 12px;
+  padding: 12px;
 }
 
 .userNameInput {
-    height: 28px;
-    width: 180px;
+  height: 28px;
+  width: 180px;
 }
 
 .passwordInput {
-    height: 28px;
-    width: 180px;
+  height: 28px;
+  width: 180px;
 }
 
 .loginButton {
-    height: 28px;
-    margin: 8px 0;
+  height: 28px;
+  margin: 8px 0;
 }
+
 .errorMessage {
-    color: red;
+  color: red;
 }
 
 .confirmContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .confirmContent {
-    position: absolute;
-    padding: 20px;
-    background-color: #FAFAFA;
-    top: 25%;
-    height: 160px;
-}
-
-.confirmTitle {
-}
-
-.confirmMessage {
+  position: absolute;
+  padding: 20px;
+  background-color: #fafafa;
+  top: 25%;
+  height: 160px;
 }
 
 .confirmOKButton {
-    position: absolute;
-    bottom: 8px;
-    left: 28px;
-    width: 50px;
-    height: 24px;
+  position: absolute;
+  bottom: 8px;
+  left: 28px;
+  width: 50px;
+  height: 24px;
 }
 
 .confirmNOButton {
-    position: absolute;
-    bottom: 8px;
-    right: 28px;
-    width: 50px;
-    height: 24px;
+  position: absolute;
+  bottom: 8px;
+  right: 28px;
+  width: 50px;
+  height: 24px;
 }

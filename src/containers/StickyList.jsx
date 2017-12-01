@@ -206,7 +206,6 @@ class StickyList extends React.Component {
       return (
         <option
           key={key}
-          selected={this.props.groupBy === value}
           value={value}
         >
           {value}
@@ -255,7 +254,7 @@ function search(query, sticky) {
 
 StickyList.propTypes = {
   searchQuery:             PropTypes.string.isRequired,
-  orderBy:                 PropTypes.string.isRequired,
+  orderBy:                 PropTypes.number.isRequired,
   groupBy:                 PropTypes.string.isRequired,
   stickies:                PropTypes.arrayOf(PropTypes.object).isRequired,
   tags:                    PropTypes.arrayOf(PropTypes.object).isRequired,

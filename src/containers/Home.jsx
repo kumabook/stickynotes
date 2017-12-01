@@ -72,13 +72,16 @@ class Home extends React.Component {
 
 Home.propTypes = {
   info: PropTypes.shape({
-    os: PropTypes.string.isRequired,
+    os: PropTypes.string,
   }).isRequired,
-  user:             PropTypes.shape({}).isRequired,
+  user:             PropTypes.shape({}),
   confirm:          PropTypes.bool.isRequired,
   handleClick:      PropTypes.func.isRequired,
   handleConfirm:    PropTypes.func.isRequired,
   handleInputFiles: PropTypes.func.isRequired,
+};
+Home.defaultProps =  {
+  user: null,
 };
 
 function mapStateToProps(state) {

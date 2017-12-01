@@ -20,7 +20,10 @@
     "android": "npm run build && mv web-ext-artifacts/stickynotes-1.1.0.zip web-ext-artifacts/stickynotes-1.1.0.xpi && adb push web-ext-artifacts/stickynotes-1.1.0.xpi /mnt/sdcard/xpi",
     "lint": "npm run eslint && npm run stylelint",
     "eslint": "eslint \"src/**/*.js?(x)\" \"test/**/*.{js,jsx}\"",
-    "stylelint": "stylelint \"./{popup,options_ui}/*.css\" --ignore-pattern normalize.css --fix"
+    "stylelint": "stylelint \"./{popup,options_ui}/*.css\" --ignore-pattern normalize.css --fix",
+    "pretest": "npm run lint",
+    "test": "cross-env NODE_ENV=test nyc ava \"test/**/*.test.{js,jsx}\"",
+    "test:watch": "npm test -- --watch"
   },
   "engines": {
     "firefox": ">=38.0a1"

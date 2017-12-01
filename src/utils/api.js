@@ -35,7 +35,11 @@ function getLastSynced() {
       if (v.lastSynced instanceof Date) {
         return v.lastSynced;
       }
-      return new Date(v.lastSynced);
+      const d = new Date(v.lastSynced);
+      if (d.toString() === 'Invalid Date') {
+        return new Date(0);
+      }
+      return d;
     }
     return null;
   });

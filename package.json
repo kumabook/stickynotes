@@ -18,7 +18,8 @@
     "pack": "git archive HEAD --output=stickynotes.zip",
     "watch": "webpack --watch",
     "android": "npm run build && mv web-ext-artifacts/stickynotes-1.1.0.zip web-ext-artifacts/stickynotes-1.1.0.xpi && adb push web-ext-artifacts/stickynotes-1.1.0.xpi /mnt/sdcard/xpi",
-    "eslint": "eslint \"src/**/*.js?(x)\" \"test/**/*.{js,jsx}\""
+    "eslint": "eslint \"src/**/*.js?(x)\" \"test/**/*.{js,jsx}\"",
+    "stylelint": "stylelint \"./{popup,options_ui}/*.css\" --ignore-pattern normalize.css --fix"
   },
   "engines": {
     "firefox": ">=38.0a1"
@@ -59,6 +60,8 @@
     "redux-saga-router": "^2.1.1",
     "regenerator-runtime": "0.10.0",
     "regenerator-transform": "^0.11.0",
+    "stylelint": "^8.3.1",
+    "stylelint-config-standard": "^18.0.0",
     "uuid": "^3.1.0",
     "web-ext": "^2.2.2",
     "webextension-polyfill": "^0.2.1",

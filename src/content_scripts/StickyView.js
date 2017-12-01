@@ -342,7 +342,6 @@ StickyView.prototype.drag = function drag(e) {
     this.resize(this.dom, e);
     return;
   }
-
   const elem   = this.dom;
   const that   = this;
   const startX = e.clientX;
@@ -354,8 +353,8 @@ StickyView.prototype.drag = function drag(e) {
   this.isDragging = true;
   this.updateClassName();
   function moveHandler(event) {
-    elem.style.left = `${e.clientX - deltaX}px`;
-    elem.style.top  = `${e.clientY - deltaY}px`;
+    elem.style.left = `${event.clientX - deltaX}px`;
+    elem.style.top  = `${event.clientY - deltaY}px`;
     event.stopPropagation();
     event.preventDefault();
   }
@@ -385,8 +384,8 @@ StickyView.prototype.resize = function resize(elem, e) {
   const deltaWidth  = startX - origWidth;
   const deltaHeight = startY - origHeight;
   function moveHandler(event) {
-    const width  = e.clientX - deltaWidth;
-    const height = e.clientY - deltaHeight;
+    const width  = event.clientX - deltaWidth;
+    const height = event.clientY - deltaHeight;
 
     that.dom.style.width  = `${Math.max(width, c.MIN_WIDTH)}px`;
     that.dom.style.height = `${Math.max(height, c.MIN_HEIGHT)}px`;

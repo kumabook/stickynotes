@@ -1,10 +1,10 @@
 import browser from 'webextension-polyfill';
 import logger from 'kiroku';
 import StickyView from './content_scripts/StickyView';
-import config  from './config.json';
 
-logger.setLevel(config.LOG_LEVEL);
-logger.info(`Current log level is ${logger.getLevel()}`);
+if (process.env.NODE_ENV === 'production') {
+  logger.setLevel('INFO');
+}
 
 const portName = `content-script-${window.location.href}`;
 let port;

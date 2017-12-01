@@ -27,10 +27,10 @@ import SignUp        from './containers/SignUp';
 
 import reducers from './reducers/popup';
 import rootSaga from './sagas/popup';
-import config  from './config.json';
 
-logger.setLevel(config.LOG_LEVEL);
-logger.info(`Current log level is ${logger.getLevel()}`);
+if (process.env.NODE_ENV === 'production') {
+  logger.setLevel('INFO');
+}
 
 const history = createHistory();
 const sagaMiddleware = createSagaMiddleware();

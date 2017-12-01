@@ -517,8 +517,9 @@ function createDB() {
   ]));
 }
 
-logger.setLevel(config.LOG_LEVEL);
-logger.info(`Current log level is ${logger.getLevel()}`);
+if (process.env.NODE_ENV === 'production') {
+  logger.setLevel('INFO');
+}
 
 createDB().then(() => {
   logger.info('Create database');

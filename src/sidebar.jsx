@@ -1,4 +1,5 @@
 import 'regenerator-runtime/runtime';
+import logger        from 'kiroku';
 import React         from 'react';
 import ReactDOM      from 'react-dom';
 import createHistory from 'history/createHashHistory';
@@ -25,6 +26,10 @@ import StickyList from './containers/StickyList';
 
 import reducers from './reducers/sidebar';
 import rootSaga from './sagas/sidebar';
+
+if (process.env.NODE_ENV === 'production') {
+  logger.setLevel('INFO');
+}
 
 const history = createHistory();
 const sagaMiddleware = createSagaMiddleware();

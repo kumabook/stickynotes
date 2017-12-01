@@ -215,18 +215,17 @@ class StickyList extends React.Component {
     return (
       <div>
         <div className="header">
-          <label htmlFor="searchInput" className="search-label">Search
-            <input
-              id="searchInput"
-              className="search-input"
-              type="search"
-              name="search"
-              size="10"
-              maxLength="255"
-              value={this.props.searchQuery}
-              onChange={e => this.props.handleSearchQueryChange(e.target.value)}
-            />
-          </label>
+          <span className="search-label">Search</span>
+          <input
+            id="searchInput"
+            className="search-input"
+            type="search"
+            name="search"
+            size="10"
+            maxLength="255"
+            value={this.props.searchQuery}
+            onChange={e => this.props.handleSearchQueryChange(e.target.value)}
+          />
           <select
             value={this.props.groupBy}
             className="groupby-select"

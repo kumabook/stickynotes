@@ -1,7 +1,8 @@
 /* global fetch: false, Headers: false, setTimeout: false */
 import browser from 'webextension-polyfill';
-import config  from '../config.json';
 import logger  from './logger';
+
+const { BASE_URL, CLIENT_ID, CLIENT_SECnRET } = process.env;
 
 function getAccessToken() {
   return browser.storage.local.get('accessToken').then((v) => {
@@ -98,10 +99,10 @@ function fetchAccessToken(email, password) {
     if (accessToken) {
       return new Promise(resolve => setTimeout(() => resolve(accessToken)), 0);
     }
-    return sendRequest('POST', `${config.BASE_URL}/oauth/token.json`, {
+    return sendRequest('POST', `${BASE_URL}/oauth/token.json`, {
       grant_type:    'password',
-      client_id:     config.CLIENT_ID,
-      client_secret: config.CLIENT_SECnRET,
+      client_id:     CLIENT_ID,
+      client_secret: CLIENT_SECnRET,
       username:      email,
       password,
     });
@@ -114,7 +115,7 @@ function isLoggedIn() {
 }
 
 function signup(email, password, passwordConfirmation) {
-  return sendRequest('POST', `${config.BASE_URL}/api/v1/users`, {
+  return sendRequest('POST', `${BASE_URL}/api/v1/users`, {
     email,
     password,
     password_confirmation: passwordConfirmation,
@@ -124,7 +125,7 @@ function signup(email, password, passwordConfirmation) {
 function login(email, password) {
   return fetchAccessToken(email, password)
     .then(token => setAccessToken(token))
-    .then(() => sendRequest('GET', `${config.BASE_URL}/api/v1/me.json`))
+    .then(() => sendRequest('GET', `${BASE_URL}/api/v1/me.json`))
     .then(user => setUser(user));
 }
 
@@ -134,13 +135,13 @@ function logout() {
 }
 
 function fetchStickies(newerThan) {
-  return sendRequest('GET', `${config.BASE_URL}/api/v1/stickies.json`, {
+  return sendRequest('GET', `${BASE_URL}/api/v1/stickies.json`, {
     newer_than: newerThan.toJSON(),
   });
 }
 
 function createStickies(stickies) {
-  return sendRequest('POST', `${config.BASE_URL}/api/v1/stickies.json`, {
+  return sendRequest('POST', `${BASE_URL}/api/v1/stickies.json`, {
     stickies,
   });
 }
@@ -157,6 +158,6 @@ export default {
   isLoggedIn,
   getUser,
   setUser,
-  signUpUrl:        `${config.BASE_URL}/users/new`,
-  resetPasswordUrl: `${config.BASE_URL}/password_resets/new`,
+  signUpUrl:        `${BASE_URL}/users/new`,
+  resetPasswordUrl: `${BASE_URL}/password_resets/new`,
 };

@@ -6,14 +6,13 @@ import logger  from './utils/logger';
 import Sticky  from './models/Sticky';
 import Page    from './models/Page';
 import Tag     from './models/Tag';
-import config  from './config.json';
 import api     from './utils/api';
 
 const contentScriptPorts = {};
 const sidebarPorts       = {};
 let popupPort            = null;
 let syncTimer            = null;
-const dbName             = config.DATABASE_NAME;
+const dbName             = process.env.DATABASE_NAME || 'StickyNotesDatabase';
 const dbVersion          = 1;
 const windowWidth        = 400;
 
@@ -379,7 +378,8 @@ function importStickies(stickies, db) {
 }
 
 function startSyncTimer() {
-  syncTimer = setTimeout(sync, config.SYNC_INTERVAL);
+  const interval = process.env.SYNC_INTERVAL || 10000;
+  syncTimer = setTimeout(sync, interval);
 }
 
 function stopSyncTimer() {

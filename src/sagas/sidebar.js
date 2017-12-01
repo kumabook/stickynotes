@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import logger from 'kiroku';
 import {
   fork,
   take,
@@ -10,7 +11,7 @@ import {
   getPort,
   createPortChannel,
 } from '../utils/port';
-import routerSaga       from './router';
+import routerSaga from './router';
 
 const portName = `sidebar-${Date.now()}`;
 const port = getPort(portName);
@@ -23,7 +24,7 @@ function* watchJumpToSticky() {
   yield takeEvery('JUMP_TO_STICKY', jumpToSticky);
 }
 
-function importStickies({ payload }) {
+function importStickies() {
   port.postMessage({ type: 'import-menu', portName, payload: [] });
 }
 
@@ -40,11 +41,12 @@ function* watchFetchStickies() {
 }
 
 function normalizeMessagePayload(payload) {
-  let info = Promise.resolve({ name: 'chrome' });
+  let browserInfo = Promise.resolve({ name: 'chrome' });
   if (browser.runtime.getBrowserInfo) {
-    info = browser.runtime.getBrowserInfo();
+    browserInfo = browser.runtime.getBrowserInfo();
   }
-  return info.then((info) => {
+  return browserInfo.then((info) => {
+    /* eslint-disable  no-param-reassign */
     switch (info.name) {
       case 'Firefox':
         return payload;
@@ -52,7 +54,6 @@ function normalizeMessagePayload(payload) {
         const { stickies, pages, tags } = payload;
         const normalize = (items) => {
           for (let i = 0; i < items.length; i += 1) {
-            console.log(items[i].updated_at);
             items[i].created_at = new Date(items[i].created_at);
             items[i].updated_at = new Date(items[i].updated_at);
           }
@@ -93,7 +94,7 @@ function* watchPort() {
         yield put({ type: 'IMPORTED_STICKIES', payload: event.payload });
         break;
       case 'error':
-        alert(`${event.type}: ${event.payload.message}`);
+        logger.error(`${event.type}: ${event.payload.message}`);
         break;
       default:
         break;

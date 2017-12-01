@@ -5,7 +5,7 @@ import {
 import { fork, put } from 'redux-saga/effects';
 
 const history = createHashHistory();
-//export const getSerachParams = () => new URLSearchParams(history.location.search);
+// export const getSerachParams = () => new URLSearchParams(history.location.search);
 
 const routes = {
   '/stickies': function* fetchStickies() {

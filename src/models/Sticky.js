@@ -14,6 +14,7 @@ Sticky.State = {
 };
 
 Sticky.normalizeLegacy = function normalizeLegacy(sticky) {
+  /* eslint-disable  no-param-reassign, no-underscore-dangle */
   sticky.tags   = Array.from(new Set(sticky.tags.map(t => t.name)));
   sticky.url    = sticky.page_.url;
   sticky.title  = sticky.page_.title;

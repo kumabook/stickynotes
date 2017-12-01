@@ -20,7 +20,8 @@ ColorPicker.getColorById = (id) => {
   return null;
 };
 
-ColorPicker.prototype.createDom = function() {
+ColorPicker.prototype.createDom = function createDom() {
+  /* eslint-disable  no-param-reassign */
   const c  = ColorPicker.classes;
   this.dom = document.createElement('div');
   this.dom.className = c.COLOR_PICKIER;
@@ -33,7 +34,8 @@ ColorPicker.prototype.createDom = function() {
   });
 };
 
-ColorPicker.prototype.bind = function() {
+ColorPicker.prototype.bind = function bind() {
+  /* eslint-disable  no-param-reassign */
   this.items.forEach((item) => {
     item.listener = () => {
       this.itemClicked(item);
@@ -42,7 +44,8 @@ ColorPicker.prototype.bind = function() {
   });
 };
 
-ColorPicker.prototype.unbind = function() {
+ColorPicker.prototype.unbind = function unbind() {
+  /* eslint-disable  no-param-reassign */
   this.items.forEach((item) => {
     item.dom.removeEventListener('click', item.listener);
     item.listener = null;

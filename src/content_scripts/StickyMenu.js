@@ -3,14 +3,14 @@ function StickyMenu(param) {
   this.items = [{
     id:    StickyMenu.Type.EditColor,
     label: 'Edit Color',
-    icon:  'color'
-  }/*, {
+    icon:  'color',
+  }, /* , {
        id: stickynotes.StickyMenu.Type.PageOption,
     label: 'Page Option',
      icon: 'page-option'
-  }*/];
+  } */];
   this.onSelectMenu         = param.onSelectMenu;
-  this._onSelectMenu        = this._onSelectMenu.bind(this);
+  this.onSelect        = this.onSelect.bind(this);
   this.leftBarButtonClicked = param.leftBarButtonClicked;
   this.createDom();
   this.bind();
@@ -24,11 +24,12 @@ StickyMenu.classes = {
 };
 
 StickyMenu.Type = {
-  EditColor: 'color',
-  PageOption: 'page-option'
+  EditColor:  'color',
+  PageOption: 'page-option',
 };
 
-StickyMenu.prototype.createDom = function() {
+StickyMenu.prototype.createDom = function createDom() {
+  /* eslint-disable  no-param-reassign */
   const c  = StickyMenu.classes;
   this.dom = document.createElement('div');
   this.dom.className = c.MENU;
@@ -38,7 +39,7 @@ StickyMenu.prototype.createDom = function() {
   });
 };
 
-StickyMenu.prototype.createMenuItem = function(item) {
+StickyMenu.prototype.createMenuItem = function createMenuItem(item) {
   const c          = StickyMenu.classes;
   const dom        = document.createElement('div');
   const icon       = document.createElement('div');
@@ -46,13 +47,13 @@ StickyMenu.prototype.createMenuItem = function(item) {
   dom.id           = item.id;
   dom.className    = c.MENU_ITEM;
   link.textContent = item.label;
-  icon.className   = c.MENU_ICON + ' ' + c.ICON + '-' + item.id;
+  icon.className   = `${c.MENU_ICON} ${c.ICON}-${item.id}`;
   dom.appendChild(icon);
   dom.appendChild(link);
   return dom;
 };
 
-StickyMenu.prototype._onSelectMenu = function(e) {
+StickyMenu.prototype.onSelect = function onSelect(e) {
   e.stopPropagation();
   e.preventDefault();
   const id = e.target.id || e.target.parentNode.id;
@@ -63,22 +64,22 @@ StickyMenu.prototype._onSelectMenu = function(e) {
   });
 };
 
-StickyMenu.prototype.onMouseDown = function(e) {
+StickyMenu.prototype.onMouseDown = function onMouseDown(e) {
   e.stopPropagation();
   e.preventDefault();
 };
 
-StickyMenu.prototype.bind = function() {
+StickyMenu.prototype.bind = function bind() {
   this.items.forEach((item) => {
     item.dom.addEventListener('mousedown', this.onMouseDown);
-    item.dom.addEventListener('click', this._onSelectMenu);
+    item.dom.addEventListener('click', this.onSelect);
   });
 };
 
-StickyMenu.prototype.unbind = function() {
+StickyMenu.prototype.unbind = function unbind() {
   this.items.forEach((item) => {
     item.dom.addEventListener('mousedown', this.onMouseDown);
-    item.dom.removeEventListener('click', this._onSelectMenu);
+    item.dom.removeEventListener('click', this.onSelect);
   });
 };
 

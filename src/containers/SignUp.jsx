@@ -1,12 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { getMessage } from '../utils/i18n';
+import getMessage from '../utils/i18n';
 
 class SignUp extends React.Component {
-  back() {
-    this.props.history.goBack();
-  }
   getErrorMessage() {
     if (this.props.signupStatus.type === 'failed') {
       let message = getMessage('signupError');
@@ -25,10 +23,33 @@ class SignUp extends React.Component {
     }
     return null;
   }
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.props.signupStatus.type === 'starting') {
+      return;
+    }
+    this.props.signup(
+      this.email.value,
+      this.password.value,
+      this.passwordConfirmation.value,
+    );
+  }
+  back() {
+    this.props.history.goBack();
+  }
   render() {
     return (
       <div className="container">
-        <div className="navBar"><a onClick={() => this.back()}>{getMessage('back')}</a></div>
+        <div className="navBar">
+          <span
+            role="button"
+            onClick={() => this.back()}
+            onKeyDown={() => {}}
+            tabIndex="0"
+          >
+            {getMessage('back')}
+          </span>
+        </div>
         <p>
           {getMessage('accountDescription')}
         </p>
@@ -69,16 +90,13 @@ class SignUp extends React.Component {
       </div>
     );
   }
-  handleSubmit(e) {
-    e.preventDefault();
-    if (this.props.signupStatus.type === 'starting') {
-      return;
-    }
-    this.props.signup(this.email.value,
-                      this.password.value,
-                      this.passwordConfirmation.value);
-  }
 }
+
+SignUp.propTypes = {
+  history:      PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  signupStatus: PropTypes.string.isRequired,
+  signup:       PropTypes.func.isRequired,
+};
 
 function mapStateToProps(state) {
   return {

@@ -18,7 +18,7 @@ const portName = 'popup';
 const port = getPort(portName);
 
 function menu({ payload }) {
-  const name = payload.name;
+  const { name } = payload;
   port.postMessage({ type: `${name}-menu`, portName, payload });
 }
 
@@ -26,7 +26,7 @@ function* watchMenu() {
   yield takeEvery('MENU', menu);
 }
 
-function importStickies({ payload }) {
+function importStickies() {
   port.postMessage({ type: 'import-menu', portName, payload: [] });
 }
 

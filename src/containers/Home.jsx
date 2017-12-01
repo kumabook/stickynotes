@@ -1,10 +1,11 @@
 /* global confirm: false */
 import browser from 'webextension-polyfill';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { isJSON } from '../utils/file';
-import { getMessage } from '../utils/i18n';
+import getMessage from '../utils/i18n';
 import Confirm from '../components/Confirm';
 
 class Home extends React.Component {
@@ -39,13 +40,16 @@ class Home extends React.Component {
           <ul className="ul">
             {this.menus().map(m => (
               <li className="li" key={m}>
-                <a
+                <span
+                  role="button"
                   className="menuItem"
                   onClick={() => this.props.handleClick(m, this.filePicker)}
-               >
-                 {getMessage(m)}
-               </a>
-             </li>
+                  onKeyDown={() => {}}
+                  tabIndex="0"
+                >
+                  {getMessage(m)}
+                </span>
+              </li>
              ))}
           </ul>
           <input
@@ -65,6 +69,17 @@ class Home extends React.Component {
     );
   }
 }
+
+Home.propTypes = {
+  info: PropTypes.shape({
+    os: PropTypes.string.isRequired,
+  }).isRequired,
+  user:             PropTypes.shape({}).isRequired,
+  confirm:          PropTypes.bool.isRequired,
+  handleClick:      PropTypes.func.isRequired,
+  handleConfirm:    PropTypes.func.isRequired,
+  handleInputFiles: PropTypes.func.isRequired,
+};
 
 function mapStateToProps(state) {
   return {

@@ -54,6 +54,7 @@ function setLastSynced(date) {
 }
 
 function sendRequest(method, url, params) {
+  /* eslint-disable prefer-promise-reject-errors */
   return getAccessToken().then((accessToken) => {
     const headers = new Headers();
     headers.append('Accept', 'application/json');

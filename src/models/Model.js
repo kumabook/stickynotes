@@ -42,6 +42,7 @@ Model.prototype.findById = function findById(id, db) {
 };
 
 Model.prototype.create = function create(data, db) {
+  /* eslint-disable  no-param-reassign */
   const store = this.objectStore(db);
   if (!data.created_at) {
     data.created_at = new Date();
@@ -57,6 +58,7 @@ Model.prototype.create = function create(data, db) {
 };
 
 Model.prototype.update = function update(data, db) {
+  /* eslint-disable  no-param-reassign */
   if (!data.updated_at) {
     data.updated_at = new Date();
   }

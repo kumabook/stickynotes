@@ -9,7 +9,7 @@ function TagEditor(param) {
   };
 
   this.mousedownListener = (e) => { e.stopPropagation(); };
-  this.keypressListener       = (e) => {
+  this.keypressListener  = (e) => {
     if (e.keyCode === 13 /* enter */) {
       this.changed(e);
     }
@@ -24,7 +24,7 @@ TagEditor.classes = {
   DIALOG_BTN: 'stickynotes-tag-editor-button',
 };
 
-TagEditor.prototype.createDom = function() {
+TagEditor.prototype.createDom = function createDom() {
   const c                       = TagEditor.classes;
   this.dom                      = document.createElement('div');
   this.input                    = document.createElement('input');
@@ -42,42 +42,43 @@ TagEditor.prototype.createDom = function() {
   this.dom.appendChild(this.doneButton);
 };
 
-TagEditor.prototype.bind = function() {
+TagEditor.prototype.bind = function bind() {
   this.dom.addEventListener('mousedown', this.mousedownListener);
   this.input.addEventListener('keypress', this.keypressListener);
   this.doneButton.addEventListener('click', this.changed);
 };
 
-TagEditor.prototype.unbind = function() {
+TagEditor.prototype.unbind = function unbind() {
   this.dom.removeEventListener('mousedown', this.mousedownListener);
   this.input.removeEventListener('keypress', this.keypressListener);
   this.doneButton.removeEventListener('click', this.changed);
 };
 
-TagEditor.prototype.dispose = function() {
+TagEditor.prototype.dispose = function dispose() {
   this.unbind();
 };
 
-TagEditor.prototype.focus = function() {
+TagEditor.prototype.focus = function focus() {
   this.input.focus();
 };
 
-TagEditor.prototype.splitToNames = function(str) {
-  const tags_str = `${str},`.replace(/^[\s　]+|[\s　]+$/g, '');
+TagEditor.prototype.splitToNames = function splitToNames(str) {
+  /* eslint-disable no-irregular-whitespace  */
+  const tagsStr = `${str},`.replace(/^[\s　]+|[\s　]+$/g, '');
   const tags     = [];
-  let _tags      = (tags_str).split(',');
-  _tags = _tags.slice(0, _tags.length - 1);
-  for (let i = 0; i < _tags.length; i++) {
-    _tags[i] = _tags[i].replace(/^[\s　]+|[\s　]+$/g, '');
-    if (_tags[i] !== '') {//remove blank str
+  let tagList      = (tagsStr).split(',');
+  tagList = tagList.slice(0, tagList.length - 1);
+  for (let i = 0; i < tagList.length; i += 1) {
+    tagList[i] = tagList[i].replace(/^[\s　]+|[\s　]+$/g, '');
+    if (tagList[i] !== '') { // remove blank str
       let isUnique = true;
-      for (let j = 0; j < tags.length; j += 1) {//remove duplicated str
-        if (tags[j] === _tags[i]) {
+      for (let j = 0; j < tags.length; j += 1) { // remove duplicated str
+        if (tags[j] === tagList[i]) {
           isUnique = false;
         }
       }
       if (isUnique) {
-        tags.push(_tags[i]);
+        tags.push(tagList[i]);
       }
     }
   }

@@ -14,7 +14,7 @@ Dialog.classes = {
   ICON:       'stickynotes-icon',
 };
 
-Dialog.prototype.createDom = function() {
+Dialog.prototype.createDom = function createDom() {
   const c                = Dialog.classes;
   this.dom               = document.createElement('div');
   this.navbar            = document.createElement('div');
@@ -30,7 +30,7 @@ Dialog.prototype.createDom = function() {
   this.dom.appendChild(this.content);
 };
 
-Dialog.prototype.bind = function() {
+Dialog.prototype.bind = function bind() {
   this.unbind();
   this.mousedownListener = (e) => {
     e.preventDefault();
@@ -46,7 +46,7 @@ Dialog.prototype.bind = function() {
   this.leftBarButton.addEventListener('click', this.leftBarButtonClicked);
 };
 
-Dialog.prototype.unbind = function() {
+Dialog.prototype.unbind = function unbind() {
   if (this.mousedownListener) {
     this.dom.removeEventListener('mousedown', this.mousedownListener);
     this.mousedownListener = null;
@@ -54,19 +54,19 @@ Dialog.prototype.unbind = function() {
   this.leftBarButton.removeEventListener('click', this.leftBarButtonClicked);
 };
 
-Dialog.prototype.updateNavbar = function() {
+Dialog.prototype.updateNavbar = function updateNavbar() {
   const c = Dialog.classes;
   if (this.views.length === 0) return;
   const view = this.views[this.views.length - 1];
   this.title.className         = c.TITLE;
   this.title.textContent       = view.title;
   const classes = [c.BAR_BUTTON];
-  if (this.views.length === 1) classes.push(c.ICON + '-close');
-  else                         classes.push(c.ICON + '-back');
+  if (this.views.length === 1) classes.push(`${c.ICON}-close`);
+  else classes.push(`${c.ICON}-back`);
   this.leftBarButton.className = classes.join(' ');
 };
 
-Dialog.prototype.push = function(view) {
+Dialog.prototype.push = function push(view) {
   if (this.views.length > 0) {
     this.content.removeChild(this.views[this.views.length - 1].dom);
   }
@@ -75,7 +75,7 @@ Dialog.prototype.push = function(view) {
   this.updateNavbar();
 };
 
-Dialog.prototype.pop = function() {
+Dialog.prototype.pop = function pop() {
   const previous = this.views.pop();
   if (previous) {
     this.content.removeChild(previous.dom);
@@ -85,7 +85,7 @@ Dialog.prototype.pop = function() {
   this.updateNavbar();
 };
 
-Dialog.prototype.onMouseDown = function(e) {
+Dialog.prototype.onMouseDown = function onMouseDown(e) {
   e.stopPropagation();
   e.preventDefault();
 };

@@ -1,4 +1,5 @@
 /* global setTimeout: false, clearTimeout: false */
+/* eslint no-use-before-define: ["error", { "functions": false }] */
 import browser from 'webextension-polyfill';
 import idb     from './utils/indexedDB';
 import logger  from './utils/logger';
@@ -70,7 +71,7 @@ function handleContentScriptMessage(msg) {
         .then(db => Sticky.findByUrl(url, db))
         .then((stickies) => {
           getSidebarPorts().concat(port).forEach(p => p.postMessage({
-            type: msg.type,
+            type:      msg.type,
             stickies,
             targetUrl: url,
           }));
@@ -83,7 +84,7 @@ function handleContentScriptMessage(msg) {
         .then(db => Sticky.findByUrl(url, db))
         .then((stickies) => {
           port.postMessage({
-            type:     'load-stickies',
+            type:      'load-stickies',
             stickies,
             targetUrl: url,
           });
@@ -230,17 +231,18 @@ function handlePopupMessage(msg) {
 }
 
 function normalizeMessagePayload(payload) {
-  let info = Promise.resolve({ name: 'chrome' });
+  let browserInfo = Promise.resolve({ name: 'chrome' });
   if (browser.runtime.getBrowserInfo) {
-    info = browser.runtime.getBrowserInfo();
+    browserInfo = browser.runtime.getBrowserInfo();
   }
-  return info.then((info) => {
+  return browserInfo.then((info) => {
     switch (info.name) {
       case 'Firefox':
         return payload;
       default: {
         const { stickies, pages, tags } = payload;
         const normalize = (items) => {
+          /* eslint-disable  no-param-reassign */
           for (let i = 0; i < items.length; i += 1) {
             items[i].created_at = items[i].created_at.toJSON();
             items[i].updated_at = items[i].updated_at.toJSON();
@@ -270,15 +272,16 @@ function handleSidebarMessage(msg) {
       })).then(payload => port.postMessage({
         type: 'fetched-stickies',
         payload,
-      })).catch(e => port.postMessage({
-        type:    'error',
-        payload: { message: e.message },
-      }));
+      }))
+        .catch(e => port.postMessage({
+          type:    'error',
+          payload: { message: e.message },
+        }));
       break;
     }
     case 'jump-to-sticky': {
-      const sticky = msg.payload;
-      const url    = sticky.page.url;
+      const sticky  = msg.payload;
+      const { url } = sticky.page;
       browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         if (tabs.length > 0) {
           if (tabs[0].url === url) {
@@ -303,9 +306,7 @@ function resolveStickies(stickies, db) {
   return Page.findAll(db).then((pages) => {
     stickies.forEach((s) => {
       s.uuid = s.id;
-      const stickyPages = pages.filter((p) => {
-        return p.id === s.page.id;
-      });
+      const stickyPages = pages.filter(p => p.id === s.page.id);
       if (stickyPages.length > 0) {
         s.url   = stickyPages[0].url;
         s.title = stickyPages[0].title;
@@ -410,7 +411,7 @@ function sync() {
 }
 
 browser.runtime.onConnect.addListener((port) => {
-  const name = port.name;
+  const { name } = port;
   if (name.startsWith('content-script')) {
     contentScriptPorts[port.name] = port;
     port.onDisconnect.addListener(() => {
@@ -462,7 +463,7 @@ function setupContextMenus() {
     contexts: ['all'],
   });
 
-  browser.contextMenus.onClicked.addListener((info, tab) => {
+  browser.contextMenus.onClicked.addListener((info) => {
     const portName = `content-script-${info.pageUrl}`;
     const port     = contentScriptPorts[portName];
     switch (info.menuItemId) {

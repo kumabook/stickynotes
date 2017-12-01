@@ -56,6 +56,7 @@ function saveSticky(sticky) {
 }
 
 function setTags(sticky, tagNames) {
+  /* eslint-disable  no-param-reassign */
   sticky.tagNames = tagNames;
   saveSticky(sticky);
 }
@@ -93,8 +94,8 @@ function addStickyView(sticky) {
       stickyView.sticky.color = colorItem.id;
       saveSticky(stickyView.sticky, { color: colorItem.id });
     },
-    onTagsChange: (tags) => setTags(stickyView.sticky, tags),
-    onMoveEnd: () => {
+    onTagsChange: tags => setTags(stickyView.sticky, tags),
+    onMoveEnd:    () => {
       stickyView.sticky.left = parseInt(stickyView.dom.style.left, 10);
       stickyView.sticky.top  = parseInt(stickyView.dom.style.top, 10);
       setTimeout(() => saveSticky(stickyView.sticky), 0);

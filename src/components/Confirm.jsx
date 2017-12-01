@@ -1,7 +1,9 @@
 import React     from 'react';
 import PropTypes from 'prop-types';
 
-const Confirm = ({ hidden, title, message, onSubmit }) => {
+const Confirm = ({
+  hidden, message, onSubmit,
+}) => {
   const style = { display: hidden ? 'none' : '' };
   return (
     <div className="confirmContainer" style={style}>
@@ -15,18 +17,14 @@ const Confirm = ({ hidden, title, message, onSubmit }) => {
 };
 
 Confirm.propTypes = {
-  hidden:  PropTypes.bool,
-  title:   PropTypes.string,
-  message: PropTypes.string,
-  ok:      PropTypes.func,
-  no:      PropTypes.func,
+  hidden:   PropTypes.bool,
+  message:  PropTypes.string,
+  onSubmit: PropTypes.func,
 };
 Confirm.defaultProps = {
-  hidden:  true,
-  title:   '',
-  message: '',
-  ok:      () => {},
-  no:      () => {},
+  hidden:   true,
+  message:  '',
+  onSubmit: () => {},
 };
 
 export default Confirm;

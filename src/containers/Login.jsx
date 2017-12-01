@@ -1,12 +1,10 @@
 import React    from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { getMessage } from '../utils/i18n';
+import getMessage from '../utils/i18n';
 
 class Login extends React.Component {
-  back() {
-    this.props.history.goBack();
-  }
   getErrorMessage() {
     if (this.props.loginStatus.type === 'failed') {
       let message = getMessage('loginError');
@@ -25,10 +23,28 @@ class Login extends React.Component {
     }
     return null;
   }
+  back() {
+    this.props.history.goBack();
+  }
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.props.loginStatus.type === 'starting') {
+      return;
+    }
+    this.props.login(this.email.value, this.password.value);
+  }
   render() {
     return (
       <div className="container">
-        <div className="navBar"><a onClick={() => this.back()}>{getMessage('back')}</a></div>
+        <div className="navBar">
+          <span
+            role="button"
+            onClick={() => this.back()}
+            onKeyDown={() => {}}
+            tabIndex="0"
+          >{getMessage('back')}
+          </span>
+        </div>
         <p>
           {getMessage('accountDescription')}
         </p>
@@ -59,7 +75,7 @@ class Login extends React.Component {
         <div><Link to="/signup">{getMessage('signup')}</Link></div>
         <div>
           <a
-            href=""
+            href="reset_password"
             onClick={(e) => {
               e.preventDefault();
               this.props.resetPassword();
@@ -71,14 +87,16 @@ class Login extends React.Component {
       </div>
     );
   }
-  handleSubmit(e) {
-    e.preventDefault();
-    if (this.props.loginStatus.type === 'starting') {
-      return;
-    }
-    this.props.login(this.email.value, this.password.value);
-  }
 }
+
+Login.propTypes = {
+  loginStatus: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+  }).isRequired,
+  history:       PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  login:         PropTypes.func.isRequired,
+  resetPassword: PropTypes.func.isRequired,
+};
 
 function mapStateToProps(state) {
   return {
@@ -88,7 +106,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    login: (email, password) => dispatch({ type: 'LOGIN', payload: { email, password } }),
+    login:         (email, password) => dispatch({ type: 'LOGIN', payload: { email, password } }),
     resetPassword: () => dispatch({ type: 'RESET_PASSWORD' }),
   };
 }

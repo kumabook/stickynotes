@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TreeView from 'react-treeview';
@@ -14,6 +15,8 @@ function getDateString(date) {
 }
 
 class StickyList extends React.Component {
+  static handleKeyDown() {
+  }
   constructor() {
     super();
     this.state = {
@@ -26,7 +29,7 @@ class StickyList extends React.Component {
         return (a, b) => b.created_at.getTime() - a.created_at.getTime();
       case OrderBy.UpdatedAt:
         return (a, b) => b.updated_at.getTime() - a.updated_at.getTime();
-      case OrderBy.Alphabetical:
+      default: // OrderBy.Alphabetical
         return (a, b) => {
           if (a < b) {
             return -1;
@@ -38,6 +41,10 @@ class StickyList extends React.Component {
         };
     }
   }
+  handleClick(item) {
+    this.state.collapsedMap[item.id] = !this.state.collapsedMap[item.id];
+    this.setState({ collapsedMap: this.state.collapsedMap });
+  }
   renderSticky(sticky) {
     return (
       <div onDoubleClick={() => this.props.handleStickyDoubleClick(sticky)}>
@@ -48,7 +55,17 @@ class StickyList extends React.Component {
     );
   }
   renderTreeView(t, items) {
-    const label = <span className="tree-label" onClick={() => this.handleClick(t)}>{t.name}</span>;
+    const label = (
+      <span
+        className="tree-label"
+        role="menuitem"
+        onClick={() => this.handleClick(t)}
+        onKeyDown={StickyList.handleKeyDown}
+        tabIndex="0"
+      >
+        {t.name}
+      </span>
+    );
     return (
       <TreeView
         key={t.name}
@@ -60,7 +77,17 @@ class StickyList extends React.Component {
     );
   }
   renderItem(p, stickies) {
-    const label = <span className="tree-label" onClick={() => this.handleClick(p)}>{p.title}</span>;
+    const label = (
+      <span
+        className="tree-label"
+        role="menuitem"
+        onClick={() => this.handleClick(p)}
+        onKeyDown={StickyList.handleKeyDown}
+        tabIndex="0"
+      >
+        {p.title}
+      </span>
+    );
     const items = stickies.map(sticky => this.renderSticky(sticky));
     return (
       <TreeView
@@ -83,7 +110,7 @@ class StickyList extends React.Component {
     const pages = [];
     stickies.forEach((s) => {
       if (!pages.find(p => p.id === s.page.id)) {
-        const p = this.props.pages.find(p => p.id === s.page.id);
+        const p = this.props.pages.find(v => v.id === s.page.id);
         if (p) {
           pages.push(p);
         }
@@ -105,10 +132,12 @@ class StickyList extends React.Component {
       stickiesOfDate[d].push(s);
     });
     return Object.keys(stickiesOfDate)
-                 .sort()
-                 .reverse()
-                 .map(d => this.renderTreeView({ id: d, name: d },
-                                               this.renderDateStickies(stickiesOfDate[d])));
+      .sort()
+      .reverse()
+      .map(d => this.renderTreeView(
+        { id: d, name: d },
+        this.renderDateStickies(stickiesOfDate[d]),
+      ));
   }
   renderGroupByCreatedAtTree() {
     return this.renderGroupByDate('created_at');
@@ -132,8 +161,8 @@ class StickyList extends React.Component {
     const compare = (a, b) => a.title.localeCompare(b.title);
     return this.props.pages.sort(compare).map((p) => {
       const vals = this.props.stickies
-                       .filter(s => s.page.id === p.id)
-                       .sort(compare);
+        .filter(s => s.page.id === p.id)
+        .sort(compare);
       return this.renderItem(p, vals);
     });
   }
@@ -141,8 +170,8 @@ class StickyList extends React.Component {
     const compare = (a, b) => a.name.localeCompare(b.name);
     const trees =  this.props.tags.sort(compare).map((t) => {
       const items = this.props.stickies
-                        .filter(s => s.tags.some(tag => t.id === tag.id))
-                        .map(sticky => this.renderSticky(sticky));
+        .filter(s => s.tags.some(tag => t.id === tag.id))
+        .map(sticky => this.renderSticky(sticky));
       if (items.length > 0) {
         return this.renderTreeView(t, items);
       }
@@ -187,16 +216,18 @@ class StickyList extends React.Component {
     return (
       <div>
         <div className="header">
-          <label className="search-label">Search</label>
-          <input
-            className="search-input"
-            type="search"
-            name="search"
-            size="10"
-            maxLength="255"
-            value={this.props.searchQuery}
-            onChange={e => this.props.handleSearchQueryChange(e.target.value)}
-          />
+          <label htmlFor="searchInput" className="search-label">Search
+            <input
+              id="searchInput"
+              className="search-input"
+              type="search"
+              name="search"
+              size="10"
+              maxLength="255"
+              value={this.props.searchQuery}
+              onChange={e => this.props.handleSearchQueryChange(e.target.value)}
+            />
+          </label>
           <select
             value={this.props.groupBy}
             className="groupby-select"
@@ -208,10 +239,6 @@ class StickyList extends React.Component {
         {this.renderTrees()}
       </div>
     );
-  }
-  handleClick(item) {
-    this.state.collapsedMap[item.id] = !this.state.collapsedMap[item.id];
-    this.setState({ collapsedMap: this.state.collapsedMap });
   }
 }
 
@@ -226,8 +253,20 @@ function search(query, sticky) {
   return !sticky.tags.every(t => t.name.toLowerCase().indexOf(q) === -1);
 }
 
+StickyList.propTypes = {
+  searchQuery:             PropTypes.string.isRequired,
+  orderBy:                 PropTypes.string.isRequired,
+  groupBy:                 PropTypes.string.isRequired,
+  stickies:                PropTypes.arrayOf(PropTypes.object).isRequired,
+  tags:                    PropTypes.arrayOf(PropTypes.object).isRequired,
+  pages:                   PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleStickyDoubleClick: PropTypes.func.isRequired,
+  handleGroupByChange:     PropTypes.func.isRequired,
+  handleSearchQueryChange: PropTypes.func.isRequired,
+};
+
 function mapStateToProps(state) {
-  let stickies = state.stickies;
+  let { stickies } = state;
   const q = state.searchQuery.trim();
   if (q.length > 0) {
     stickies = stickies.filter(s => search(q, s));
@@ -242,7 +281,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch, { history }) {
+function mapDispatchToProps(dispatch) {
   return {
     handleStickyDoubleClick: payload => dispatch({ type: 'JUMP_TO_STICKY', payload }),
     handleGroupByChange:     payload => dispatch({ type: 'CHANGE_GROUP_BY', payload }),

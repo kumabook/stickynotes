@@ -1,6 +1,6 @@
 /* global indexedDB: false */
 
-//const { indexedDB } = require('sdk/indexed-db');
+// const { indexedDB } = require('sdk/indexed-db');
 
 function open(dbName, version = 1) {
   return new Promise((resolve, reject) => {
@@ -24,6 +24,7 @@ function upgrade(dbName, version = 1, callback) {
 }
 
 function transactionComplete(store) {
+  /* eslint-disable  no-param-reassign */
   return new Promise((resolve) => {
     store.transaction.oncomplete = resolve;
   });

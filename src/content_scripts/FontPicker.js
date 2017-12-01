@@ -10,13 +10,13 @@ function FontPicker(param) {
     id:    StickyMenu.Type.EditFont,
     label: 'Edit Font',
     icon:  'font',
-  }/*, {
+  }, /* , {
        id: stickynotes.StickyMenu.Type.PageOption,
     label: 'Page Option',
      icon: 'page-option'
-  }*/];
+  } */];
   this.onSelectItem         = param.onSelectItem;
-  this._onSelectItem        = this._onSelectItem.bind(this);
+  this.onSelect             = this.onSelect.bind(this);
   this.leftBarButtonClicked = param.leftBarButtonClicked;
   this.createDom();
   this.bind();
@@ -26,7 +26,8 @@ FontPicker.classes = {
   FONT_ITEM: 'stickynotes-font-item',
 };
 
-FontPicker.prototype.createDom = function() {
+FontPicker.prototype.createDom = function createDom() {
+  /* eslint-disable  no-param-reassign */
   this.dom = document.createElement('div');
   this.dom.className = StickyMenu.classes.MENU;
   this.items.forEach((item) => {
@@ -35,7 +36,7 @@ FontPicker.prototype.createDom = function() {
   });
 };
 
-FontPicker.prototype.createItem = function(item) {
+FontPicker.prototype.createItem = function createItem(item) {
   const dom        = document.createElement('div');
   const link       = document.createElement('a');
   dom.id           = item.id;
@@ -45,7 +46,7 @@ FontPicker.prototype.createItem = function(item) {
   return dom;
 };
 
-FontPicker.prototype._onSelectItem = function(e) {
+FontPicker.prototype.onSelect = function onSelect(e) {
   e.stopPropagation();
   e.preventDefault();
   const id = e.target.id || e.target.parentNode.id;
@@ -56,26 +57,26 @@ FontPicker.prototype._onSelectItem = function(e) {
   });
 };
 
-FontPicker.prototype.onMouseDown = function(e) {
+FontPicker.prototype.onMouseDown = function onMouseDown(e) {
   e.stopPropagation();
   e.preventDefault();
 };
 
-FontPicker.prototype.bind = function() {
+FontPicker.prototype.bind = function bind() {
   this.items.forEach((item) => {
     item.dom.addEventListener('mousedown', this.onMouseDown);
-    item.dom.addEventListener('click', this._onSelectMenu);
+    item.dom.addEventListener('click', this.onSelect);
   });
 };
 
-FontPicker.prototype.unbind = function() {
+FontPicker.prototype.unbind = function unbind() {
   this.items.forEach((item) => {
     item.dom.addEventListener('mousedown', this.onMouseDown);
-    item.dom.removeEventListener('click' , this._onSelectMenu);
+    item.dom.removeEventListener('click', this.onSelect);
   });
 };
 
-FontPicker.prototype.dispose = function() {
+FontPicker.prototype.dispose = function dispose() {
   this.unbind();
 };
 

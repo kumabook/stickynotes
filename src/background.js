@@ -367,18 +367,13 @@ function importStickies(stickies, db) {
         },
       });
     });
-    Promise.all([
-      Sticky.findAll(db).then(a => a.filter(s => !Sticky.isDeleted(s))),
-      Tag.findAll(db),
-      Page.findAll(db),
-    ]).then(values => normalizeMessagePayload({
-      stickies: values[0],
-      tags:     values[1],
-      pages:    values[2],
-    })).then(payload => getSidebarPorts().forEach(p => p.postMessage({
-      type: 'fetched-stickies',
-      payload,
-    })));
+    getSidebarPorts().forEach(p => p.postMessage({
+      type:    'imported-stickies',
+      payload: {
+        createdStickies,
+        updatedStickies,
+      },
+    }));
   });
 }
 

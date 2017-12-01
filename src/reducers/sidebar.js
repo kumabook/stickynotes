@@ -69,6 +69,17 @@ const stickies = (state = [], action) => {
       return state.filter(s => s.id !== action.payload.id);
     case 'CLEARED_STICKIES':
       return [];
+    case 'IMPORTED_STICKIES': {
+      const { createdStickies, updatedStickies } = action.payload;
+      const items = state.concat(createdStickies);
+      updatedStickies.forEach((sticky) => {
+        const i = items.findIndex(s => s.id === sticky.id);
+        if (i !== -1) {
+          items[i] = sticky;
+        }
+      });
+      return items;
+    }
     default:
       return state;
   }
@@ -84,6 +95,18 @@ const tags = (state = [], action) => {
       return addTags(state.slice(), action.payload.tags);
     case 'CLEARED_STICKIES':
       return [];
+    case 'IMPORTED_STICKIES': {
+      const { createdStickies, updatedStickies } = action.payload;
+      const items = state.slice();
+      createdStickies.concat(updatedStickies).forEach((sticky) => {
+        sticky.tags.forEach((tag) => {
+          if (items.findIndex(t => t.id === tag.id) === -1) {
+            items.push(tag);
+          }
+        });
+      });
+      return items;
+    }
     default:
       return state;
   }
@@ -99,6 +122,16 @@ const pages = (state = [], action) => {
       return addPage(state.slice(), action.payload.page);
     case 'CLEARED_STICKIES':
       return [];
+    case 'IMPORTED_STICKIES': {
+      const { createdStickies, updatedStickies } = action.payload;
+      const items = state.slice();
+      createdStickies.concat(updatedStickies).forEach((sticky) => {
+        if (items.findIndex(p => p.id === sticky.page.id) === -1) {
+          items.push(sticky.page);
+        }
+      });
+      return items;
+    }
     default:
       return state;
   }

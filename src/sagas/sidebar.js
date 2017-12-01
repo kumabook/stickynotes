@@ -90,6 +90,7 @@ function* watchPort() {
         yield put({ type: 'CLEARED_STICKIES', payload: event.payload });
         break;
       case 'imported-stickies':
+        yield put({ type: 'IMPORTED_STICKIES', payload: event.payload });
         break;
       case 'error':
         alert(`${event.type}: ${event.payload.message}`);

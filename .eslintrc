@@ -1,12 +1,12 @@
 {
-    "extends": "airbnb",
-    "env": {
-        "browser": true,
-        "mocha":   true
-    },
-    "rules": {
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "mocha":   true
+  },
+  "rules": {
     "no-multi-spaces": ["error", {
-      exceptions: {
+      "exceptions": {
         "VariableDeclarator": true,
         "ImportDeclaration": true,
         "Property": true,
@@ -18,6 +18,11 @@
       "devDependencies": true,
       "optionalDependencies": false,
       "peerDependencies": false
+    }],
+    "jsx-a11y/anchor-is-valid": [ "error", {
+      "components": [ "Link" ],
+      "specialLink": [ "to", "hrefLeft", "hrefRight" ],
+      "aspects": [ "noHref", "invalidHref", "preferButton" ]
     }]
   }
 }

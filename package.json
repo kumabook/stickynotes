@@ -8,10 +8,10 @@
   "author": "Hiroki Kumamoto",
   "scripts": {
     "get-unbranded-firefox": "get-firefox -ecb unbranded-release",
-    "build": "webpack && web-ext build --overwrite-dest -i src/ \"**/*~\"",
+    "build": "webpack && web-ext build --overwrite-dest -i $IGNORE_FILES -i \"**/*~\"",
     "build:release": "cross-env NODE_ENV=production npm run build",
-    "start": "webpack && web-ext run -i src/ \"**/*~\" --bc -f $FIREFOX_BINARY",
-    "sign": "web-ext sign -i web-ext-artifacts/ src/ \"**/*~\" --api-key $API_KEY --api-secret $API_SECRET",
+    "start": "node index.js",
+    "sign": "web-ext sign -i $IGNORE_FILES -i \"**/*~\" --api-key $API_KEY --api-secret $API_SECRET",
     "webstore": "webstore upload --source web-ext-artifacts/stickynotes-$VERSION.zip --extension-id $EXTENSION_ID --client-id $GOOGLE_CLIENT_ID --client-secret $GOOGLE_CLIENT_SECRET --refresh-token $GOOGLE_REFRESH_TOKEN --auto-publish",
     "release:firefox": "npm run build:release && npm run sign",
     "release:chrome": "npm run build:release && npm run webstore",

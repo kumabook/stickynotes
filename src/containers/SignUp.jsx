@@ -41,14 +41,12 @@ class SignUp extends React.Component {
     return (
       <div className="container">
         <div className="navBar">
-          <span
-            role="button"
+          <button
+            className="backButton"
             onClick={() => this.back()}
-            onKeyDown={() => {}}
-            tabIndex="0"
           >
             {getMessage('back')}
-          </span>
+          </button>
         </div>
         <p>
           {getMessage('accountDescription')}

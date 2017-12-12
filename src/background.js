@@ -68,6 +68,7 @@ function handleContentScriptMessage(msg) {
       const { url } = msg;
       idb.open(dbName)
         .then(db => Sticky.findByUrl(url, db))
+        .then(stickies => stickies.filter(s => !Sticky.isDeleted(s)))
         .then((stickies) => {
           getSidebarPorts().concat(port).forEach(p => p.postMessage({
             type:      msg.type,

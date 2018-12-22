@@ -12,7 +12,7 @@
                   "notifications",
                   "tabs",
                   "activeTab",
-                  "*://stickynotes-backend.herokuapp.com/*"
+                  "*://stickynotes.kumabook.tokyo/*"
                  ],
   "background": {
     "scripts": ["background/bundle.js"]

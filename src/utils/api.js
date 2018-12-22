@@ -2,7 +2,7 @@
 import browser from 'webextension-polyfill';
 import logger  from './logger';
 
-const { BASE_URL, CLIENT_ID, CLIENT_SECnRET } = process.env;
+const { BASE_URL, CLIENT_ID, CLIENT_SECRET } = process.env;
 
 function getAccessToken() {
   return browser.storage.local.get('accessToken').then((v) => {
@@ -102,7 +102,7 @@ function fetchAccessToken(email, password) {
     return sendRequest('POST', `${BASE_URL}/oauth/token.json`, {
       grant_type:    'password',
       client_id:     CLIENT_ID,
-      client_secret: CLIENT_SECnRET,
+      client_secret: CLIENT_SECRET,
       username:      email,
       password,
     });

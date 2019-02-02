@@ -19,9 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(reducers, applyMiddleware(
-  sagaMiddleware,
-));
+const store = createStore(reducers, applyMiddleware(sagaMiddleware));
 sagaMiddleware.run(rootSaga);
 
 const element = (

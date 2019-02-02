@@ -309,18 +309,25 @@ function handleOptionsUIMessage(msg) {
   const port = getPort(msg.portName);
   switch (msg.type) {
     case 'import': {
+      const stickies = msg.payload;
+      idb.open(dbName)
+        .then(db => importStickies(stickies, db))
+        .then(() => port.postMessage({
+          type:    'imported',
+          payload: { count: stickies.length },
+        }));
       break;
     }
     case 'export': {
       idb.open(dbName)
         .then(db => Sticky.findBySince(0, db)
-              .then(stickies => resolveStickies(stickies, db))
-              .then(stickies => port.postMessage({
-                type: 'export',
-                payload: { name: 'all', stickies }
-              }))).catch((e) => {
-               logger.error(e);
-             });
+          .then(stickies => resolveStickies(stickies, db))
+          .then(stickies => port.postMessage({
+            type:    'export',
+            payload: { name: 'all', stickies },
+          }))).catch((e) => {
+          logger.error(e);
+        });
       break;
     }
     default:

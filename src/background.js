@@ -27,6 +27,8 @@ function getPort(name) {
     return popupPort;
   } else if (name.startsWith('sidebar')) {
     return sidebarPorts[name];
+  } else if (name.startsWith('options-ui')) {
+    return optionsUIPorts[name];
   }
   return null;
 }
@@ -307,6 +309,19 @@ function handleOptionsUIMessage(msg) {
   const port = getPort(msg.portName);
   switch (msg.type) {
     case 'import': {
+      break;
+    }
+    case 'export': {
+      idb.open(dbName)
+        .then(db => Sticky.findBySince(0, db)
+              .then(stickies => resolveStickies(stickies, db))
+              .then(stickies => port.postMessage({
+                type: 'export',
+                payload: { name: 'all', stickies }
+              }))).catch((e) => {
+               logger.error(e);
+             });
+      break;
     }
     default:
       break;

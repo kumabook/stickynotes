@@ -1,4 +1,7 @@
 {
+  "options": {
+    "message": "設定"
+  },
   "import": {
     "message": "インポート"
   },

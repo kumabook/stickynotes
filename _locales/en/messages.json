@@ -1,4 +1,7 @@
 {
+  "options": {
+    "message": "Options"
+  },
   "import": {
     "message": "Import"
   },

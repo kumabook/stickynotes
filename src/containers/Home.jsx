@@ -13,7 +13,7 @@ class Home extends React.Component {
     return browser.sidebarAction && browser.sidebarAction.open;
   }
   menus() {
-    let menus = [];
+    let menus = ['options'];
     switch (this.props.info.os) {
       case 'android':
         menus.push('list');
@@ -99,8 +99,8 @@ function mapDispatchToProps(dispatch, { history }) {
         case 'login':
           history.push('/login');
           break;
-        case 'import':
-          filePicker.click();
+        case 'options':
+          browser.runtime.openOptionsPage();
           break;
         case 'sidebar':
           browser.sidebarAction.open();

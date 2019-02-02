@@ -5,6 +5,7 @@ module.exports = {
     popup:           './src/popup.jsx',
     sidebar:         './src/sidebar.jsx',
     content_scripts: './src/content_script.js',
+    options_ui:      './src/options_ui.jsx',
   },
   output: {
     path:     `${__dirname}/`,

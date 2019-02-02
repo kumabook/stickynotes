@@ -10,6 +10,7 @@ import api     from './utils/api';
 
 const contentScriptPorts = {};
 const sidebarPorts       = {};
+const optionsUIPorts     = {};
 let popupPort            = null;
 let syncTimer            = null;
 const dbName             = process.env.DATABASE_NAME || 'StickyNotesDatabase';
@@ -302,6 +303,16 @@ function handleSidebarMessage(msg) {
   }
 }
 
+function handleOptionsUIMessage(msg) {
+  const port = getPort(msg.portName);
+  switch (msg.type) {
+    case 'import': {
+    }
+    default:
+      break;
+  }
+}
+
 function resolveStickies(stickies, db) {
   return Page.findAll(db).then((pages) => {
     stickies.forEach((s) => {
@@ -435,6 +446,13 @@ browser.runtime.onConnect.addListener((port) => {
       port.onMessage.removeListener(handleSidebarMessage);
     });
     port.onMessage.addListener(handleSidebarMessage);
+  } else if (name.startsWith('options-ui')) {
+    optionsUIPorts[port.name] = port;
+    port.onDisconnect.addListener(() => {
+      delete optionsUIPorts[port.name];
+      port.onMessage.removeListener(handleOptionsUIMessage);
+    });
+    port.onMessage.addListener(handleOptionsUIMessage);
   }
 });
 

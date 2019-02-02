@@ -1,11 +1,8 @@
 /* global confirm: false */
-import browser from 'webextension-polyfill';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { isJSON } from '../utils/file';
-import getMessage from '../utils/i18n';
 
 class OptionsUI extends React.Component {
   render() {
@@ -25,23 +22,23 @@ class OptionsUI extends React.Component {
 }
 
 OptionsUI.propTypes = {
+  export:           PropTypes.func.isRequired,
+  handleInputFiles: PropTypes.func.isRequired,
 };
 
 OptionsUI.defaultProps =  {
 };
 
-function mapStateToProps(state) {
+function mapStateToProps() {
   return {};
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    export: () => dispatch({ type: 'EXPORT', payload: [] }),
+    export:           () => dispatch({ type: 'EXPORT', payload: [] }),
     handleInputFiles: (files) => {
-      dispatch({ type: 'IMPORT', payload: [] });
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];
-        dispatch({ type: 'IMPORT', payload: [] });
         if (isJSON(file)) {
           const reader = new FileReader();
           reader.onload = () => {
@@ -56,7 +53,7 @@ function mapDispatchToProps(dispatch) {
         }
       }
     },
-  }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OptionsUI);

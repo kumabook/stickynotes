@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { isJSON } from '../utils/file';
 import getMessage from '../utils/i18n';
 import Confirm from '../components/Confirm';
 
@@ -43,7 +42,7 @@ class Home extends React.Component {
                 <span
                   role="button"
                   className="menuItem"
-                  onClick={() => this.props.handleClick(m, this.filePicker)}
+                  onClick={() => this.props.handleClick(m)}
                   onKeyDown={() => {}}
                   tabIndex="0"
                 >
@@ -52,12 +51,6 @@ class Home extends React.Component {
               </li>
              ))}
           </ul>
-          <input
-            ref={(input) => { this.filePicker = input; }}
-            type="file"
-            style={{ position: 'fixed', top: 10, display: 'none' }}
-            onChange={e => this.props.handleInputFiles(e.target.files)}
-          />
         </div>
         <Confirm
           hidden={!this.props.confirm}
@@ -74,11 +67,10 @@ Home.propTypes = {
   info: PropTypes.shape({
     os: PropTypes.string,
   }).isRequired,
-  user:             PropTypes.shape({}),
-  confirm:          PropTypes.bool.isRequired,
-  handleClick:      PropTypes.func.isRequired,
-  handleConfirm:    PropTypes.func.isRequired,
-  handleInputFiles: PropTypes.func.isRequired,
+  user:          PropTypes.shape({}),
+  confirm:       PropTypes.bool.isRequired,
+  handleClick:   PropTypes.func.isRequired,
+  handleConfirm: PropTypes.func.isRequired,
 };
 Home.defaultProps =  {
   user: null,
@@ -94,7 +86,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, { history }) {
   return {
-    handleClick: (menu, filePicker) => {
+    handleClick: (menu) => {
       switch (menu) {
         case 'login':
           history.push('/login');
@@ -118,25 +110,6 @@ function mapDispatchToProps(dispatch, { history }) {
         dispatch({ type: 'MENU', payload: { name: 'clearCache' } });
       }
       dispatch({ type: 'HIDE_CONFIRM' });
-    },
-    handleInputFiles: (files) => {
-      dispatch({ type: 'IMPORT', payload: [] });
-      for (let i = 0; i < files.length; i += 1) {
-        const file = files[i];
-        dispatch({ type: 'IMPORT', payload: [] });
-        if (isJSON(file)) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            try {
-              const data = JSON.parse(reader.result);
-              dispatch({ type: 'IMPORT', payload: data });
-            } catch (e) {
-              dispatch({ type: 'IMPORT_FAIL', payload: e });
-            }
-          };
-          reader.readAsText(file);
-        }
-      }
     },
   };
 }

@@ -3,13 +3,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isJSON } from '../utils/file';
+import getMessage from '../utils/i18n';
 
 class OptionsUI extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={() => this.filePicker.click()}>import</button>
-        <button onClick={this.props.export}>export</button>
+        <button onClick={() => this.filePicker.click()}>{getMessage('import')}</button>
+        <button onClick={this.props.export}>{getMessage('export')}</button>
         <input
           ref={(input) => { this.filePicker = input; }}
           type="file"

@@ -12,6 +12,7 @@ class OptionsUI extends React.Component {
     return (
       <div>
         <button onClick={() => this.filePicker.click()}>import</button>
+        <button onClick={this.props.export}>export</button>
         <input
           ref={(input) => { this.filePicker = input; }}
           type="file"
@@ -35,8 +36,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    export: () => dispatch({ type: 'EXPORT', payload: [] }),
     handleInputFiles: (files) => {
-      console.log('----- import')
       dispatch({ type: 'IMPORT', payload: [] });
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];

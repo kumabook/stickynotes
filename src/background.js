@@ -319,12 +319,13 @@ function handleOptionsUIMessage(msg) {
       break;
     }
     case 'export': {
+      const { format } = msg.payload;
       idb.open(dbName)
         .then(db => Sticky.findBySince(0, db)
           .then(stickies => resolveStickies(stickies, db))
           .then(stickies => port.postMessage({
             type:    'export',
-            payload: { name: 'all', stickies },
+            payload: { name: 'all', stickies, format },
           }))).catch((e) => {
           logger.error(e);
         });

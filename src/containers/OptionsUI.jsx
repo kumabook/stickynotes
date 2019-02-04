@@ -10,7 +10,8 @@ class OptionsUI extends React.Component {
     return (
       <div>
         <button onClick={() => this.filePicker.click()}>{getMessage('import')}</button>
-        <button onClick={this.props.export}>{getMessage('export')}</button>
+        <button onClick={this.props.exportAsJson}>{getMessage('export')}</button>
+        <button onClick={this.props.exportAsCsv}>{getMessage('export_as_csv')}</button>
         <input
           ref={(input) => { this.filePicker = input; }}
           type="file"
@@ -23,7 +24,8 @@ class OptionsUI extends React.Component {
 }
 
 OptionsUI.propTypes = {
-  export:           PropTypes.func.isRequired,
+  exportAsJson:     PropTypes.func.isRequired,
+  exportAsCsv:      PropTypes.func.isRequired,
   handleInputFiles: PropTypes.func.isRequired,
 };
 
@@ -36,7 +38,8 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    export:           () => dispatch({ type: 'EXPORT', payload: [] }),
+    exportAsJson:     () => dispatch({ type: 'EXPORT', payload: 'json' }),
+    exportAsCsv:      () => dispatch({ type: 'EXPORT', payload: 'csv' }),
     handleInputFiles: (files) => {
       for (let i = 0; i < files.length; i += 1) {
         const file = files[i];

@@ -8,6 +8,9 @@
   "export": {
     "message": "エクスポート"
   },
+  "export_as_csv": {
+    "message": "CSVとしてエクスポート"
+  },
   "create": {
     "message": "ここに付箋を作成"
   },

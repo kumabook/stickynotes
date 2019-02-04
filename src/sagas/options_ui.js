@@ -1,4 +1,5 @@
 import logger from 'kiroku';
+import csv from 'csv/lib/es5/sync';
 import {
   fork,
   take,
@@ -9,6 +10,8 @@ import {
   getPort,
   createPortChannel,
 } from '../utils/port';
+
+import Sticky from '../models/Sticky';
 
 const portName = `options-ui-${Date.now()}`;
 const port = getPort(portName);
@@ -25,6 +28,19 @@ function downloadAsFile(fileName, content) {
   a.dispatchEvent(event);
 }
 
+function formatStickies(format, stickies) {
+  switch (format) {
+    case 'csv': {
+      const records = stickies.map(Sticky.toCSV);
+      records.unshift(Sticky.props);
+      return csv.stringify(records);
+    }
+    case 'json':
+      return JSON.stringify(stickies);
+    default:
+      return '';
+  }
+}
 
 function* watchPort() {
   const portChannel = yield call(createPortChannel, port);
@@ -38,8 +54,9 @@ function* watchPort() {
         break;
       }
       case 'export': {
-        const { name, stickies } = event.payload;
-        downloadAsFile(`stickynotes_${name}.json`, JSON.stringify(stickies));
+        const { name, stickies, format } = event.payload;
+        const fileName = `stickynotes_${name}.${format}`;
+        downloadAsFile(fileName, formatStickies(format, stickies));
         break;
       }
       case 'error':
@@ -59,8 +76,8 @@ function* watchImport() {
   yield takeEvery('IMPORT', importStickies);
 }
 
-function exportStickies() {
-  port.postMessage({ type: 'export', portName, payload: [] });
+function exportStickies({ payload: format }) {
+  port.postMessage({ type: 'export', portName, payload: { format } });
 }
 
 function* watchExport() {

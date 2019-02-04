@@ -8,6 +8,9 @@
   "export": {
     "message": "Export"
   },
+  "export_as_csv": {
+    "message": "Export as CSV"
+  },
   "create": {
     "message": "Generate Sticky"
   },

@@ -124,6 +124,27 @@ Sticky.findBySince = function findBySince(date, db) {
   });
 };
 
+Sticky.props = [
+  'id',
+  'uuid',
+  'left',
+  'top',
+  'width',
+  'height',
+  'url',
+  'title',
+  'content',
+  'color',
+  'state',
+];
+
+Sticky.toCSV = function toCSV(s) {
+  return Sticky.props.reduce((acc, key) => {
+    acc.push(s[key]);
+    return acc;
+  }, []);
+};
+
 Sticky.isDeleted = sticky => sticky.state === Sticky.State.Deleted;
 
 export default Sticky;

@@ -35,6 +35,15 @@
     "default_title": "StickyNotes",
     "default_popup": "popup/index.html"
   },
+  "page_action": {
+    "browser_style": true,
+    "default_icon": {
+      "19": "icons/create-icon-19.png",
+      "38": "icons/create-icon-38.png"
+    },
+    "default_title": "Create new sticky",
+    "show_matches": ["*://*/*"]
+  },
   "sidebar_action": {
     "default_icon": "icons/icon-32.png",
     "default_title" : "StickyNotes",

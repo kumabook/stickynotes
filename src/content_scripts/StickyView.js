@@ -307,9 +307,7 @@ StickyView.prototype.unbind = function unbind() {
 };
 
 StickyView.prototype.onContentChange = function onContentChange() {
-  if (this.sticky.content !== this.textarea.value) {
-    this.onTextareaChange();
-  }
+  this.onTextareaChange();
 };
 
 StickyView.prototype.onTextareaKeyDown = function onTextareaKeyDown(e) {

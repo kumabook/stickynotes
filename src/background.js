@@ -563,6 +563,14 @@ function setupCommands() {
   });
 }
 
+function setupPageAction() {
+  browser.pageAction.onClicked.addListener((tab) => {
+    getContentScriptPorts().forEach(p => p.postMessage({
+      type:      'create-sticky',
+      targetUrl: tab.url,
+    }));
+  });
+}
 
 function createDB() {
   return idb.upgrade(dbName, dbVersion, db => Promise.all([
@@ -590,6 +598,7 @@ browser.runtime.getPlatformInfo().then((info) => {
     case 'android':
       break;
     default:
+      setupPageAction();
       setupContextMenus();
       setupCommands();
       break;

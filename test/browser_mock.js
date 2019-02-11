@@ -56,4 +56,10 @@ browser.contextMenus = {
   },
 };
 
+browser.pageAction = {
+  onClicked: {
+    addListener: () => {},
+  },
+};
+
 module.exports = browser;

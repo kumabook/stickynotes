@@ -13,6 +13,9 @@ const mounsePosition = {
   y: 0,
 };
 
+/* eslint-disable no-underscore-dangle */
+window.__stickynotes_state = {};
+
 function watchClickPosition(event) {
   try {
     mounsePosition.x = event.clientX + window.top.pageXOffset;
@@ -234,6 +237,9 @@ function messageListener(msg) {
       break;
     case 'reload':
       break;
+    case 'load-options':
+      window.__stickynotes_state = msg.payload;
+      break;
     default:
       break;
   }
@@ -242,6 +248,10 @@ function messageListener(msg) {
 setTimeout(() => {
   port = browser.runtime.connect({ name: portName });
   port.onMessage.addListener(messageListener);
+  port.postMessage({
+    portName,
+    type: 'load-options',
+  });
   port.postMessage({
     portName,
     type: 'load-stickies',

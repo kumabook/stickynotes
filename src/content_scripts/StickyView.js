@@ -87,6 +87,14 @@ StickyView.deleteAll = function deleteAll() {
   }
 };
 
+/* eslint-disable no-underscore-dangle */
+StickyView.prototype.canMoveFocusByTab = function canMoveFocusByTab() {
+  if (window.__stickynotes_state.canMoveFocusByTab === undefined) {
+    return true;
+  }
+  return !!window.__stickynotes_state.canMoveFocusByTab;
+};
+
 StickyView.prototype.isMinimized = function isMinimized() {
   return this.sticky.state === StickyView.State.Minimized;
 };
@@ -307,6 +315,15 @@ StickyView.prototype.onContentChange = function onContentChange() {
 StickyView.prototype.onTextareaKeyDown = function onTextareaKeyDown(e) {
   if (e.keyCode === 68 && e.ctrlKey && e.shiftKey) {
     e.target.sticky.remove();
+  }
+  if (!this.canMoveFocusByTab() && e.keyCode === 9) {
+    e.preventDefault();
+    const elem = this.textarea;
+    const v = elem.value;
+    const start = elem.selectionStart;
+    const end = elem.selectionEnd;
+    elem.value = `${v.slice(0, start)}\t${v.slice(end, v.length)}`;
+    elem.setSelectionRange(start + 1, start + 1);
   }
 };
 

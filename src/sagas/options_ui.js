@@ -1,9 +1,11 @@
+import browser from 'webextension-polyfill';
 import logger from 'kiroku';
 import csv from 'csv/lib/es5/sync';
 import {
   fork,
   take,
   takeEvery,
+  select,
   call,
 } from 'redux-saga/effects';
 import {
@@ -84,10 +86,20 @@ function* watchExport() {
   yield takeEvery('EXPORT', exportStickies);
 }
 
+function* watchCanMoveFocusByTab() {
+  yield takeEvery('UPDATE_CAN_MOVE_FOCUS_BY_TAB', function* update() {
+    const { canMoveFocusByTab } = yield select(state => state);
+    yield browser.storage.local.set({ canMoveFocusByTab });
+    port.postMessage({ type: 'updated-options', portName });
+  });
+}
+
+
 export default function* root() {
   yield [
     fork(watchPort),
     fork(watchImport),
     fork(watchExport),
+    fork(watchCanMoveFocusByTab),
   ];
 }

@@ -1,0 +1,33 @@
+.options {
+  display: absolute;
+  height: 100px;
+  width: 100%;
+}
+
+.optionsTitle {
+  font-size: 2em;
+}
+
+.optionsLabel {
+  font-size: 1.4em;
+}
+
+.optionsDescription {
+  margin-left: 40px;
+}
+
+.optionsValue {
+  margin: 8px;
+}
+
+.optionsValueInput {
+  display: inline-block;
+  margin-left: 40px;
+  width: 60px;
+}
+
+.optionsValueTextInput {
+  display: inline-block;
+  margin-left: 40px;
+  width: 150px;
+}

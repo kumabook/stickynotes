@@ -6,9 +6,25 @@ import { isJSON } from '../utils/file';
 import getMessage from '../utils/i18n';
 
 class OptionsUI extends React.Component {
-  render() {
+  renderCanMoveFocusByTab() {
     return (
       <div>
+        <h4 className="optionsLabel">Tab behavior</h4>
+        <input
+          className="optionsValueInput"
+          type="checkbox"
+          checked={this.props.canMoveFocusByTab}
+          onChange={e => this.props.handleCanMoveFocusByTabChange(e.target.checked)}
+        />
+        On ... Move focus by tab, Off ... Enter tab
+      </div>
+    );
+  }
+
+  renderFiles() {
+    return (
+      <div>
+        <h4 className="optionsLabel">Files</h4>
         <button onClick={() => this.filePicker.click()}>{getMessage('import')}</button>
         <button onClick={this.props.exportAsJson}>{getMessage('export')}</button>
         <button onClick={this.props.exportAsCsv}>{getMessage('export_as_csv')}</button>
@@ -21,19 +37,32 @@ class OptionsUI extends React.Component {
       </div>
     );
   }
+
+  render() {
+    return (
+      <div>
+        {this.renderFiles()}
+        {this.renderCanMoveFocusByTab()}
+      </div>
+    );
+  }
 }
 
 OptionsUI.propTypes = {
-  exportAsJson:     PropTypes.func.isRequired,
-  exportAsCsv:      PropTypes.func.isRequired,
-  handleInputFiles: PropTypes.func.isRequired,
+  exportAsJson:                  PropTypes.func.isRequired,
+  exportAsCsv:                   PropTypes.func.isRequired,
+  handleInputFiles:              PropTypes.func.isRequired,
+  handleCanMoveFocusByTabChange: PropTypes.func.isRequired,
+  canMoveFocusByTab:             PropTypes.bool.isRequired,
 };
 
-OptionsUI.defaultProps =  {
+OptionsUI.defaultProps = {
 };
 
-function mapStateToProps() {
-  return {};
+function mapStateToProps(state) {
+  return {
+    canMoveFocusByTab: state.canMoveFocusByTab,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -57,6 +86,10 @@ function mapDispatchToProps(dispatch) {
         }
       }
     },
+    handleCanMoveFocusByTabChange: payload => dispatch({
+      type: 'UPDATE_CAN_MOVE_FOCUS_BY_TAB',
+      payload,
+    }),
   };
 }
 

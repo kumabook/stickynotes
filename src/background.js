@@ -67,6 +67,14 @@ function handleContentScriptMessage(msg) {
   logger.info(`handleContentScriptMessage ${JSON.stringify(msg)}`);
   const port = getPort(msg.portName);
   switch (msg.type) {
+    case 'load-options': {
+      browser.storage.local.get()
+        .then(payload => port.postMessage({
+          type: 'load-options',
+          payload,
+        }));
+      break;
+    }
     case 'load-stickies': {
       const { url } = msg;
       idb.open(dbName)
@@ -329,6 +337,15 @@ function handleOptionsUIMessage(msg) {
           }))).catch((e) => {
           logger.error(e);
         });
+      break;
+    }
+    case 'updated-options': {
+      const type = 'load-options';
+      browser.storage.local.get()
+        .then(payload => getContentScriptPorts().forEach(p => p.postMessage({
+          type,
+          payload,
+        })));
       break;
     }
     default:

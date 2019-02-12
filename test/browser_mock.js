@@ -62,4 +62,10 @@ browser.pageAction = {
   },
 };
 
+browser.webNavigation = {
+  onHistoryStateUpdated: {
+    addListener: () => {},
+  },
+};
+
 module.exports = browser;

@@ -2,7 +2,7 @@
   "id": "sticky@filenamezero.dip.jp",
   "title": "Sticky Notes",
   "name": "stickynotes",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Put sticky notes on the web page",
   "main": "./main.js",
   "author": "Hiroki Kumamoto",

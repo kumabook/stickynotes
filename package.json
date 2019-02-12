@@ -79,7 +79,7 @@
     "stylelint-config-standard": "^18.0.0",
     "uuid": "^3.1.0",
     "web-ext": "^2.2.2",
-    "webextension-polyfill": "^0.2.1",
+    "webextension-polyfill": "^0.4.0",
     "webpack": "^3.8.1"
   },
   "hasEmbeddedWebExtension": true,

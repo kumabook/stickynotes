@@ -240,6 +240,16 @@ function messageListener(msg) {
     case 'load-options':
       window.__stickynotes_state = msg.payload;
       break;
+    case 'history-state-updated':
+      if (msg.targetUrl !== window.location.href) {
+        return;
+      }
+      port.postMessage({
+        portName,
+        type: 'reload-stickies',
+        url:  window.location.href,
+      });
+      break;
     default:
       break;
   }

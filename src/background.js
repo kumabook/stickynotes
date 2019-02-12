@@ -601,3 +601,13 @@ browser.runtime.getPlatformInfo().then((info) => {
       break;
   }
 });
+
+browser.webNavigation.onHistoryStateUpdated.addListener(({ url }) => {
+  logger.info(`onHistoryStateUpdated: ${url}`);
+  getContentScriptPorts().forEach((p) => {
+    p.postMessage({
+      type:      'history-state-updated',
+      targetUrl: url,
+    });
+  });
+});

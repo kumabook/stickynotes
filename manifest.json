@@ -12,6 +12,7 @@
                   "notifications",
                   "tabs",
                   "activeTab",
+                  "webNavigation",
                   "*://stickynotes.kumabook.tokyo/*"
                  ],
   "background": {

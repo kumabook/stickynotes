@@ -524,16 +524,13 @@ function setupContextMenus() {
 
   browser.contextMenus.onClicked.addListener((info) => {
     const portName = `content-script-${info.pageUrl}`;
-    const port     = contentScriptPorts[portName];
     switch (info.menuItemId) {
       case 'create-sticky':
-        if (port) {
-          port.postMessage({
-            type:      'create-sticky',
-            targetUrl: info.pageUrl,
-            portName,
-          });
-        }
+        getContentScriptPorts().forEach(p => p.postMessage({
+          type:      'create-sticky',
+          targetUrl: info.pageUrl,
+          portName,
+        }));
         break;
       case 'toggle-visibility':
         break;

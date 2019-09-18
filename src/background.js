@@ -512,7 +512,7 @@ function setupContextMenus() {
 
   browser.contextMenus.create({
     id:       'delete-all',
-    title:    'delte all stickies on this page',
+    title:    'delete all stickies on this page',
     contexts: ['all'],
   });
 

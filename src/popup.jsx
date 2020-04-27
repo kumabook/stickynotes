@@ -3,9 +3,7 @@ import logger        from 'kiroku';
 import React         from 'react';
 import ReactDOM      from 'react-dom';
 import createHistory from 'history/createHashHistory';
-import {
-  Provider,
-}  from 'react-redux';
+import { Provider }  from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import {
   applyMiddleware,

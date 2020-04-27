@@ -2,9 +2,7 @@ import 'regenerator-runtime/runtime';
 import browser from 'webextension-polyfill';
 import logger   from 'kiroku';
 import React    from 'react';
-import {
-  Provider,
-}  from 'react-redux';
+import { Provider }  from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import {
   applyMiddleware,

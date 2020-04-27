@@ -8,7 +8,7 @@
   "author": "Hiroki Kumamoto",
   "scripts": {
     "get-unbranded-firefox": "get-firefox -ecb unbranded-release",
-    "build": "webpack && web-ext build --overwrite-dest -i $IGNORE_FILES -i \"**/*~\"",
+    "build": "webpack && web-ext build --overwrite-dest -i web-ext-artifacts/ -i test/ -i coverage/ -i \"**/*~\"",
     "build:release": "cross-env NODE_ENV=production npm run build",
     "start": "node index.js",
     "sign": "web-ext sign -i $IGNORE_FILES -i \"**/*~\" --api-key $API_KEY --api-secret $API_SECRET",

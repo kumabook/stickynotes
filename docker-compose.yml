@@ -1,0 +1,12 @@
+version: '3'
+services:
+  cli: &cli
+    build: .
+    volumes:
+      - ./:/app:cached
+    command: >
+      sh -c "npm run build:release"
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true

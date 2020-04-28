@@ -14,6 +14,10 @@ jobs:
         EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
         API_KEY: ${{ secrets.API_KEY }}
         API_SECRET: ${{ secrets.API_SECRET }}
+        BASE_URL: ${{ secrets.BASE_URL }}
+        CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        SYNC_INTERVAL: ${{ secrets.SYNC_INTERVAL }}
       run: |
         npm install
         npm run release:firefox || true

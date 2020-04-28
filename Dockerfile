@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:14.0.0
 
 ENV ROOT_PATH /app
 RUN mkdir $ROOT_PATH

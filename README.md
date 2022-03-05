@@ -60,3 +60,9 @@ you can import/export with json file.
 you can cutomize shortcut and other settings fron icon-menu.
 
 - whether or not confirm before delete
+
+### Sync
+
+To sync your notes in the cloud (and share them across several browsers automatically) you will need to register and login from the menu.
+
+This setup can be customized from icon-menu: icon-menu where you can specify a custom url. The url must point to a running backend instance. You can learn how to self host one using the [dedicated project](https://github.com/kumabook/stickynotes-backend/).

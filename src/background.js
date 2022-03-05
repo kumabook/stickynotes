@@ -234,7 +234,7 @@ function handlePopupMessage(msg) {
       break;
     }
     case 'reset-password':
-      browser.tabs.create({ url: api.resetPasswordUrl });
+      browser.tabs.create({ url: api.getResetPasswordUrl() });
       break;
     default:
       break;
@@ -346,6 +346,10 @@ function handleOptionsUIMessage(msg) {
           type,
           payload,
         })));
+      break;
+    }
+    case 'updated-server-url': {
+      browser.storage.local.get().then(payload => api.setOnPremiseUrl(payload));
       break;
     }
     default:

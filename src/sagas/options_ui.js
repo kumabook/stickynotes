@@ -94,6 +94,14 @@ function* watchCanMoveFocusByTab() {
   });
 }
 
+function* watchUseCustomerBackupServer() {
+  yield takeEvery('UPDATE_USE_CUSTOM_BACKUP_SERVER', function* update() {
+    const { BASE_URL, CLIENT_ID, CLIENT_SECRET, hasCustomBaseUrl } = yield select(state => state);
+    yield browser.storage.local.set({ BASE_URL, CLIENT_ID, CLIENT_SECRET, hasCustomBaseUrl });
+    port.postMessage({ type: 'updated-server-url', portName });
+  });
+}
+
 
 export default function* root() {
   yield [
@@ -101,5 +109,6 @@ export default function* root() {
     fork(watchImport),
     fork(watchExport),
     fork(watchCanMoveFocusByTab),
+    fork(watchUseCustomerBackupServer),
   ];
 }

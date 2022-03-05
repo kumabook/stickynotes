@@ -2,7 +2,40 @@
 import browser from 'webextension-polyfill';
 import logger  from './logger';
 
-const { BASE_URL, CLIENT_ID, CLIENT_SECRET } = process.env;
+let { BASE_URL, CLIENT_ID, CLIENT_SECRET } = process.env;
+
+browser.storage.local.get('hasCustomBaseUrl').then((hasCustomBaseUrl) => {
+  if (hasCustomBaseUrl) {
+    ['BASE_URL', 'CLIENT_ID', 'CLIENT_SECRET'].forEach(key=>browser.storage.local.get(key).then((v) => {
+      if (v && v[key]) {
+        if (key=='BASE_URL')
+          BASE_URL = v[key];
+        if (key=='CLIENT_ID')
+          CLIENT_ID = v[key];
+        if (key=='CLIENT_SECRET')
+          CLIENT_SECRET = v[key];
+      }
+    }));
+  }
+});
+
+
+function setOnPremiseUrl(payload) {
+  let server = {};
+  ['BASE_URL', 'CLIENT_ID', 'CLIENT_SECRET'].forEach(key=>{
+    if (!payload.hasCustomBaseUrl || typeof(payload[key]) == "undefined" || payload[key] == "") {
+      server[key] = process.env[key];
+    } else {
+      server[key] = payload[key];
+    }
+  });
+  ({ BASE_URL, CLIENT_ID, CLIENT_SECRET } = server);
+}
+
+
+function getResetPasswordUrl() {
+  return `${BASE_URL}/password_resets/new`; 
+}
 
 function getAccessToken() {
   return browser.storage.local.get('accessToken').then((v) => {
@@ -84,6 +117,9 @@ function sendRequest(method, url, params) {
     logger.trace(JSON.stringify(params));
 
     return fetch(u, { method, headers, body })
+      .catch(function(e) {
+        return {ok: false, status: e.code, exception: e}
+      })
       .then((response) => {
         logger.trace(response);
         if (response.ok) {
@@ -158,6 +194,6 @@ export default {
   isLoggedIn,
   getUser,
   setUser,
-  signUpUrl:        `${BASE_URL}/users/new`,
-  resetPasswordUrl: `${BASE_URL}/password_resets/new`,
+  getResetPasswordUrl,
+  setOnPremiseUrl,
 };
